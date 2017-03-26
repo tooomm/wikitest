@@ -6,7 +6,6 @@
 *Put your Cockatrice version number & build date here! You find them inside the app: `Help` --> `About Cockatrice` (e.g. "2d53ce9 (2016-02-18)")*
 
 ___
-<br>
 
 
 *Explain your Issue/Request/Suggestion in detail here!*
