@@ -24,7 +24,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 
 - Latest full release (**recommended**): [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![Release Date - remove this label once badge is working!](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
 
-- Latest development version: [![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![Pre-Release Date - remove this label once badge is working!](https://img.shields.io/github/release-date/Cockatrice/Cockatrice/all.svg) ![DL Count badge for Pre-Release missing - exchange/remove this hint once available](url missing)
+- Latest development version: [![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![Pre-Release Date - remove this label once badge is working!](https://img.shields.io/github/release-date/Cockatrice/Cockatrice/all.svg) [![DL Count on latest Pre-Release - no badge yet](badge url missing)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
    - Development builds may not be stable and/or contain several bugs.
    - If you'd like to be a Cockatrice Beta Tester, use this version.
    - More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
@@ -35,7 +35,8 @@ We offer downloads for all full releases (recommended) and the latest developmen
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
 If you'd like to contribute code to the project, please review [the guidelines](https://github.com/Cockatrice/Cockatrice/blob/master/.github/CONTRIBUTING.md).
-We maintain a tag for "easy" changes on our issue tracker: issues tagged in this way provide a simple way to get started. [Issues tagged as Easy Changes](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+Change%22)
+We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as Easy Changes](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Easy Change.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+Change%22)<br>
+We are also participating in every years [Hacktoberfest](https://hacktoberfest.digitalocean.com/) by DigitalOcean & GitHub: [![Issues tagged for Hacktoberfest](https://img.shields.io/github/issues/Cockatrice/Cockatrice/hacktoberfest.svg)](https://github.com/Cockatrice/Cockatrice/issues?utf8=%E2%9C%93&q=is%3Aopen%20is%3Aissue%20label%3A%22hacktoberfest%22%20)
 
 Check our long-term project **roadmap** with some visions [here](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit).
 
