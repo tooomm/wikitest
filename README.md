@@ -12,7 +12,7 @@
 </pre><br>
 
 
-# Cockatrice [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg)](https://github.com/Cockatrice/Cockatrice/commits/master)
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg)](https://github.com/Cockatrice/Cockatrice/commits/master)
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
 This project is written in C++ and is using the Qt5 libraries.<br>
@@ -35,7 +35,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
 If you'd like to contribute code to the project, please review [the guidelines](https://github.com/Cockatrice/Cockatrice/blob/master/.github/CONTRIBUTING.md).
-We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as Easy Changes](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Easy Change.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+Change%22)<br>
+We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as Easy Changes](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Easy%20Change.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+Change%22)<br>
 We are also participating in every years [Hacktoberfest](https://hacktoberfest.digitalocean.com/) by DigitalOcean & GitHub: [![Issues tagged for Hacktoberfest](https://img.shields.io/github/issues/Cockatrice/Cockatrice/hacktoberfest.svg)](https://github.com/Cockatrice/Cockatrice/issues?utf8=%E2%9C%93&q=is%3Aopen%20is%3Aissue%20label%3A%22hacktoberfest%22%20)
 
 Check our long-term project **roadmap** with some visions [here](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit).
