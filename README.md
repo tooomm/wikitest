@@ -12,7 +12,7 @@
 </pre><br>
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=last%20change)](https://github.com/Cockatrice/Cockatrice/commits/master)
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=recent%20change)](https://github.com/Cockatrice/Cockatrice/commits/master)
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
 This project is written in C++ and is using the Qt5 libraries.<br>
