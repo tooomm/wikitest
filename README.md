@@ -42,9 +42,9 @@ If you'd like to contribute code to the project, please review [the guidelines](
 We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as Easy Changes](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Easy%20Change.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+Change%22)<br>
 We are also participating in every years [Hacktoberfest](https://hacktoberfest.digitalocean.com/) by DigitalOcean & GitHub: [![Issues tagged for Hacktoberfest](https://img.shields.io/github/issues/Cockatrice/Cockatrice/hacktoberfest.svg)](https://github.com/Cockatrice/Cockatrice/issues?utf8=%E2%9C%93&q=is%3Aopen%20is%3Aissue%20label%3A%22hacktoberfest%22%20)
 
-Check our long-term project **roadmap** with some visions [here](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit).
-
 We try to be very responsive to new issues. We'll try to give you advice on how a feature should be implemented / advice on places the codebase is doing something similar before you get too far along with a PR.
+
+Check our long-term project **roadmap** with some visions [here](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit).
 
 
 # Community Resources
