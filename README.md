@@ -22,8 +22,11 @@ This project is written in C++ and is using the Qt5 libraries.<br>
 
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
+#### TODO
 ** for better overview: use link shortcuts to not confuse badges - at other places in readme, too?! **
 ** minimize badge labels for not displaying badges **
+** change colors for badges, uniformity + color system **
+** change gitter badge back to original, reduce shields queries? **
 
 - Latest full release (**recommended**):<br>
 [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![Release Date - remove this label once badge is working!](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
