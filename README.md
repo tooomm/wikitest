@@ -26,7 +26,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **for better overview: use link shortcuts to not confuse badges - at other places in readme, too?!**<br>
 >- **minimize badge labels for not displaying badges**<br>
 >- **change colors for badges, uniformity + color system**<br>
->- **change gitter badge back to original, reduce shields queries?**<br>
+>- **change alterative link names if badge can't get loaded - uniform, short, simple**<br>
 
 - Latest full release (**recommended**):<br>
 [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![Release Date - remove this label once badge is working!](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
@@ -38,7 +38,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
    - More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 
 
-# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
+# Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
