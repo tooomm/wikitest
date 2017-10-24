@@ -40,6 +40,8 @@ We offer downloads for all full releases (recommended) and the latest developmen
 
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
+# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?style=for-the-badge)](https://gitter.im/Cockatrice/Cockatrice)
+
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
 If you'd like to contribute code to the project, please review [the guidelines](https://github.com/Cockatrice/Cockatrice/blob/master/.github/CONTRIBUTING.md).
@@ -70,6 +72,8 @@ Check out our [Translator FAQ](https://github.com/Cockatrice/Cockatrice/wiki/Tra
 
 
 # Building [![Travis Build Status - master](https://travis-ci.org/Cockatrice/Cockatrice.svg?branch=master)](https://travis-ci.org/Cockatrice/Cockatrice) [![Appveyor Build Status - master](https://ci.appveyor.com/api/projects/status/lp5h0dhk4mhmeps7/branch/master?svg=true)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master) ([![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build)](https://travis-ci.org/Cockatrice/Cockatrice) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master))
+
+# Building [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis&style=for-the-badge)](https://travis-ci.org/Cockatrice/Cockatrice) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
 
 **Detailed compiling instructions are on the Cockatrice wiki under [Compiling Cockatrice](https://github.com/Cockatrice/Cockatrice/wiki/Compiling-Cockatrice)**
 
@@ -132,6 +136,8 @@ More infos on how to use Servatrice with Docker can be found in our [wiki](https
 
 
 # License [![GPLv2 License](https://img.shields.io/github/license/Cockatrice/Cockatrice.svg)](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE)
+
+# License [![GPLv2 License](https://img.shields.io/github/license/Cockatrice/Cockatrice.svg?style=for-the-badge)](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE)
 
 Cockatrice is free software, licensed under the [GPLv2](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE).
 
