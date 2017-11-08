@@ -27,6 +27,9 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **minimize badge labels for not displaying badges**<br>
 >- **change colors for badges, uniformity + color system**<br>
 >- **change alterative link names if badge can't get loaded - uniform, short, simple**<br>
+>- **possible to have a backup pic once main badge doesn't load? original travis badge update for shields fail e.g**<br>
+>- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br>
+>- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff**<br>
 
 - Latest full release (**recommended**):<br>
 [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg?style=for-the-badge)](https://github.com/cockatrice/cockatrice/releases/latest) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?style=for-the-badge) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?style=for-the-badge)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
