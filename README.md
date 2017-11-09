@@ -16,20 +16,20 @@
 
 ---
 
-tests with backup pic (use real badges, gitter or travis)
+tests with backup pic (real pic: ![](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg) / backup pic: ![](https://badges.gitter.im/Cockatrice/Cockatrice.svg))
 - nested `![]()` [works for real pic / works NOT for backup]
-![![](https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png)](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated)
+![![](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg)
 
 - use object data in case img src unavailable [works for real pic / unknown]
-<object data="https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png" type="image/png">
-<img src="https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated" />
+<object data="https://badges.gitter.im/Cockatrice/Cockatrice.svg" type="image/svg+xml">
+<img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg"/>
 </object>
 
 - use background image (first) which is overlayed by other if able to load main (second) [works NOT for real pic / unknown]
-<img style="background-image: url(https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png), url(https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated);"></img>
+<img style="background-image: url(https://badges.gitter.im/Cockatrice/Cockatrice.svg), url(https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg);"></img>
 
 - javascript onerror [works for real pic / unknown]
-<img src="https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated" onerror="javascript:this.src='https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png'">
+<img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg" onerror="javascript:this.src='https://badges.gitter.im/Cockatrice/Cockatrice.svg'">
 
 ---
 
