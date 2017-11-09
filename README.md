@@ -12,7 +12,26 @@
 </pre><br>
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated)](https://github.com/Cockatrice/Cockatrice/commits/master)
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg "Repo Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repo Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+
+---
+
+tests with backup pic (use real badges, gitter or travis)
+- nested `![]()` [works for real pic / works NOT for backup]
+![![](https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png)](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated)
+
+- use object data in case img src unavailable [works for real pic / unknown]
+<object data="https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png" type="image/png">
+<img src="https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated" />
+</object>
+
+- use background image (first) which is overlayed by other if able to load main (second) [works NOT for real pic / unknown]
+<img style="background-image: url(https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png), url(https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated);"></img>
+
+- javascript onerror [works for real pic / unknown]
+<img src="https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated" onerror="javascript:this.src='https://user-images.githubusercontent.com/7288322/32297884-8b4666a0-bfb5-11e7-9264-bd76325d6a6a.png'">
+
+---
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
 This project is written in C++ and is using the Qt5 libraries.<br>
@@ -33,7 +52,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **actually that's just a use of footnotes?! https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
 
 - Latest full release (**recommended**):<br>
-[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg?style=for-the-badge)](https://github.com/cockatrice/cockatrice/releases/latest) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?style=for-the-badge) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?style=for-the-badge)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
+[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
 
 - Latest development version:<br>
 [![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?label=pre-release)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
