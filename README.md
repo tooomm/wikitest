@@ -30,6 +30,8 @@ tests with backup pic (real pic: ![](https://img.shields.io/gitter/room/Cockatri
 
 - javascript onerror [works for real pic / unknown]
 <img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg" onerror="javascript:this.src='https://badges.gitter.im/Cockatrice/Cockatrice.svg'">
+- javascript onerror (other appraoch) [works for real pic / unknown]
+<img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice" onError="this.onerror=null;this.src='https://badges.gitter.im/Cockatrice/Cockatrice.svg';" />
 
 ---
 
