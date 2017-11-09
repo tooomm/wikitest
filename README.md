@@ -12,7 +12,7 @@
 </pre><br>
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg?style=for-the-badge) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=recent%20change&style=for-the-badge)](https://github.com/Cockatrice/Cockatrice/commits/master)
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated)](https://github.com/Cockatrice/Cockatrice/commits/master)
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
 This project is written in C++ and is using the Qt5 libraries.<br>
@@ -49,7 +49,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
 If you'd like to contribute code to the project, please review [the guidelines](https://github.com/Cockatrice/Cockatrice/blob/master/.github/CONTRIBUTING.md).
-We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as Good first issues](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Good%20first%20issue.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+first+issue%22)<br>
+We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as "Good first issue"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Good%20first%20issue.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aissue+is%3Aopen+label%3A%22Good+first+issue%22) [![Issues tagged as "Help Wanted"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Help%20Wanted.svg)](https://github.com/Cockatrice/Cockatrice/issues?q=is%3Aissue+is%3Aopen+label%3A%22Help+Wanted%22)<br>
 We are also participating in every years [Hacktoberfest](https://hacktoberfest.digitalocean.com/) by DigitalOcean & GitHub: [![Issues tagged for Hacktoberfest](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Hacktoberfest.svg)](https://github.com/Cockatrice/Cockatrice/issues?utf8=%E2%9C%93&q=is%3Aopen%20is%3Aissue%20label%3A%22Hacktoberfest%22%20)
 
 We try to be very responsive to new issues. We'll try to give you advice on how a feature should be implemented / advice on places the codebase is doing something similar before you get too far along with a PR.
