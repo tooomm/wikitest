@@ -2,7 +2,7 @@
 
 ---
 
->&nbsp;&nbsp;&nbsp; **Table of Contents** &nbsp;&nbsp; [Cockatrice](#cockatrice--) | [Downloads](#downloads-) | [Get Involved](#get-involved-) | [Community](#community-resources) | [Translation](#translation-status-) | [Building](#building--) | [Running](#running) | [License](#license-)
+&nbsp; **Table of Contents** &nbsp;&nbsp; [Cockatrice](#cockatrice--) | [Downloads](#downloads-) | [Get Involved](#get-involved-) | [Community](#community-resources) | [Translation](#translation-status-) | [Building](#building--) | [Running](#running) | [License](#license-)
 
 ---
 
@@ -57,6 +57,12 @@ We offer downloads for all full releases (recommended) and the latest developmen
 <br><pre>
 Latest **stable** release:<br>
 [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg)
+</pre><pre>
+Latest **beta** version:
+[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40)](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Aclosed) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorB=f37f40)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg)<br>
+    &#9679; Use with caution! Beta builds may not be stable and/or contain several bugs
+    &#9679; If you'd like to be a Cockatrice Beta Tester, use this version
+    &#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 </pre>
 
 >Latest `beta` version:<br>
