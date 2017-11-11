@@ -55,10 +55,10 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **actually that's just a use of footnotes?! https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
 
 - Latest `stable` release:<br>
-[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
+[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg)<br>
 
 - Latest `beta` version:<br>
-[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorB=f37f40)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg)
    - Development builds may not be stable and/or contain several bugs.
    - If you'd like to be a Cockatrice Beta Tester, use this version.
    - More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
