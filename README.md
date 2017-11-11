@@ -40,7 +40,7 @@ Cockatrice is an open-source multiplatform supported program for playing tableto
 This project is written in C++ and is using the Qt5 libraries.<br>
 
 
-# Downloads [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?style=for-the-badge)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+# Downloads [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
 
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
@@ -54,11 +54,11 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff & https://stackoverflow.com/questions/24580042/github-markdown-are-macros-and-variables-possible**<br>
 >- **actually that's just a use of footnotes?! https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
 
-- Latest full release (**recommended**):<br>
+- Latest `stable` release:<br>
 [![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)<br>
 
-- Latest development version:<br>
-[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?label=pre-release)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+- Latest `beta` version:<br>
+[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) ![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
    - Development builds may not be stable and/or contain several bugs.
    - If you'd like to be a Cockatrice Beta Tester, use this version.
    - More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
