@@ -40,7 +40,7 @@ Cockatrice is an open-source multiplatform supported program for playing tableto
 This project is written in C++ and is using the Qt5 libraries.<br>
 
 
-# Downloads [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+# Downloads [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
 
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
@@ -56,12 +56,11 @@ We offer downloads for all full releases (recommended) and the latest developmen
 
 <br><pre>
 Latest **stable** release:<br>
-[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg)](https://github.com/cockatrice/cockatrice/releases/latest) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg)
+[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg?colorB=4ac41d)](https://github.com/cockatrice/cockatrice/releases/latest) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?colorB=4ac41d)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg)
 </pre><pre>
-Latest **beta** version:
+Download latest **beta** version to be a *Cockatrice Beta Tester*:
 [![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40)](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Aclosed) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorB=f37f40)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg)<br>
     &#9679; Use with caution! Beta builds may not be stable and/or contain several bugs
-    &#9679; If you'd like to be a Cockatrice Beta Tester, use this version
     &#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 </pre>
 
@@ -74,7 +73,7 @@ Latest **beta** version:
 
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?style=for-the-badge)](https://gitter.im/Cockatrice/Cockatrice)
+# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
@@ -95,6 +94,8 @@ Check our long-term project **roadmap** with some visions [here](https://docs.go
 
 
 # Translation Status [![Cockatrice on Transiflex](https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png)](https://www.transifex.com/projects/p/cockatrice/)
+
+# Translation Status [![Cockatrice on Transiflex](https://img.shields.io/badge/translate-on%20transifex-blue.svg)](https://www.transifex.com/projects/p/cockatrice/)
 
 Cockatrice uses Transifex for translations. You can help us bring Cockatrice and Oracle to your language or just edit single wordings right from within your browser by simply visiting our [Transifex project page](https://www.transifex.com/projects/p/cockatrice/).<br>
 
