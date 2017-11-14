@@ -63,12 +63,19 @@ Download latest **beta** version to be a *Cockatrice Beta Tester*:
     &#9679; Use with caution! Beta builds may not be stable and/or contain several bugs
     &#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 </pre>
+<br>
 
+---
+
+<br><pre>
+Latest **stable** release:<br>
+[![Download from GitHub Releases](https://img.shields.io/github/release/cockatrice/cockatrice.svg?colorB=4ac41d)](https://github.com/cockatrice/cockatrice/releases/latest) [![Download Count on Latest Release](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?colorB=4ac41d)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?label=released&colorB=4ac41d)
+</pre>
 >Latest `beta` version:<br>
-[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40)](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Aclosed) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorB=f37f40)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg)
->    - Development builds may not be stable and/or contain several bugs.
->    - If you'd like to be a Cockatrice Beta Tester, use this version.
->    - More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
+[![Download from GitHub Pre-Releases](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?)](https://github.com/cockatrice/cockatrice/releases) [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorB=f37f40)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorB=f37f40)](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Aclosed) ![](https://img.shields.io/github/release-date-pre/Cockatrice/Cockatrice.svg)<br>
+>&nbsp;&nbsp; &#9679; Development builds may not be stable and/or contain several bugs.<br>
+>&nbsp;&nbsp; &#9679; If you'd like to be a Cockatrice Beta Tester, use this version.<br>
+>&nbsp;&nbsp; &#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 
 
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
