@@ -3,7 +3,7 @@
 ---
 
 <p align='center'>
-   <a href="#cockatrice--">Cockatrice</a> | 
+   <a href="#cockatrice--"><b>Cockatrice</b></a> | 
    <a href="#downloads-">Downloads</a> | 
    <a href="#get-involved-">Get Involved</a> | 
    <a href="#community-resources">Community</a> | 
