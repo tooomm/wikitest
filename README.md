@@ -3,13 +3,13 @@
 ---
 
 <p align='center'>
-   <a href="#cockatrice--"><b>Cockatrice</b></a> | 
-   <a href="#downloads-">Downloads</a> | 
-   <a href="#get-involved-">Get Involved</a> | 
-   <a href="#community-resources">Community</a> | 
-   <a href="#translation-status-">Translation</a> | 
-   <a href="#building--">Building</a> | 
-   <a href="#running">Running</a> | 
+   <a href="#cockatrice--"><b>Cockatrice</b></a> <b>|</b> 
+   <a href="#downloads-">Downloads</a> <b>|</b> 
+   <a href="#get-involved-">Get Involved</a> <b>|</b> 
+   <a href="#community-resources">Community</a> <b>|</b> 
+   <a href="#translation-status-">Translation</a> <b>|</b> 
+   <a href="#building--">Building</a> <b>|</b> 
+   <a href="#running">Running</a> <b>|</b> 
    <a href="#license-">License</a>
 </p>
 
@@ -62,6 +62,7 @@ We offer downloads for all full releases (recommended) and the latest developmen
 >- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br>
 >- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff & https://stackoverflow.com/questions/24580042/github-markdown-are-macros-and-variables-possible**<br>
 >- **actually that's just a use of footnotes?!** https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
+>- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
 
 <br><pre>
 **Latest stable release:**<br>
