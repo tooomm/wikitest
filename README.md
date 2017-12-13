@@ -111,11 +111,10 @@ If you'd like to contribute code to the project, please review [the guidelines](
 We maintain a tag for "easy" changes on our issue tracker, issues tagged in this way provide a simple way to get started: [![Issues tagged as "Good first issue"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Good%20first%20issue.svg)](https://github.com/Cockatrice/Cockatrice/labels/Good%20first%20issue) [![Issues tagged as "Help Wanted"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Help%20Wanted.svg)](https://github.com/Cockatrice/Cockatrice/labels/Help%20Wanted)<br>
 We are also participating in every years [Hacktoberfest](https://hacktoberfest.digitalocean.com/) by DigitalOcean & GitHub: [![Issues tagged for Hacktoberfest](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Hacktoberfest.svg)](https://github.com/Cockatrice/Cockatrice/labels/Hacktoberfest)
 
-[![Issues tagged as "Roadmap"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Roadmap.svg)](https://github.com/Cockatrice/Cockatrice/labels/Roadmap)
 
 We try to be very responsive to new issues. We'll try to give you advice on how a feature should be implemented / advice on places the codebase is doing something similar before you get too far along with a PR.
 
-Check our long-term project **roadmap** with some visions [here](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit).
+Check our long-term project **roadmap** with some [visions](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit) &mdash; or review our more short/mid term list: [![Issues tagged as "Roadmap"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Roadmap.svg)](https://github.com/Cockatrice/Cockatrice/labels/Roadmap)
 
 
 # Community Resources
