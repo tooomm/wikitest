@@ -38,7 +38,7 @@ script: bash ./.travis/travis-compile.sh
 deploy:
   provider: releases
   api_key:
-    secure: "mLMF41q7xgOR1sjczsilEy7HQis2PkZCzhfOGbn/8FoOQnmmPOZjrsdhn06ZSl3SFsbfCLuClDYXAbFscQmdgjcGN5AmHV+JYfW650QEuQa/f4/lQFsVRtEqUA1O3FQ0OuRxdpCfJubZBdFVH8SbZ93GLC5zXJbkWQNq+xCX1fU="
+    secure: "mLMF41q7xgOR1sjczsilEy7Hfe2"
   file_glob: true
   file: "build/Cockatrice-*"
   prerelease: true
