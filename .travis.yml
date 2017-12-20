@@ -55,7 +55,7 @@ deploy:
     prerelease: true
     on:
       tags: true
-      condition: "$BUILDTYPE = Release && $TRAVIS_TAG =~ [0-9]-beta"
+      condition: "$BUILDTYPE = Release && $TRAVIS_TAG =~ .[0-9]-beta[1-9]"
       
 # Deploy config for "stable" releases
 #  - provider: releases
