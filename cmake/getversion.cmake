@@ -160,7 +160,7 @@ function(get_tag_name commit)
 
 		# get version name from github
 		set(GIT_TAG_TEMP_FILE "${PROJECT_BINARY_DIR}/tag_informations.txt")
-		set(GIT_TAG_TEMP_URL "https://api.github.com/repos/Cockatrice/Cockatrice/releases/tags/${GIT_TAG}")
+		set(GIT_TAG_TEMP_URL "https://api.github.com/repos/tooomm/Cockatrice/releases/tags/${GIT_TAG}")
 		message(STATUS "Fetching tag informations from ${GIT_TAG_TEMP_URL}")
 		file(REMOVE "${GIT_TAG_TEMP_FILE}")
 		file(DOWNLOAD "${GIT_TAG_TEMP_URL}" "${GIT_TAG_TEMP_FILE}" STATUS status LOG log INACTIVITY_TIMEOUT 30 TIMEOUT 300 SHOW_PROGRESS)
