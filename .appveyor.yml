@@ -83,17 +83,35 @@ build_script:
         
 test: off
 
+
+# Builds for pull requests skip the deployment step altogether
 deploy:
-  provider: GitHub
-  auth_token:
-    secure: p+7wPVry2XEa6TBm9XH8IaQZbBmXQ/4afal
-  description: "Dev build of Cockatrice"
-  artifact: /.*\.exe/
-  draft: false
-  prerelease: true
-  force_update: true
-  on:
-    appveyor_repo_tag: true
+# Deploy config for "beta" releases
+  - provider: GitHub
+    auth_token:
+      secure: p+7wPVry2XEa6TBm9XH8kghgf6
+    release: "Cockatrice $APPVEYOR_REPO_TAG_NAME"    
+    description: "Beta release of Cockatrice"
+    artifact: /.*\.exe/
+    force_update: true
+    draft: false
+    prerelease: true
+    on:
+      APPVEYOR_REPO_TAG: true
+      APPVEYOR_REPO_TAG_NAME: /([0-9]|[1-9][0-9])(.([0-9]|[1-9][0-9])){2}-beta[1-9]$/
+      
+# Deploy config for "stable" releases
+  - provider: GitHub
+    auth_token:
+       secure: p+7wPVry2XEa6TBm9XH8nm877b
+    artifact: /.*\.exe/
+    force_update: true
+    draft: false
+    prerelease: false
+    on:
+      APPVEYOR_REPO_TAG: true
+      APPVEYOR_REPO_TAG_NAME: /([0-9]|[1-9][0-9])(.([0-9]|[1-9][0-9])){2}$/
+
 
 # official validator for ".appveyor.yml" config file: https://ci.appveyor.com/tools/validate-yaml
 # appveyor config documentation: https://www.appveyor.com/docs/build-configuration/
