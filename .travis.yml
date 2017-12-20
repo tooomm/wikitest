@@ -35,7 +35,7 @@ install: bash ./.travis/travis-dependencies.sh
 
 script: bash ./.travis/travis-compile.sh
 
-after_success: "echo $TRAVIS_TAG"
+after_success: "echo $TRAVIS_TAG $BUILDTYPE"
 
 before_deploy: "echo $TRAVIS_TAG"
 
@@ -55,7 +55,7 @@ deploy:
     prerelease: true
     on:
       tags: true
-      condition: "$TRAVIS_TAG = 2017-12-20-Development-2.4.1-beta7"
+      condition: "$BUILDTYPE = Release && $TRAVIS_TAG = 2017-12-20-Development-2.4.1-beta8"
       
 # Deploy config for "stable" releases
 #  - provider: releases
