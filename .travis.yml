@@ -46,13 +46,12 @@ deploy:
   overwrite: true
   on:
     tags: true
-    repo: Cockatrice/Cockatrice
     condition: $BUILDTYPE = Release
 
 notifications:
   webhooks:
     urls:
-    - https://webhooks.gitter.im/e/d94969c3b01b22cbdcb7
+#    - https://webhooks.gitter.im/e/d94969c3b01b22cbdcb7
     on_success: change
     on_failure: change
     on_start: never
