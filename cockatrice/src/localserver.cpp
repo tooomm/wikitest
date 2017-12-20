@@ -3,14 +3,18 @@
 #include "server_room.h"
 
 LocalServer::LocalServer(QObject *parent)
-    : Server(false, parent)
+    : Server(parent)
 {
     setDatabaseInterface(new LocalServer_DatabaseInterface(this));
-    addRoom(new Server_Room(0, 0, QString(), QString(), QString(), false, QString(), QStringList(), this));
+    addRoom(new Server_Room(0, 0, QString(), QString(), QString(), QString(), false, QString(), QStringList(), this));
 }
 
 LocalServer::~LocalServer()
 {
+    // LocalServer is single threaded so it doesn't need locks on this
+    while (!clients.isEmpty())
+        clients.first()->prepareDestroy();
+
     prepareDestroy();
 }
 

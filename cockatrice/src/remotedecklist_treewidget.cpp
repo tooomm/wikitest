@@ -198,7 +198,7 @@ Qt::ItemFlags RemoteDeckList_TreeModel::flags(const QModelIndex &index) const
 
 QModelIndex RemoteDeckList_TreeModel::nodeToIndex(Node *node) const
 {
-    if (node == root)
+    if (node == nullptr || node == root)
         return QModelIndex();
     return createIndex(node->getParent()->indexOf(node), 0, node);
 }
@@ -283,11 +283,7 @@ RemoteDeckList_TreeWidget::RemoteDeckList_TreeWidget(AbstractClient *_client, QW
     setModel(proxyModel);
     connect(treeModel, SIGNAL(treeRefreshed()), this, SLOT(expandAll()));
 
-#if QT_VERSION < 0x050000
-    header()->setResizeMode(QHeaderView::ResizeToContents);
-#else
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
     setUniformRowHeights(true);
     setSortingEnabled(true);
     proxyModel->sort(0, Qt::AscendingOrder);

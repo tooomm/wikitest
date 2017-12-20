@@ -5,22 +5,37 @@ if (WIN32)
   # Get standard installation paths for OpenSSL under Windows 
 
   # http://www.slproweb.com/products/Win32OpenSSL.html
-  set(_OPENSSL_ROOT_HINTS
-    ${OPENSSL_ROOT_DIR}
-    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;Inno Setup: App Path]"
-    "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;Inno Setup: App Path]"
-    ENV OPENSSL_ROOT_DIR
-    )
-  file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
-  set(_OPENSSL_ROOT_PATHS
-    "${_programfiles}/OpenSSL"
-    "${_programfiles}/OpenSSL-Win32"
-    "${_programfiles}/OpenSSL-Win64"
-    "C:/OpenSSL/"
-    "C:/OpenSSL-Win32/"
-    "C:/OpenSSL-Win64/"
-    )
-  unset(_programfiles)
+
+  if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    # target win64
+    set(_OPENSSL_ROOT_HINTS
+      ${OPENSSL_ROOT_DIR}
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;Inno Setup: App Path]"
+      ENV OPENSSL_ROOT_DIR
+      )
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
+    set(_OPENSSL_ROOT_PATHS
+      "${_programfiles}/OpenSSL-Win64"
+      "C:/OpenSSL-Win64/"
+      )
+    unset(_programfiles)
+  else( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    # target win32
+    set(_OPENSSL_ROOT_HINTS
+      ${OPENSSL_ROOT_DIR}
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;Inno Setup: App Path]"
+      ENV OPENSSL_ROOT_DIR
+      )
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
+    set(_OPENSSL_ROOT_PATHS
+      "${_programfiles}/OpenSSL"
+      "${_programfiles}/OpenSSL-Win32"
+      "C:/OpenSSL/"
+      "C:/OpenSSL-Win32/"
+      )
+    unset(_programfiles)
+  endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+
 else ()
   set(_OPENSSL_ROOT_HINTS
     ${OPENSSL_ROOT_DIR}
@@ -33,8 +48,10 @@ set(_OPENSSL_ROOT_HINTS_AND_PATHS
     PATHS ${_OPENSSL_ROOT_PATHS}
     )
 
-FIND_FILE(WIN32SSLRUNTIME_LIBEAY NAMES libeay32.dll ${_OPENSSL_ROOT_HINTS_AND_PATHS})
-FIND_FILE(WIN32SSLRUNTIME_SSLEAY NAMES ssleay32.dll ${_OPENSSL_ROOT_HINTS_AND_PATHS})
+# For OpenSSL < 1.1, they are named libeay32 and ssleay32 and even if the dll is 64bit, it's still suffixed as *32.dll
+# For OpenSSL >= 1.1, they are named libcrypto and libssl with no suffix
+FIND_FILE(WIN32SSLRUNTIME_LIBEAY NAMES libeay32.dll libcrypto.dll ${_OPENSSL_ROOT_HINTS_AND_PATHS})
+FIND_FILE(WIN32SSLRUNTIME_SSLEAY NAMES ssleay32.dll libssl.dll ${_OPENSSL_ROOT_HINTS_AND_PATHS})
 
 
 IF(WIN32SSLRUNTIME_LIBEAY AND WIN32SSLRUNTIME_SSLEAY)

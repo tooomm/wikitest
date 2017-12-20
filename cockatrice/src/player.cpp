@@ -24,6 +24,7 @@
 #include <QPainter>
 #include <QMenu>
 #include <QDebug>
+#include <QRegExp>
 
 #include "pb/command_change_zone_properties.pb.h"
 #include "pb/command_reveal_cards.pb.h"
@@ -94,6 +95,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
       game(_parent),
       shortcutsActive(false),
       defaultNumberTopCards(1),
+      defaultNumberTopCardsToPlaceBelow(1),
       lastTokenDestroy(true),
       lastTokenTableRow(0),
       id(_id),
@@ -107,12 +109,14 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
 {
     userInfo = new ServerInfo_User;
     userInfo->CopyFrom(info);
-    
+
+
+
     connect(settingsCache, SIGNAL(horizontalHandChanged()), this, SLOT(rearrangeZones()));
     connect(settingsCache, SIGNAL(handJustificationChanged()), this, SLOT(rearrangeZones()));
-    
+
     playerArea = new PlayerArea(this);
-    
+
     playerTarget = new PlayerTarget(this, playerArea);
     qreal avatarMargin = (counterAreaWidth + CARD_HEIGHT + 15 - playerTarget->boundingRect().width()) / 2.0;
     playerTarget->setPos(QPointF(avatarMargin, avatarMargin));
@@ -126,7 +130,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
     HandCounter *handCounter = new HandCounter(playerArea);
     handCounter->setPos(base + QPointF(0, h + 10));
     qreal h2 = handCounter->boundingRect().height();
-    
+
     PileZone *grave = new PileZone(this, "grave", false, true, playerArea);
     grave->setPos(base + QPointF(0, h + h2 + 10));
 
@@ -138,19 +142,19 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
 
     table = new TableZone(this, this);
     connect(table, SIGNAL(sizeChanged()), this, SLOT(updateBoundingRect()));
-    
+
     stack = new StackZone(this, (int) table->boundingRect().height(), this);
-    
+
     hand = new HandZone(this, _local || (_parent->getSpectator() && _parent->getSpectatorsSeeEverything()), (int) table->boundingRect().height(), this);
     connect(hand, SIGNAL(cardCountChanged()), handCounter, SLOT(updateNumber()));
     connect(handCounter, SIGNAL(showContextMenu(const QPoint &)), hand, SLOT(showContextMenu(const QPoint &)));
-    
+
     updateBoundingRect();
 
     if (local) {
         connect(_parent, SIGNAL(playerAdded(Player *)), this, SLOT(addPlayer(Player *)));
         connect(_parent, SIGNAL(playerRemoved(Player *)), this, SLOT(removePlayer(Player *)));
-        
+
         aMoveHandToTopLibrary = new QAction(this);
         aMoveHandToTopLibrary->setData(QList<QVariant>() << "deck" << 0);
         aMoveHandToBottomLibrary = new QAction(this);
@@ -159,7 +163,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
         aMoveHandToGrave->setData(QList<QVariant>() << "grave" << 0);
         aMoveHandToRfg = new QAction(this);
         aMoveHandToRfg->setData(QList<QVariant>() << "rfg" << 0);
-        
+
         connect(aMoveHandToTopLibrary, SIGNAL(triggered()), hand, SLOT(moveAllToZone()));
         connect(aMoveHandToBottomLibrary, SIGNAL(triggered()), hand, SLOT(moveAllToZone()));
         connect(aMoveHandToGrave, SIGNAL(triggered()), hand, SLOT(moveAllToZone()));
@@ -173,7 +177,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
         aMoveGraveToHand->setData(QList<QVariant>() << "hand" << 0);
         aMoveGraveToRfg = new QAction(this);
         aMoveGraveToRfg->setData(QList<QVariant>() << "rfg" << 0);
-        
+
         connect(aMoveGraveToTopLibrary, SIGNAL(triggered()), grave, SLOT(moveAllToZone()));
         connect(aMoveGraveToBottomLibrary, SIGNAL(triggered()), grave, SLOT(moveAllToZone()));
         connect(aMoveGraveToHand, SIGNAL(triggered()), grave, SLOT(moveAllToZone()));
@@ -187,7 +191,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
         aMoveRfgToHand->setData(QList<QVariant>() << "hand" << 0);
         aMoveRfgToGrave = new QAction(this);
         aMoveRfgToGrave->setData(QList<QVariant>() << "grave" << 0);
-        
+
         connect(aMoveRfgToTopLibrary, SIGNAL(triggered()), rfg, SLOT(moveAllToZone()));
         connect(aMoveRfgToBottomLibrary, SIGNAL(triggered()), rfg, SLOT(moveAllToZone()));
         connect(aMoveRfgToHand, SIGNAL(triggered()), rfg, SLOT(moveAllToZone()));
@@ -214,7 +218,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
     if (local) {
         aViewSideboard = new QAction(this);
         connect(aViewSideboard, SIGNAL(triggered()), this, SLOT(actViewSideboard()));
-    
+
         aDrawCard = new QAction(this);
         connect(aDrawCard, SIGNAL(triggered()), this, SLOT(actDrawCard()));
         aDrawCards = new QAction(this);
@@ -286,6 +290,15 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
 
     graveMenu = playerMenu->addMenu(QString());
     graveMenu->addAction(aViewGraveyard);
+
+    if (local) {
+        mRevealRandomGraveyardCard = graveMenu->addMenu(QString());
+        QAction *newAction = mRevealRandomGraveyardCard->addAction(QString());
+        newAction->setData(-1);
+        connect(newAction, SIGNAL(triggered()), this, SLOT(actRevealRandomGraveyardCard()));
+        allPlayersActions.append(newAction);
+        mRevealRandomGraveyardCard->addSeparator();
+    }
     grave->setMenu(graveMenu, aViewGraveyard);
 
     rfgMenu = playerMenu->addMenu(QString());
@@ -320,14 +333,14 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
 
         aRollDie = new QAction(this);
         connect(aRollDie, SIGNAL(triggered()), this, SLOT(actRollDie()));
-    
+
         aCreateToken = new QAction(this);
         connect(aCreateToken, SIGNAL(triggered()), this, SLOT(actCreateToken()));
-        
+
         aCreateAnotherToken = new QAction(this);
         connect(aCreateAnotherToken, SIGNAL(triggered()), this, SLOT(actCreateAnotherToken()));
         aCreateAnotherToken->setEnabled(false);
-        
+
         createPredefinedTokenMenu = new QMenu(QString());
 
         playerMenu->addSeparator();
@@ -343,7 +356,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
         playerMenu->addSeparator();
         sayMenu = playerMenu->addMenu(QString());
         initSayMenu();
-        
+
         aCardMenu = new QAction(this);
         playerMenu->addSeparator();
         playerMenu->addAction(aCardMenu);
@@ -362,13 +375,10 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
         createPredefinedTokenMenu = 0;
         aCardMenu = 0;
     }
-    
+
     aTap = new QAction(this);
     aTap->setData(cmTap);
     connect(aTap, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
-    aUntap = new QAction(this);
-    aUntap->setData(cmUntap);
-    connect(aUntap, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
     aDoesntUntap = new QAction(this);
     aDoesntUntap->setData(cmDoesntUntap);
     connect(aDoesntUntap, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
@@ -407,6 +417,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
     aMoveToTopLibrary->setData(cmMoveToTopLibrary);
     aMoveToBottomLibrary = new QAction(this);
     aMoveToBottomLibrary->setData(cmMoveToBottomLibrary);
+    aMoveToXfromTopOfLibrary = new QAction(this);
     aMoveToGraveyard = new QAction(this);
     aMoveToHand = new QAction(this);
     aMoveToHand->setData(cmMoveToHand);
@@ -415,10 +426,11 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
     aMoveToExile->setData(cmMoveToExile);
     connect(aMoveToTopLibrary, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
     connect(aMoveToBottomLibrary, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
+    connect(aMoveToXfromTopOfLibrary, SIGNAL(triggered()), this, SLOT(actMoveCardXCardsFromTop()));
     connect(aMoveToHand, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
     connect(aMoveToGraveyard, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
     connect(aMoveToExile, SIGNAL(triggered()), this, SLOT(cardMenuAction()));
-    
+
     aPlay = new QAction(this);
     connect(aPlay, SIGNAL(triggered()), this, SLOT(actPlay()));
     aHide = new QAction(this);
@@ -444,7 +456,7 @@ Player::Player(const ServerInfo_User &info, int _id, bool _local, TabGame *_pare
     const QList<Player *> &players = game->getPlayers().values();
     for (int i = 0; i < players.size(); ++i)
         addPlayer(players[i]);
-    
+
     rearrangeZones();
     retranslateUi();
     connect(&settingsCache->shortcuts(), SIGNAL(shortCutchanged()),this,SLOT(refreshShortcuts()));
@@ -456,13 +468,13 @@ Player::~Player()
     qDebug() << "Player destructor:" << getName();
 
     static_cast<GameScene *>(scene())->removePlayer(this);
-    
+
     clear();
     QMapIterator<QString, CardZone *> i(zones);
     while (i.hasNext())
         delete i.next().value();
     zones.clear();
-    
+
     delete playerMenu;
     delete userInfo;
 }
@@ -470,18 +482,19 @@ Player::~Player()
 void Player::clear()
 {
     clearArrows();
-    
+
     QMapIterator<QString, CardZone *> i(zones);
     while (i.hasNext())
         i.next().value()->clearContents();
-    
+
     clearCounters();
 }
 
 void Player::addPlayer(Player *player)
 {
-    if (player == this)
+    if (player == nullptr || player == this)
         return;
+
     for (int i = 0; i < playerLists.size(); ++i) {
         QAction *newAction = playerLists[i]->addAction(player->getName());
         newAction->setData(player->getId());
@@ -491,6 +504,9 @@ void Player::addPlayer(Player *player)
 
 void Player::removePlayer(Player *player)
 {
+    if (player == nullptr)
+        return;
+
     for (int i = 0; i < playerLists.size(); ++i) {
         QList<QAction *> actionList = playerLists[i]->actions();
         for (int j = 0; j < actionList.size(); ++j)
@@ -505,39 +521,33 @@ void Player::playerListActionTriggered()
 {
     QAction *action = static_cast<QAction *>(sender());
     QMenu *menu = static_cast<QMenu *>(action->parentWidget());
-    
+
     Command_RevealCards cmd;
     const int otherPlayerId = action->data().toInt();
     if (otherPlayerId != -1)
         cmd.set_player_id(otherPlayerId);
-    
+
     if (menu == mRevealLibrary) {
         cmd.set_zone_name("deck");
     } else if (menu == mRevealTopCard) {
         int decksize = zones.value("deck")->getCards().size();
         bool ok;
-        int number = 
-#if QT_VERSION < 0x050000
-            QInputDialog::getInteger(
-#else
-            QInputDialog::getInt(
-#endif
-            0, tr("Reveal top cards of library"), tr("Number of cards: (max. %1)").arg(decksize), defaultNumberTopCards, 1, decksize, 1, &ok);
+        int number = QInputDialog::getInt(0, tr("Reveal top cards of library"), tr("Number of cards: (max. %1)").arg(decksize), defaultNumberTopCards, 1, decksize, 1, &ok);
         if (ok) {
             cmd.set_zone_name("deck");
             cmd.set_top_cards(number);
             // backward compatibility: servers before #1051 only permits to reveal the first card
             cmd.set_card_id(0);
         }
-        
+
     } else if (menu == mRevealHand)
         cmd.set_zone_name("hand");
     else if (menu == mRevealRandomHandCard) {
         cmd.set_zone_name("hand");
-        cmd.set_card_id(-2);
+        cmd.set_card_id(RANDOM_CARD_FROM_ZONE);
     } else
         return;
-    
+
     sendGameCommand(cmd);
 }
 
@@ -552,17 +562,17 @@ void Player::rearrangeZones()
                 base += QPointF(0, hand->boundingRect().height());
             } else
                 handVisible = false;
-            
+
             stack->setPos(base);
             base += QPointF(stack->boundingRect().width(), 0);
-            
+
             table->setPos(base);
         } else {
             stack->setPos(base);
-            
+
             table->setPos(base.x() + stack->boundingRect().width(), 0);
             base += QPointF(0, table->boundingRect().height());
-            
+
             if (hand->contentsKnown()) {
                 handVisible = true;
                 hand->setPos(base);
@@ -572,13 +582,13 @@ void Player::rearrangeZones()
         hand->setWidth(table->getWidth() + stack->boundingRect().width());
     } else {
         handVisible = true;
-        
+
         hand->setPos(base);
         base += QPointF(hand->boundingRect().width(), 0);
-        
+
         stack->setPos(base);
         base += QPointF(stack->boundingRect().width(), 0);
-        
+
         table->setPos(base);
     }
     hand->setVisible(handVisible);
@@ -603,7 +613,7 @@ void Player::updateBoundingRect()
     } else
         bRect = QRectF(0, 0, width + hand->boundingRect().width() + table->boundingRect().width(), table->boundingRect().height());
     playerArea->setSize(CARD_HEIGHT + counterAreaWidth + 15, bRect.height());
-    
+
     emit sizeChanged();
 }
 
@@ -615,7 +625,7 @@ void Player::retranslateUi()
     playerMenu->setTitle(tr("Player \"%1\"").arg(QString::fromStdString(userInfo->name())));
     graveMenu->setTitle(tr("&Graveyard"));
     rfgMenu->setTitle(tr("&Exile"));
-    
+
     if (local) {
         moveHandMenu->setTitle(tr("&Move hand to..."));
         aMoveHandToTopLibrary->setText(tr("&Top of library"));
@@ -652,10 +662,11 @@ void Player::retranslateUi()
         aMoveTopCardsToExile->setText(tr("Move top cards to &exile..."));
         aMoveTopCardToBottom->setText(tr("Put top card on &bottom"));
         aMoveBottomCardToGrave->setText(tr("Put bottom card &in graveyard"));
-    
+
         handMenu->setTitle(tr("&Hand"));
         mRevealHand->setTitle(tr("&Reveal hand to..."));
         mRevealRandomHandCard->setTitle(tr("Reveal r&andom card to..."));
+        mRevealRandomGraveyardCard->setTitle(tr("Reveal random card to..."));
         sbMenu->setTitle(tr("&Sideboard"));
         libraryMenu->setTitle(tr("&Library"));
         countersMenu->setTitle(tr("&Counters"));
@@ -666,13 +677,13 @@ void Player::retranslateUi()
         aCreateAnotherToken->setText(tr("C&reate another token"));
         createPredefinedTokenMenu->setTitle(tr("Cr&eate predefined token"));
         sayMenu->setTitle(tr("S&ay"));
-        
+
         QMapIterator<int, AbstractCounter *> counterIterator(counters);
         while (counterIterator.hasNext())
             counterIterator.next().value()->retranslateUi();
 
         aCardMenu->setText(tr("C&ard"));
-        
+
         for (int i = 0; i < allPlayersActions.size(); ++i)
             allPlayersActions[i]->setText(tr("&All players"));
     }
@@ -680,8 +691,7 @@ void Player::retranslateUi()
     aPlay->setText(tr("&Play"));
     aHide->setText(tr("&Hide"));
     aPlayFacedown->setText(tr("Play &Face Down"));
-    aTap->setText(tr("&Tap"));
-    aUntap->setText(tr("&Untap"));
+    aTap->setText(tr("&Tap / Untap"));
     aDoesntUntap->setText(tr("Toggle &normal untapping"));
     aFlip->setText(tr("&Flip"));
     aPeek->setText(tr("&Peek at card face"));
@@ -714,6 +724,7 @@ void Player::retranslateUi()
     }
 
     aMoveToTopLibrary->setText(tr("&Top of library"));
+    aMoveToXfromTopOfLibrary->setText(tr("X cards from the top of library..."));
     aMoveToBottomLibrary->setText(tr("&Bottom of library"));
     aMoveToHand->setText(tr("&Hand"));
     aMoveToGraveyard->setText(tr("&Graveyard"));
@@ -727,10 +738,9 @@ void Player::retranslateUi()
 void Player::setShortcutsActive()
 {
     shortcutsActive = true;
-    
+
     aPlay->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aPlay"));
     aTap->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aTap"));
-    aUntap->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aUntap"));
     aDoesntUntap->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aDoesntUntap"));
     aFlip->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aFlip"));
     aPeek->setShortcuts(settingsCache->shortcuts().getShortcut("Player/aPeek"));
@@ -800,7 +810,7 @@ void Player::setShortcutsActive()
 void Player::setShortcutsInactive()
 {
     shortcutsActive = false;
-    
+
     aViewSideboard->setShortcut(QKeySequence());
     aViewLibrary->setShortcut(QKeySequence());
     aViewTopCards->setShortcut(QKeySequence());
@@ -841,10 +851,10 @@ void Player::setDeck(const DeckLoader &_deck)
 {
     deck = new DeckLoader(_deck);
     aOpenDeckInDeckEditor->setEnabled(deck);
-    
+
     createPredefinedTokenMenu->clear();
     predefinedTokens.clear();
-    InnerDecklistNode *tokenZone = dynamic_cast<InnerDecklistNode *>(deck->getRoot()->findChild("tokens"));
+    InnerDecklistNode *tokenZone = dynamic_cast<InnerDecklistNode *>(deck->getRoot()->findChild(DECK_ZONE_TOKENS));
 
     if (tokenZone)
         for (int i = 0; i < tokenZone->size(); ++i) {
@@ -867,13 +877,7 @@ void Player::actViewLibrary()
 void Player::actViewTopCards()
 {
     bool ok;
-    int number = 
-#if QT_VERSION < 0x050000
-    QInputDialog::getInteger(
-#else
-    QInputDialog::getInt(
-#endif
-        0, tr("View top cards of library"), tr("Number of cards:"), defaultNumberTopCards, 1, 2000000000, 1, &ok);
+    int number = QInputDialog::getInt(0, tr("View top cards of library"), tr("Number of cards:"), defaultNumberTopCards, 1, 2000000000, 1, &ok);
     if (ok) {
         defaultNumberTopCards = number;
         static_cast<GameScene *>(scene())->toggleZoneView(this, "deck", number);
@@ -885,7 +889,7 @@ void Player::actAlwaysRevealTopCard()
     Command_ChangeZoneProperties cmd;
     cmd.set_zone_name("deck");
     cmd.set_always_reveal_top_card(aAlwaysRevealTopCard->isChecked());
-    
+
     sendGameCommand(cmd);
 }
 
@@ -896,7 +900,19 @@ void Player::actOpenDeckInDeckEditor()
 
 void Player::actViewGraveyard()
 {
-    static_cast<GameScene *>(scene())->toggleZoneView(this, "grave", -1);
+    dynamic_cast<GameScene *>(scene())->toggleZoneView(this, "grave", -1);
+}
+
+void Player::actRevealRandomGraveyardCard()
+{
+    Command_RevealCards cmd;
+    QAction *action = dynamic_cast<QAction *>(sender());
+    const int otherPlayerId = action->data().toInt();
+    if (otherPlayerId != -1)
+        cmd.set_player_id(otherPlayerId);
+    cmd.set_zone_name("grave");
+    cmd.set_card_id(RANDOM_CARD_FROM_ZONE);
+    sendGameCommand(cmd);
 }
 
 void Player::actViewRfg()
@@ -928,14 +944,8 @@ void Player::actMulligan()
 
 void Player::actDrawCards()
 {
-    int number = 
-#if QT_VERSION < 0x050000
-    QInputDialog::getInteger(
-#else
-    QInputDialog::getInt(
-#endif
-    0, tr("Draw cards"), tr("Number:"));
-        if (number) {
+    int number = QInputDialog::getInt(0, tr("Draw cards"), tr("Number:"));
+    if (number) {
         Command_DrawCards cmd;
         cmd.set_number(number);
         sendGameCommand(cmd);
@@ -949,13 +959,7 @@ void Player::actUndoDraw()
 
 void Player::actMoveTopCardsToGrave()
 {
-    int number = 
-#if QT_VERSION < 0x050000
-    QInputDialog::getInteger(
-#else
-    QInputDialog::getInt(
-#endif
-    0, tr("Move top cards to grave"), tr("Number:"));
+    int number = QInputDialog::getInt(0, tr("Move top cards to grave"), tr("Number:"));
     if (!number)
         return;
 
@@ -972,26 +976,20 @@ void Player::actMoveTopCardsToGrave()
 
     for (int i = 0; i < number; ++i)
         cmd.mutable_cards_to_move()->add_card()->set_card_id(i);
-    
+
     sendGameCommand(cmd);
 }
 
 void Player::actMoveTopCardsToExile()
 {
-    int number =
-#if QT_VERSION < 0x050000
-    QInputDialog::getInteger(
-#else
-    QInputDialog::getInt(
-#endif
-    0, tr("Move top cards to exile"), tr("Number:"));
+    int number = QInputDialog::getInt(0, tr("Move top cards to exile"), tr("Number:"));
     if (!number)
         return;
 
     const int maxCards = zones.value("deck")->getCards().size();
     if (number > maxCards)
         number = maxCards;
-    
+
     Command_MoveCard cmd;
     cmd.set_start_zone("deck");
     cmd.set_target_player_id(getId());
@@ -1001,7 +999,7 @@ void Player::actMoveTopCardsToExile()
 
     for (int i = 0; i < number; ++i)
         cmd.mutable_cards_to_move()->add_card()->set_card_id(i);
-    
+
     sendGameCommand(cmd);
 }
 
@@ -1014,7 +1012,7 @@ void Player::actMoveTopCardToBottom()
     cmd.set_target_zone("deck");
     cmd.set_x(-1);
     cmd.set_y(0);
-    
+
     sendGameCommand(cmd);
 }
 
@@ -1029,7 +1027,7 @@ void Player::actMoveTopCardToPlayFaceDown()
     cmd.set_target_zone("table");
     cmd.set_x(-1);
     cmd.set_y(0);
-    
+
     sendGameCommand(cmd);
 }
 
@@ -1052,20 +1050,14 @@ void Player::actUntapAll()
     cmd.set_zone("table");
     cmd.set_attribute(AttrTapped);
     cmd.set_attr_value("0");
-    
+
     sendGameCommand(cmd);
 }
 
 void Player::actRollDie()
 {
     bool ok;
-    int sides =
-#if QT_VERSION < 0x050000
-    QInputDialog::getInteger(
-#else
-    QInputDialog::getInt(
-#endif
-    static_cast<QWidget *>(parent()), tr("Roll die"), tr("Number of sides:"), 20, 2, 1000, 1, &ok);
+    int sides = QInputDialog::getInt(static_cast<QWidget *>(parent()), tr("Roll die"), tr("Number of sides:"), 20, 2, 1000, 1, &ok);
     if (ok) {
         Command_RollDie cmd;
         cmd.set_sides(sides);
@@ -1081,7 +1073,8 @@ void Player::actCreateToken()
 
     lastTokenName = dlg.getName();
     lastTokenPT = dlg.getPT();
-    if (CardInfo *correctedCard = db->getCardBySimpleName(lastTokenName, false)) {
+    CardInfo *correctedCard = db->getCardBySimpleName(lastTokenName);
+    if (correctedCard) {
         lastTokenName = correctedCard->getName();
         lastTokenTableRow = table->clampValidTableRow(2 - correctedCard->getTableRow());
         if (lastTokenPT.isEmpty())
@@ -1091,12 +1084,15 @@ void Player::actCreateToken()
     lastTokenAnnotation = dlg.getAnnotation();
     lastTokenDestroy = dlg.getDestroy();
     aCreateAnotherToken->setEnabled(true);
-    
+    aCreateAnotherToken->setText(tr("C&reate another %1 token").arg(lastTokenName));
     actCreateAnotherToken();
 }
 
 void Player::actCreateAnotherToken()
 {
+    if (lastTokenName.isEmpty())
+        return;
+
     Command_CreateToken cmd;
     cmd.set_zone("table");
     cmd.set_card_name(lastTokenName.toStdString());
@@ -1106,7 +1102,7 @@ void Player::actCreateAnotherToken()
     cmd.set_destroy_on_zone_change(lastTokenDestroy);
     cmd.set_x(-1);
     cmd.set_y(lastTokenTableRow);
-    
+
     sendGameCommand(cmd);
 }
 
@@ -1114,34 +1110,152 @@ void Player::actCreatePredefinedToken()
 {
     QAction *action = static_cast<QAction *>(sender());
     CardInfo *cardInfo = db->getCard(action->text());
-    
-    lastTokenName = cardInfo->getName();
-    lastTokenColor = cardInfo->getColors().isEmpty() ? QString() : cardInfo->getColors().first().toLower();
-    lastTokenPT = cardInfo->getPowTough();
-    lastTokenAnnotation = settingsCache->getAnnotateTokens() ? cardInfo->getText() : "";
-    lastTokenTableRow = table->clampValidTableRow(2 - cardInfo->getTableRow());
-    lastTokenDestroy = true;
-    aCreateAnotherToken->setEnabled(true);
-    
+    if(!cardInfo)
+        return;
+
+    setLastToken(cardInfo);
+
     actCreateAnotherToken();
 }
 
 void Player::actCreateRelatedCard()
 {
-    // get the clicked card
+    CardItem * sourceCard = game->getActiveCard();
+    if(!sourceCard)
+        return;
+    QAction *action = static_cast<QAction *>(sender());
+    //If there is a better way of passing a CardRelation through a QAction, please add it here.
+    QList<CardRelation *> relatedCards = QList<CardRelation *>();
+    relatedCards.append(sourceCard->getInfo()->getRelatedCards());
+    relatedCards.append(sourceCard->getInfo()->getReverseRelatedCards2Me());
+    CardRelation * cardRelation = relatedCards.at(action->data().toInt());
+
+   /*
+    * If we make a token via "Token: TokenName"
+    * then let's allow it to be created via "create another token"
+    */
+    if (createRelatedFromRelation(sourceCard, cardRelation) && cardRelation->getCanCreateAnother()) {
+        CardInfo *cardInfo = db->getCard(dbNameFromTokenDisplayName(cardRelation->getName()));
+        setLastToken(cardInfo);
+    }
+}
+
+void Player::actCreateAllRelatedCards()
+{
     CardItem * sourceCard = game->getActiveCard();
     if(!sourceCard)
         return;
 
-    // get the target card name
-    QAction *action = static_cast<QAction *>(sender());
+    QList<CardRelation *> relatedCards = QList<CardRelation *>();
+    relatedCards.append(sourceCard->getInfo()->getRelatedCards());
+    relatedCards.append(sourceCard->getInfo()->getReverseRelatedCards2Me());
 
-    // removes p/t from tokens (and leading space))
-    QStringList spaces = action->text().split(" ");
-    if (spaces.at(0).indexOf("/") != -1) // Strip space from creatures
-        spaces.removeFirst();
-    CardInfo *cardInfo = db->getCard(spaces.join(" "));
-    
+    QList<CardRelation *> nonExcludedRelatedCards = QList<CardRelation *>();
+    QString dbName;
+    CardRelation * cardRelation = nullptr;
+    int tokensTypesCreated = 0;
+
+    switch(relatedCards.length()) { //Is an if/elseif/else pattern better?
+        case 0: //if (relatedCards.length() == 0)
+            return;
+        case 1: //else if (relatedCards.length() == 1)
+            cardRelation = relatedCards.at(0);
+            if (createRelatedFromRelation(sourceCard, cardRelation))
+                tokensTypesCreated++;
+            break;
+        default: //else
+            foreach (CardRelation * cardRelationTemp, relatedCards) {
+                if(!cardRelationTemp->getIsCreateAllExclusion() && !cardRelationTemp->getDoesAttach()) {
+                    nonExcludedRelatedCards.append(cardRelationTemp);
+                }
+            }
+            switch(nonExcludedRelatedCards.length()) {
+                case 1: //if nonExcludedRelatedCards == 1
+                    cardRelation = nonExcludedRelatedCards.at(0);
+                    if (createRelatedFromRelation(sourceCard, cardRelation))
+                        tokensTypesCreated++;
+                    break;
+                //If all are marked "Exclude", then treat the situation as if none of them are.
+                //We won't accept "garbage in, garbage out", here.
+                case 0: //else if nonExcludedRelatedCards == 0
+                    foreach (CardRelation * cardRelationAll, relatedCards) {
+                        if (!cardRelationAll->getDoesAttach() && !cardRelationAll->getIsVariable()) {
+                            dbName = dbNameFromTokenDisplayName(cardRelationAll->getName());
+                            for (int i = 0; i < cardRelationAll->getDefaultCount(); i++) {
+                                createCard(sourceCard, dbName);
+                            }
+                            tokensTypesCreated++;
+                            if(tokensTypesCreated == 1) {
+                                cardRelation = cardRelationAll;
+                            }
+                        }
+                    }
+                    break;
+                default: //else
+                    foreach (CardRelation * cardRelationNotExcluded, nonExcludedRelatedCards) {
+                        if (!cardRelationNotExcluded->getDoesAttach() && !cardRelationNotExcluded->getIsVariable()) {
+                            dbName = dbNameFromTokenDisplayName(cardRelationNotExcluded->getName());
+                            for (int i = 0; i < cardRelationNotExcluded->getDefaultCount(); i++) {
+                                createCard(sourceCard, dbName);
+                            }
+                            tokensTypesCreated++;
+                            if(tokensTypesCreated == 1) {
+                                cardRelation = cardRelationNotExcluded;
+                            }
+                        }
+                    }
+                    break;
+            }
+            break;
+    }
+
+    /*
+     * If we made at least one token via "Create All Tokens"
+     * then assign the first to the "Create another" shortcut.
+     */
+    if (cardRelation != nullptr && cardRelation->getCanCreateAnother())
+    {
+        CardInfo *cardInfo = db->getCard(dbNameFromTokenDisplayName(cardRelation->getName()));
+        setLastToken(cardInfo);
+    }
+}
+
+bool Player::createRelatedFromRelation(const CardItem *sourceCard, const CardRelation *cardRelation)
+{
+    if (sourceCard == nullptr || cardRelation == nullptr)
+        return false;
+    QString dbName = dbNameFromTokenDisplayName(cardRelation->getName());
+    if(cardRelation->getIsVariable()) {
+        bool ok;
+        dialogSemaphore = true;
+        int count = QInputDialog::getInt(0, tr("Create tokens"), tr("Number:"), cardRelation->getDefaultCount(), 1, MAX_TOKENS_PER_DIALOG, 1, &ok);
+        dialogSemaphore = false;
+        if (!ok)
+            return false;
+        for (int i = 0; i < count; i++) {
+            createCard(sourceCard, dbName);
+        }
+    } else if (cardRelation->getDefaultCount() > 1) {
+        for (int i = 0; i < cardRelation->getDefaultCount(); i++) {
+            createCard(sourceCard, dbName);
+        }
+    } else {
+        if (cardRelation->getDoesAttach()) {
+            createAttachedCard(sourceCard, dbName);
+        } else {
+            createCard(sourceCard, dbName);
+        }
+    }
+    return true;
+}
+
+void Player::createCard(const CardItem *sourceCard, const QString &dbCardName, bool attach)
+{
+    CardInfo *cardInfo = db->getCard(dbCardName);
+
+    if (cardInfo == nullptr || sourceCard == nullptr)
+        return;
+
     // get the target token's location
     // TODO: Define this QPoint into its own function along with the one below
     QPoint gridPoint = QPoint(-1, table->clampValidTableRow(2 - cardInfo->getTableRow()));
@@ -1150,7 +1264,10 @@ void Player::actCreateRelatedCard()
     Command_CreateToken cmd;
     cmd.set_zone("table");
     cmd.set_card_name(cardInfo->getName().toStdString());
-    cmd.set_color(cardInfo->getColors().isEmpty() ? QString().toStdString() : cardInfo->getColors().first().toLower().toStdString());
+    if(cardInfo->getColors().length() > 1) //Multicoloured
+        cmd.set_color("m");
+    else
+        cmd.set_color(cardInfo->getColors().isEmpty() ? QString().toStdString() : cardInfo->getColors().first().toLower().toStdString());
     cmd.set_pt(cardInfo->getPowTough().toStdString());
     cmd.set_annotation(settingsCache->getAnnotateTokens() ? cardInfo->getText().toStdString() : QString().toStdString());
     cmd.set_destroy_on_zone_change(true);
@@ -1158,10 +1275,15 @@ void Player::actCreateRelatedCard()
     cmd.set_x(gridPoint.x());
     cmd.set_y(gridPoint.y());
 
-    if(!cardInfo->getIsToken())
+    if(attach)
         cmd.set_target_card_id(sourceCard->getId());
 
     sendGameCommand(cmd);
+}
+
+void Player::createAttachedCard(const CardItem *sourceCard, const QString &dbCardName)
+{
+    createCard(sourceCard, dbCardName, true);
 }
 
 void Player::actSayMessage()
@@ -1174,6 +1296,9 @@ void Player::actSayMessage()
 
 void Player::setCardAttrHelper(const GameEventContext &context, CardItem *card, CardAttribute attribute, const QString &avalue, bool allCards)
 {
+    if (card == nullptr)
+        return;
+
     bool moveCardContext = context.HasExtension(Context_MoveCard::ext);
     switch (attribute) {
         case AttrTapped: {
@@ -1207,6 +1332,27 @@ void Player::setCardAttrHelper(const GameEventContext &context, CardItem *card, 
     }
 }
 
+// token names take the form of "<Descriptors> <Power>/<Toughness> <Card Name>   " or "<Card Name>   ".
+// dbName for tokens should take the form of "<Card Name>   ".
+// trailing whitespace is significant; it is hacked on at the end as an additional identifier in our single key database
+QString Player::dbNameFromTokenDisplayName(const QString &tokenName) {
+    QRegExp tokenNamePattern(".*/\\S+\\s+(.*)");
+
+    int index = tokenNamePattern.indexIn(tokenName);
+    if (index != -1)
+    {
+        return tokenNamePattern.capturedTexts()[1];
+    }
+    else if (tokenName.indexOf(tr("Token: ")) != -1)
+    {
+        return tokenName.mid(tr("Token: ").length());
+    }
+    else
+    {
+        return tokenName;
+    }
+}
+
 void Player::eventGameSay(const Event_GameSay &event)
 {
     emit logSay(this, QString::fromStdString(event.message()));
@@ -1233,7 +1379,7 @@ void Player::eventCreateArrow(const Event_CreateArrow &event)
     ArrowItem *arrow = addArrow(event.arrow_info());
     if (!arrow)
         return;
-    
+
     CardItem *startCard = static_cast<CardItem *>(arrow->getStartItem());
     CardItem *targetCard = qgraphicsitem_cast<CardItem *>(arrow->getTargetItem());
     if (targetCard)
@@ -1256,9 +1402,13 @@ void Player::eventCreateToken(const Event_CreateToken &event)
     CardItem *card = new CardItem(this, QString::fromStdString(event.card_name()), event.card_id());
     // use db PT if not provided in event
     if (!QString::fromStdString(event.pt()).isEmpty())
+    {
         card->setPT(QString::fromStdString(event.pt()));
-    else
-        card->setPT(db->getCard(QString::fromStdString(event.card_name()))->getPowTough());
+    } else {
+        CardInfo * dbCard = db->getCard(QString::fromStdString(event.card_name()));
+        if(dbCard)
+            card->setPT(dbCard->getPowTough());
+    }
     card->setColor(QString::fromStdString(event.color()));
     card->setAnnotation(QString::fromStdString(event.annotation()));
     card->setDestroyOnZoneChange(event.destroy_on_zone_change());
@@ -1299,7 +1449,7 @@ void Player::eventSetCardCounter(const Event_SetCardCounter &event)
     CardItem *card = zone->getCard(event.card_id(), QString());
     if (!card)
         return;
-    
+
     int oldValue = card->getCounters().value(event.counter_id(), 0);
     card->setCounter(event.counter_id(), event.counter_value());
     emit logSetCardCounter(this, card->getName(), event.counter_id(), event.counter_value(), oldValue);
@@ -1363,7 +1513,7 @@ void Player::eventMoveCard(const Event_MoveCard &event, const GameEventContext &
         targetZone = startZone;
     if (!startZone || !targetZone)
         return;
-    
+
     int position = event.position();
     int x = event.x();
     int y = event.y();
@@ -1379,7 +1529,7 @@ void Player::eventMoveCard(const Event_MoveCard &event, const GameEventContext &
         card->deleteCardInfoPopup();
     if (event.has_card_name())
         card->setName(QString::fromStdString(event.card_name()));
-    
+
     if (card->getAttachedTo() && (startZone != targetZone)) {
         CardItem *parentCard = card->getAttachedTo();
         card->setAttachedTo(0);
@@ -1393,11 +1543,11 @@ void Player::eventMoveCard(const Event_MoveCard &event, const GameEventContext &
     if (startZone != targetZone) {
         card->setBeingPointedAt(false);
         card->setHovered(false);
-        
+
         const QList<CardItem *> &attachedCards = card->getAttachedCards();
         for (int i = 0; i < attachedCards.size(); ++i)
             attachedCards[i]->setParentItem(targetZone);
-        
+
         if (startZone->getPlayer() != targetZone->getPlayer())
             card->setOwner(targetZone->getPlayer());
     }
@@ -1450,16 +1600,16 @@ void Player::eventDestroyCard(const Event_DestroyCard &event)
     CardZone *zone = zones.value(QString::fromStdString(event.zone_name()), 0);
     if (!zone)
         return;
-    
+
     CardItem *card = zone->getCard(event.card_id(), QString());
     if (!card)
         return;
-    
+
     QList<CardItem *> attachedCards = card->getAttachedCards();
     // This list is always empty except for buggy server implementations.
     for (int i = 0; i < attachedCards.size(); ++i)
         attachedCards[i]->setAttachedTo(0);
-    
+
     emit logDestroyCard(this, card->getName());
     zone->takeCard(-1, event.card_id(), true);
     card->deleteLater();
@@ -1479,25 +1629,25 @@ void Player::eventAttachCard(const Event_AttachCard &event)
                 targetCard = targetZone->getCard(event.target_card_id(), QString());
         }
     }
-    
+
     CardZone *startZone = getZones().value(QString::fromStdString(event.start_zone()), 0);
     if (!startZone)
         return;
-    
+
     CardItem *startCard = startZone->getCard(event.card_id(), QString());
     if (!startCard)
         return;
-    
+
     CardItem *oldParent = startCard->getAttachedTo();
-    
+
     startCard->setAttachedTo(targetCard);
-    
+
     startZone->reorganizeCards();
     if ((startZone != targetZone) && targetZone)
         targetZone->reorganizeCards();
     if (oldParent)
         oldParent->getZone()->reorganizeCards();
-    
+
     if (targetCard)
         emit logAttachCard(this, startCard->getName(), targetPlayer, targetCard->getName());
     else
@@ -1508,7 +1658,7 @@ void Player::eventDrawCards(const Event_DrawCards &event)
 {
     CardZone *deck = zones.value("deck");
     CardZone *hand = zones.value("hand");
-    
+
     const int listSize = event.cards_size();
     if (listSize) {
         for (int i = 0; i < listSize; ++i) {
@@ -1522,7 +1672,7 @@ void Player::eventDrawCards(const Event_DrawCards &event)
         for (int i = 0; i < number; ++i)
             hand->addCard(deck->takeCard(0, -1), false, -1);
     }
-    
+
     hand->reorganizeCards();
     deck->reorganizeCards();
     emit logDrawCards(this, event.number());
@@ -1539,7 +1689,7 @@ void Player::eventRevealCards(const Event_RevealCards &event)
         if (!otherPlayer)
             return;
     }
-    
+
     bool peeking = false;
     QList<const ServerInfo_Card *> cardList;
     const int cardListSize = event.cards_size();
@@ -1549,7 +1699,7 @@ void Player::eventRevealCards(const Event_RevealCards &event)
             peeking = true;
         cardList.append(temp);
     }
-    
+
     if (peeking) {
         for (int i = 0; i < cardList.size(); ++i) {
             QString cardName = QString::fromStdString(cardList.at(i)->name());
@@ -1572,7 +1722,7 @@ void Player::eventRevealCards(const Event_RevealCards &event)
         }
         if (showZoneView && !cardList.isEmpty())
             static_cast<GameScene *>(scene())->addRevealedZoneView(this, zone, cardList, event.grant_write_access());
-        
+
         emit logRevealCards(this, zone, event.card_id(), cardName, otherPlayer, false);
     }
 }
@@ -1582,7 +1732,7 @@ void Player::eventChangeZoneProperties(const Event_ChangeZoneProperties &event)
     CardZone *zone = zones.value(QString::fromStdString(event.zone_name()));
     if (!zone)
         return;
-    
+
     if (event.has_always_reveal_top_card()) {
         zone->setAlwaysRevealTopCard(event.always_reveal_top_card());
         emit logAlwaysRevealTopCard(this, zone, event.always_reveal_top_card());
@@ -1613,7 +1763,7 @@ void Player::processGameEvent(GameEvent::GameEventType type, const GameEvent &ev
         case GameEvent::REVEAL_CARDS: eventRevealCards(event.GetExtension(Event_RevealCards::ext)); break;
         case GameEvent::CHANGE_ZONE_PROPERTIES: eventChangeZoneProperties(event.GetExtension(Event_ChangeZoneProperties::ext)); break;
         default: {
-            qDebug() << "unhandled game event";
+            qDebug() << "unhandled game event" << type;
         }
     }
 }
@@ -1638,18 +1788,18 @@ void Player::processPlayerInfo(const ServerInfo_Player &info)
 {
     clearCounters();
     clearArrows();
-    
+
     QMapIterator<QString, CardZone *> zoneIt(zones);
     while (zoneIt.hasNext())
         zoneIt.next().value()->clearContents();
-    
+
     const int zoneListSize = info.zone_list_size();
     for (int i = 0; i < zoneListSize; ++i) {
         const ServerInfo_Zone &zoneInfo = info.zone_list(i);
         CardZone *zone = zones.value(QString::fromStdString(zoneInfo.name()), 0);
         if (!zone)
             continue;
-        
+
         const int cardListSize = zoneInfo.card_list_size();
         if (!cardListSize) {
             for (int j = 0; j < zoneInfo.card_count(); ++j)
@@ -1664,14 +1814,14 @@ void Player::processPlayerInfo(const ServerInfo_Player &info)
         }
         if (zoneInfo.has_always_reveal_top_card())
             zone->setAlwaysRevealTopCard(zoneInfo.always_reveal_top_card());
-        
+
         zone->reorganizeCards();
     }
-    
+
     const int counterListSize = info.counter_list_size();
     for (int i = 0; i < counterListSize; ++i)
         addCounter(info.counter_list(i));
-    
+
     setConceded(info.properties().conceded());
 }
 
@@ -1683,7 +1833,7 @@ void Player::processCardAttachment(const ServerInfo_Player &info)
         CardZone *zone = zones.value(QString::fromStdString(zoneInfo.name()), 0);
         if (!zone)
             continue;
-        
+
         const int cardListSize = zoneInfo.card_list_size();
         for (int j = 0; j < cardListSize; ++j) {
             const ServerInfo_Card &cardInfo = zoneInfo.card_list(j);
@@ -1692,12 +1842,12 @@ void Player::processCardAttachment(const ServerInfo_Player &info)
                 CardItem *targetCard = game->getCard(cardInfo.attach_player_id(), QString::fromStdString(cardInfo.attach_zone()), cardInfo.attach_card_id());
                 if (!targetCard)
                     continue;
-                
+
                 startCard->setAttachedTo(targetCard);
             }
         }
     }
-    
+
     const int arrowListSize = info.arrow_list_size();
     for (int i = 0; i < arrowListSize; ++i)
         addArrow(info.arrow_list(i));
@@ -1705,14 +1855,19 @@ void Player::processCardAttachment(const ServerInfo_Player &info)
 
 void Player::playCard(CardItem *c, bool faceDown, bool tapped)
 {
+    if (c == nullptr)
+        return;
+
     Command_MoveCard cmd;
     cmd.set_start_player_id(c->getZone()->getPlayer()->getId());
     cmd.set_start_zone(c->getZone()->getName().toStdString());
     cmd.set_target_player_id(getId());
     CardToMove *cardToMove = cmd.mutable_cards_to_move()->add_card();
     cardToMove->set_card_id(c->getId());
-    
+
     CardInfo *ci = c->getInfo();
+    if(!ci)
+        return;
     if (!faceDown && ((!settingsCache->getPlayToStack() && ci->getTableRow() == 3) ||
         ((settingsCache->getPlayToStack() && ci->getTableRow() != 0) &&
         c->getZone()->getName().toStdString() != "stack"))) {
@@ -1761,12 +1916,12 @@ AbstractCounter *Player::addCounter(int counterId, const QString &name, QColor c
     qDebug() << "addCounter:" << getName() << counterId << name;
     if (counters.contains(counterId))
         return 0;
-    
+
     AbstractCounter *c;
     if (name == "life")
         c = playerTarget->addCounter(counterId, name, value);
     else
-        c = new GeneralCounter(this, counterId, name, color, radius, value, this);
+        c = new GeneralCounter(this, counterId, name, color, radius, value, true, this);
     counters.insert(counterId, c);
     if (countersMenu)
         countersMenu->addMenu(c->getMenu());
@@ -1781,7 +1936,7 @@ void Player::delCounter(int counterId)
     AbstractCounter *c = counters.value(counterId, 0);
     if (!c)
         return;
-    
+
     c->delCounter();
     counters.remove(counterId);
     rearrangeCounters();
@@ -1802,21 +1957,21 @@ ArrowItem *Player::addArrow(const ServerInfo_Arrow &arrow)
     Player *targetPlayer = playerList.value(arrow.target_player_id(), 0);
     if (!startPlayer || !targetPlayer)
         return 0;
-    
+
     CardZone *startZone = startPlayer->getZones().value(QString::fromStdString(arrow.start_zone()), 0);
     CardZone *targetZone = 0;
     if (arrow.has_target_zone())
         targetZone = targetPlayer->getZones().value(QString::fromStdString(arrow.target_zone()), 0);
     if (!startZone || (!targetZone && arrow.has_target_zone()))
         return 0;
-    
+
     CardItem *startCard = startZone->getCard(arrow.start_card_id(), QString());
     CardItem *targetCard = 0;
     if (targetZone)
         targetCard = targetZone->getCard(arrow.target_card_id(), QString());
     if (!startCard || (!targetCard && arrow.has_target_card_id()))
         return 0;
-    
+
     if (targetCard)
         return addArrow(arrow.id(), startCard, targetCard, convertColorToQColor(arrow.arrow_color()));
     else
@@ -1856,7 +2011,7 @@ void Player::clearArrows()
 void Player::rearrangeCounters()
 {
     qreal marginTop = 80;
-    
+
     // Determine total height of bounding rectangles
     qreal totalHeight = 0;
     QMapIterator<int, AbstractCounter *> counterIterator(counters);
@@ -1865,17 +2020,17 @@ void Player::rearrangeCounters()
         if (counterIterator.value()->getShownInCounterArea())
             totalHeight += counterIterator.value()->boundingRect().height();
     }
-    
+
     const qreal padding = 5;
     qreal y = boundingRect().y() + marginTop;
-    
+
     // Place objects
     for (counterIterator.toFront(); counterIterator.hasNext(); ) {
         AbstractCounter *c = counterIterator.next().value();
 
         if (!c->getShownInCounterArea())
             continue;
-        
+
         QRectF br = c->boundingRect();
         c->setPos((counterAreaWidth - br.width()) / 2, y);
         y += br.height() + padding;
@@ -1906,48 +2061,87 @@ bool Player::clearCardsToDelete()
 {
     if (cardsToDelete.isEmpty())
         return false;
-    
+
     for (int i = 0; i < cardsToDelete.size(); ++i)
         cardsToDelete[i]->deleteLater();
     cardsToDelete.clear();
-    
+
     return true;
 }
 
-void Player::cardMenuAction()
+void Player::actMoveCardXCardsFromTop()
 {
-    QAction *a = static_cast<QAction *>(sender());
+    bool ok;
+    int number = QInputDialog::getInt(0, tr("Place card X cards from top of library"), tr("How many cards from the top of the deck should this card be placed:"), defaultNumberTopCardsToPlaceBelow, 1, 2000000000, 1, &ok);
+    number--;
+
+    if (!ok)
+        return;
+
+    defaultNumberTopCardsToPlaceBelow = number;
+
     QList<QGraphicsItem *> sel = scene()->selectedItems();
     QList<CardItem *> cardList;
     while (!sel.isEmpty())
         cardList.append(qgraphicsitem_cast<CardItem *>(sel.takeFirst()));
-    
+
+    QList< const ::google::protobuf::Message * > commandList;
+    ListOfCardsToMove idList;
+    for (int i = 0; i < cardList.size(); ++i)
+        idList.add_card()->set_card_id(cardList[i]->getId());
+
+    if (cardList.isEmpty())
+        return;
+
+    int startPlayerId = cardList[0]->getZone()->getPlayer()->getId();
+    QString startZone = cardList[0]->getZone()->getName();
+
+    Command_MoveCard *cmd = new Command_MoveCard;
+    cmd->set_start_player_id(startPlayerId);
+    cmd->set_start_zone(startZone.toStdString());
+    cmd->mutable_cards_to_move()->CopyFrom(idList);
+    cmd->set_target_player_id(getId());
+    cmd->set_target_zone("deck");
+    cmd->set_x(number);
+    cmd->set_y(0);
+    commandList.append(cmd);
+
+    if (local)
+        sendGameCommand(prepareGameCommand(commandList));
+    else
+        game->sendGameCommand(prepareGameCommand(commandList));
+}
+
+void Player::cardMenuAction()
+{
+    QAction *a = dynamic_cast<QAction *>(sender());
+    QList<QGraphicsItem *> sel = scene()->selectedItems();
+    QList<CardItem *> cardList;
+    while (!sel.isEmpty())
+        cardList.append(qgraphicsitem_cast<CardItem *>(sel.takeFirst()));
+
     QList< const ::google::protobuf::Message * > commandList;
     if (a->data().toInt() <= (int) cmClone)
-        for (int i = 0; i < cardList.size(); ++i) {
+    {
+        for (int i = 0; i < cardList.size(); ++i)
+        {
             CardItem *card = cardList[i];
-            switch (static_cast<CardMenuActionType>(a->data().toInt())) {
-                case cmTap:
-                    if (!card->getTapped()) {
-                        Command_SetCardAttr *cmd = new Command_SetCardAttr;
-                        cmd->set_zone(card->getZone()->getName().toStdString());
-                        cmd->set_card_id(card->getId());
-                        cmd->set_attribute(AttrTapped);
-                        cmd->set_attr_value("1");
-                        commandList.append(cmd);
-                    }
-                    break;
+            switch (static_cast<CardMenuActionType>(a->data().toInt()))
+            {
+                // Leaving both for compatibility with server
                 case cmUntap:
-                    if (card->getTapped()) {
-                        Command_SetCardAttr *cmd = new Command_SetCardAttr;
-                        cmd->set_zone(card->getZone()->getName().toStdString());
-                        cmd->set_card_id(card->getId());
-                        cmd->set_attribute(AttrTapped);
-                        cmd->set_attr_value("0");
-                        commandList.append(cmd);
-                    }
+                case cmTap:
+                {
+                    Command_SetCardAttr *cmd = new Command_SetCardAttr;
+                    cmd->set_zone(card->getZone()->getName().toStdString());
+                    cmd->set_card_id(card->getId());
+                    cmd->set_attribute(AttrTapped);
+                    cmd->set_attr_value(std::to_string(1 - static_cast<int>(card->getTapped())));
+                    commandList.append(cmd);
                     break;
-                case cmDoesntUntap: {
+                }
+                case cmDoesntUntap:
+                {
                     Command_SetCardAttr *cmd = new Command_SetCardAttr;
                     cmd->set_zone(card->getZone()->getName().toStdString());
                     cmd->set_card_id(card->getId());
@@ -1956,7 +2150,8 @@ void Player::cardMenuAction()
                     commandList.append(cmd);
                     break;
                 }
-                case cmFlip: {
+                case cmFlip:
+                {
                     Command_FlipCard *cmd = new Command_FlipCard;
                     cmd->set_zone(card->getZone()->getName().toStdString());
                     cmd->set_card_id(card->getId());
@@ -1964,7 +2159,8 @@ void Player::cardMenuAction()
                     commandList.append(cmd);
                     break;
                 }
-                case cmPeek: {
+                case cmPeek:
+                {
                     Command_RevealCards *cmd = new Command_RevealCards;
                     cmd->set_zone_name(card->getZone()->getName().toStdString());
                     cmd->set_card_id(card->getId());
@@ -1972,9 +2168,10 @@ void Player::cardMenuAction()
                     commandList.append(cmd);
                     break;
                 }
-                case cmClone: {
+                case cmClone:
+                {
                     Command_CreateToken *cmd = new Command_CreateToken;
-                    cmd->set_zone(card->getZone()->getName().toStdString());
+                    cmd->set_zone("table");
                     cmd->set_card_name(card->getName().toStdString());
                     cmd->set_color(card->getColor().toStdString());
                     cmd->set_pt(card->getPT().toStdString());
@@ -1985,18 +2182,25 @@ void Player::cardMenuAction()
                     commandList.append(cmd);
                     break;
                 }
-                default: break;
+                default:
+                    break;
             }
         }
-    else {
+    }
+    else
+    {
         ListOfCardsToMove idList;
-        for (int i = 0; i < cardList.size(); ++i)
+        for (int i = 0; i < cardList.size(); i++)
+        {
             idList.add_card()->set_card_id(cardList[i]->getId());
+        }
         int startPlayerId = cardList[0]->getZone()->getPlayer()->getId();
         QString startZone = cardList[0]->getZone()->getName();
-        
-        switch (static_cast<CardMenuActionType>(a->data().toInt())) {
-            case cmMoveToTopLibrary: {
+
+        switch (static_cast<CardMenuActionType>(a->data().toInt()))
+        {
+            case cmMoveToTopLibrary:
+            {
                 Command_MoveCard *cmd = new Command_MoveCard;
                 cmd->set_start_player_id(startPlayerId);
                 cmd->set_start_zone(startZone.toStdString());
@@ -2008,7 +2212,8 @@ void Player::cardMenuAction()
                 commandList.append(cmd);
                 break;
             }
-            case cmMoveToBottomLibrary: {
+            case cmMoveToBottomLibrary:
+            {
                 Command_MoveCard *cmd = new Command_MoveCard;
                 cmd->set_start_player_id(startPlayerId);
                 cmd->set_start_zone(startZone.toStdString());
@@ -2020,7 +2225,8 @@ void Player::cardMenuAction()
                 commandList.append(cmd);
                 break;
             }
-            case cmMoveToHand: {
+            case cmMoveToHand:
+            {
                 Command_MoveCard *cmd = new Command_MoveCard;
                 cmd->set_start_player_id(startPlayerId);
                 cmd->set_start_zone(startZone.toStdString());
@@ -2032,7 +2238,8 @@ void Player::cardMenuAction()
                 commandList.append(cmd);
                 break;
             }
-            case cmMoveToGraveyard: {
+            case cmMoveToGraveyard:
+            {
                 Command_MoveCard *cmd = new Command_MoveCard;
                 cmd->set_start_player_id(startPlayerId);
                 cmd->set_start_zone(startZone.toStdString());
@@ -2044,7 +2251,8 @@ void Player::cardMenuAction()
                 commandList.append(cmd);
                 break;
             }
-            case cmMoveToExile: {
+            case cmMoveToExile:
+            {
                 Command_MoveCard *cmd = new Command_MoveCard;
                 cmd->set_start_player_id(startPlayerId);
                 cmd->set_start_zone(startZone.toStdString());
@@ -2056,20 +2264,26 @@ void Player::cardMenuAction()
                 commandList.append(cmd);
                 break;
             }
-            default: ;
+            default:
+                break;
         }
     }
-    if(local)
+
+    if (local)
+    {
         sendGameCommand(prepareGameCommand(commandList));
+    }
     else
+    {
         game->sendGameCommand(prepareGameCommand(commandList));
+    }
 }
 
 void Player::actIncPT(int deltaP, int deltaT)
 {
     QString ptString = "+" + QString::number(deltaP) + "/+" + QString::number(deltaT);
     int playerid = id;
-    
+
     QList< const ::google::protobuf::Message * > commandList;
     QListIterator<QGraphicsItem *> j(scene()->selectedItems());
     while (j.hasNext()) {
@@ -2107,7 +2321,7 @@ void Player::actSetPT()
         return;
     if (!ok)
         return;
-    
+
     QList< const ::google::protobuf::Message * > commandList;
     QListIterator<QGraphicsItem *> j(scene()->selectedItems());
     while (j.hasNext()) {
@@ -2173,7 +2387,7 @@ void Player::actSetAnnotation()
         if (!card->getAnnotation().isEmpty())
             oldAnnotation = card->getAnnotation();
     }
-    
+
     bool ok;
     dialogSemaphore = true;
     QString annotation = QInputDialog::getText(0, tr("Set annotation"), tr("Please enter the new annotation:"), QLineEdit::Normal, oldAnnotation, &ok);
@@ -2182,7 +2396,7 @@ void Player::actSetAnnotation()
         return;
     if (!ok)
         return;
-    
+
     QList< const ::google::protobuf::Message * > commandList;
     i.toFront();
     while (i.hasNext()) {
@@ -2201,7 +2415,7 @@ void Player::actAttach()
 {
     if(!game->getActiveCard())
         return;
-    
+
     ArrowAttachItem *arrow = new ArrowAttachItem(game->getActiveCard());
     scene()->addItem(arrow);
     arrow->grabMouse();
@@ -2258,19 +2472,13 @@ void Player::actCardCounterTrigger()
         case 11: {
             bool ok;
             dialogSemaphore = true;
-            int number = 
-#if QT_VERSION < 0x050000
-                QInputDialog::getInteger(
-#else
-                QInputDialog::getInt(
-#endif
-                    0, tr("Set counters"), tr("Number:"), 0, 0, MAX_COUNTERS_ON_CARD, 1, &ok);
+            int number = QInputDialog::getInt(0, tr("Set counters"), tr("Number:"), 0, 0, MAX_COUNTERS_ON_CARD, 1, &ok);
             dialogSemaphore = false;
             if (clearCardsToDelete())
                 return;
             if (!ok)
                 return;
-        
+
             QListIterator<QGraphicsItem *> i(scene()->selectedItems());
             while (i.hasNext()) {
                 CardItem *card = static_cast<CardItem *>(i.next());
@@ -2293,7 +2501,8 @@ void Player::actPlay()
     if(!game->getActiveCard())
         return;
 
-    playCard(game->getActiveCard(), false, game->getActiveCard()->getInfo()->getCipt());
+    bool cipt = game->getActiveCard()->getInfo() ? game->getActiveCard()->getInfo()->getCipt(): false;
+    playCard(game->getActiveCard(), false, cipt);
 }
 
 void Player::actHide()
@@ -2315,34 +2524,54 @@ void Player::actPlayFacedown()
 void Player::refreshShortcuts()
 {
     if(shortcutsActive)
+    {
         setShortcutsActive();
+
+        foreach (const CardItem *cardItem, table->getCards())
+        {
+            updateCardMenu(cardItem);
+        }
+    }
 }
 
-void Player::updateCardMenu(CardItem *card)
+void Player::updateCardMenu(const CardItem *card)
 {
+    // If bad card OR is a spectator (as spectators don't need card menus), return
+    if (card == nullptr || game->isSpectator())
+    {
+        return;
+    }
+
     QMenu *cardMenu = card->getCardMenu();
     QMenu *ptMenu = card->getPTMenu();
     QMenu *moveMenu = card->getMoveMenu();
-    
+
     cardMenu->clear();
-    
+
     bool revealedCard = false;
     bool writeableCard = getLocal();
-    if (card->getZone() && card->getZone()->getIsView()) {
+    if (card->getZone() && card->getZone()->getIsView())
+    {
         ZoneViewZone *view = static_cast<ZoneViewZone *>(card->getZone());
-        if (view->getRevealZone()) {
+        if (view->getRevealZone())
+        {
             if (view->getWriteableRevealZone())
+            {
                 writeableCard = true;
+            }
             else
+            {
                 revealedCard = true;
+            }
         }
     }
-    
-    if (revealedCard)
+
+    if (revealedCard) {
         cardMenu->addAction(aHide);
-    else if (writeableCard) {
+    } else if (writeableCard) {
         if (moveMenu->isEmpty()) {
             moveMenu->addAction(aMoveToTopLibrary);
+            moveMenu->addAction(aMoveToXfromTopOfLibrary);
             moveMenu->addAction(aMoveToBottomLibrary);
             moveMenu->addSeparator();
             moveMenu->addAction(aMoveToHand);
@@ -2351,7 +2580,7 @@ void Player::updateCardMenu(CardItem *card)
             moveMenu->addSeparator();
             moveMenu->addAction(aMoveToExile);
         }
-        
+
         if (card->getZone()) {
             if (card->getZone()->getName() == "table") {
                 if (ptMenu->isEmpty()) {
@@ -2366,34 +2595,21 @@ void Player::updateCardMenu(CardItem *card)
                     ptMenu->addSeparator();
                     ptMenu->addAction(aSetPT);
                 }
-                
+
                 cardMenu->addAction(aTap);
-                cardMenu->addAction(aUntap);
                 cardMenu->addAction(aDoesntUntap);
                 cardMenu->addAction(aFlip);
-                if (card->getFaceDown())
+                if (card->getFaceDown()) {
                     cardMenu->addAction(aPeek);
-
-                QStringList relatedCards = card->getInfo()->getRelatedCards();
-                QStringList reverserelatedCards2Me = card->getInfo()->getReverseRelatedCards2Me();
-                if(relatedCards.size() || reverserelatedCards2Me.size())
-                {
-                    QMenu * createRelatedCardMenu = cardMenu->addMenu(tr("Cr&eate related card"));
-
-                    for (int i = 0; i < relatedCards.size(); ++i) {
-                        QAction *a = createRelatedCardMenu->addAction(relatedCards.at(i));
-                        connect(a, SIGNAL(triggered()), this, SLOT(actCreateRelatedCard()));
-                    }
-
-                    for (int i = 0; i < reverserelatedCards2Me.size(); ++i) {
-                        QAction *a = createRelatedCardMenu->addAction(reverserelatedCards2Me.at(i));
-                        connect(a, SIGNAL(triggered()), this, SLOT(actCreateRelatedCard()));
-                    }
                 }
+
+                addRelatedCardActions(card, cardMenu);
+
                 cardMenu->addSeparator();
                 cardMenu->addAction(aAttach);
-                if (card->getAttachedTo())
+                if (card->getAttachedTo()) {
                     cardMenu->addAction(aUnattach);
+                }
                 cardMenu->addAction(aDrawArrow);
                 cardMenu->addSeparator();
                 cardMenu->addMenu(ptMenu);
@@ -2401,42 +2617,99 @@ void Player::updateCardMenu(CardItem *card)
                 cardMenu->addSeparator();
                 cardMenu->addAction(aClone);
                 cardMenu->addMenu(moveMenu);
-                
+
                 for (int i = 0; i < aAddCounter.size(); ++i) {
                     cardMenu->addSeparator();
                     cardMenu->addAction(aAddCounter[i]);
-                    cardMenu->addAction(aRemoveCounter[i]);
+                    if (card->getCounters().contains(i)) {
+                        cardMenu->addAction(aRemoveCounter[i]);
+                    }
                     cardMenu->addAction(aSetCounter[i]);
                 }
                 cardMenu->addSeparator();
             } else if (card->getZone()->getName() == "stack") {
                 cardMenu->addAction(aDrawArrow);
+                cardMenu->addSeparator();
+                cardMenu->addAction(aClone);
                 cardMenu->addMenu(moveMenu);
 
-                QStringList relatedCards = card->getInfo()->getRelatedCards();
-                QStringList reverserelatedCards2Me = card->getInfo()->getReverseRelatedCards2Me();
-                if(relatedCards.size() || reverserelatedCards2Me.size())
-                {
-                    QMenu * createRelatedCardMenu = cardMenu->addMenu(tr("Cr&eate related card"));
-
-                    for (int i = 0; i < relatedCards.size(); ++i) {
-                        QAction *a = createRelatedCardMenu->addAction(relatedCards.at(i));
-                        connect(a, SIGNAL(triggered()), this, SLOT(actCreateRelatedCard()));
-                    }
-
-                    for (int i = 0; i < reverserelatedCards2Me.size(); ++i) {
-                        QAction *a = createRelatedCardMenu->addAction(reverserelatedCards2Me.at(i));
-                        connect(a, SIGNAL(triggered()), this, SLOT(actCreateRelatedCard()));
-                    }
-                }
-            } else {
+                addRelatedCardActions(card, cardMenu);
+            } else if (card->getZone()->getName() == "rfg" || card->getZone()->getName() == "grave") {
+				cardMenu->addAction(aPlay);
+				cardMenu->addAction(aPlayFacedown);
+				cardMenu->addSeparator();
+				cardMenu->addAction(aClone);
+				cardMenu->addMenu(moveMenu);
+			} else {
                 cardMenu->addAction(aPlay);
                 cardMenu->addAction(aPlayFacedown);
                 cardMenu->addMenu(moveMenu);
             }
-        } else
+        } else {
             cardMenu->addMenu(moveMenu);
+        }
+    } else {
+        if (card->getZone() && card->getZone()->getName() != "hand") {
+            cardMenu->addAction(aDrawArrow);
+            cardMenu->addSeparator();
+            addRelatedCardActions(card, cardMenu);
+            cardMenu->addSeparator();
+            cardMenu->addAction(aClone);
+        }
     }
+}
+
+void Player::addRelatedCardActions(const CardItem *card, QMenu *cardMenu) {
+    if (card == nullptr || cardMenu == nullptr || card->getInfo() == nullptr)
+        return;
+
+    QList<CardRelation *> relatedCards = QList<CardRelation *>();
+    relatedCards.append(card->getInfo()->getRelatedCards());
+    relatedCards.append(card->getInfo()->getReverseRelatedCards2Me());
+
+    switch (relatedCards.length()) {
+        case 0:
+            break;
+        case 1: {
+            cardMenu->addSeparator();
+            QAction *createRelatedCards;
+            if (relatedCards.at(0)->getDoesAttach()) {
+                createRelatedCards = new QAction(tr("Token: ") + tr("Attach to ") + relatedCards.at(0)->getName(), this);
+            } else
+                createRelatedCards = new QAction(tr("Token: ") + (relatedCards.at(0)->getIsVariable() ? "X " : QString(relatedCards.at(0)->getDefaultCount() == 1 ? QString() : QString::number(relatedCards.at(0)->getDefaultCount()) + " ")) + relatedCards.at(0)->getName(), this);
+            connect(createRelatedCards, SIGNAL(triggered()), this, SLOT(actCreateAllRelatedCards()));
+            if (shortcutsActive) {
+                createRelatedCards->setShortcut(settingsCache->shortcuts().getSingleShortcut("Player/aCreateRelatedTokens"));
+            }
+            cardMenu->addAction(createRelatedCards);
+            break;
+        }
+        default: {
+            cardMenu->addSeparator();
+            int i = 0;
+            foreach (CardRelation * cardRelation, relatedCards)
+            {
+                QString cardName = cardRelation->getName();
+                QAction *createRelated;
+                if (cardRelation->getDoesAttach())
+                    createRelated = new QAction(tr("Token: ") + tr("Attach to ") + cardName, this);
+                else
+                    createRelated = new QAction(tr("Token: ") + (cardRelation->getIsVariable() ? "X " : QString(cardRelation->getDefaultCount() == 1 ? QString() : QString::number(cardRelation->getDefaultCount()) + " ")) + cardName, this);
+                createRelated->setData(QVariant(i));
+                connect(createRelated, SIGNAL(triggered()), this, SLOT(actCreateRelatedCard()));
+                cardMenu->addAction(createRelated);
+                i++;
+            }
+            QAction *createRelatedCards = new QAction(tr("All tokens"), this);
+            connect(createRelatedCards, SIGNAL(triggered()), this, SLOT(actCreateAllRelatedCards()));
+            if (shortcutsActive) {
+                createRelatedCards->setShortcut(settingsCache->shortcuts().getSingleShortcut("Player/aCreateRelatedTokens"));
+            }
+            cardMenu->addAction(createRelatedCards);
+            break;
+        }
+    }
+
 }
 
 void Player::setCardMenu(QMenu *menu)
@@ -2496,7 +2769,22 @@ void Player::processSceneSizeChange(int newPlayerWidth)
     qreal tableWidth = newPlayerWidth - CARD_HEIGHT - 15 - counterAreaWidth - stack->boundingRect().width();
     if (!settingsCache->getHorizontalHand())
         tableWidth -= hand->boundingRect().width();
-    
+
     table->setWidth(tableWidth);
     hand->setWidth(tableWidth + stack->boundingRect().width());
+}
+
+void Player::setLastToken(CardInfo *cardInfo)
+{
+    if (cardInfo == nullptr || aCreateAnotherToken == nullptr)
+        return;
+
+    lastTokenName = cardInfo->getName();
+    lastTokenColor = cardInfo->getColors().isEmpty() ? QString() : cardInfo->getColors().first().toLower();
+    lastTokenPT = cardInfo->getPowTough();
+    lastTokenAnnotation = settingsCache->getAnnotateTokens() ? cardInfo->getText() : "";
+    lastTokenTableRow = table->clampValidTableRow(2 - cardInfo->getTableRow());
+    lastTokenDestroy = true;
+    aCreateAnotherToken->setText(tr("C&reate another %1 token").arg(lastTokenName));
+    aCreateAnotherToken->setEnabled(true);
 }

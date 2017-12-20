@@ -140,7 +140,7 @@ void ShortcutsSettings::clearAllShortcuts()
 void ShortcutsSettings::fillDefaultShorcuts()
 {
     defaultShortCuts["MainWindow/aCheckCardUpdates"] = parseSequenceString("");
-    defaultShortCuts["MainWindow/aConnect"] = parseSequenceString("");
+    defaultShortCuts["MainWindow/aConnect"] = parseSequenceString("Ctrl+L");
     defaultShortCuts["MainWindow/aDeckEditor"] = parseSequenceString("");
     defaultShortCuts["MainWindow/aDisconnect"] = parseSequenceString("");
     defaultShortCuts["MainWindow/aExit"] = parseSequenceString("");
@@ -157,9 +157,10 @@ void ShortcutsSettings::fillDefaultShorcuts()
     defaultShortCuts["TabDeckEditor/aDecrement"] = parseSequenceString("-");
     defaultShortCuts["TabDeckEditor/aEditSets"] = parseSequenceString("");
     defaultShortCuts["TabDeckEditor/aEditTokens"] = parseSequenceString("");
+    defaultShortCuts["TabDeckEditor/aExportDeckDecklist"] = parseSequenceString("");
     defaultShortCuts["TabDeckEditor/aIncrement"] = parseSequenceString("+");
     defaultShortCuts["TabDeckEditor/aLoadDeck"] = parseSequenceString("Ctrl+O");
-    defaultShortCuts["TabDeckEditor/aLoadDeckFromClipboard"] = parseSequenceString("Ctrl+V");
+    defaultShortCuts["TabDeckEditor/aLoadDeckFromClipboard"] = parseSequenceString("Ctrl+Shift+V");
     defaultShortCuts["TabDeckEditor/aNewDeck"] = parseSequenceString("Ctrl+N");
     defaultShortCuts["TabDeckEditor/aOpenCustomFolder"] = parseSequenceString("");
     defaultShortCuts["TabDeckEditor/aPrintDeck"] = parseSequenceString("Ctrl+P");
@@ -167,7 +168,7 @@ void ShortcutsSettings::fillDefaultShorcuts()
     defaultShortCuts["TabDeckEditor/aResetLayout"] = parseSequenceString("");
     defaultShortCuts["TabDeckEditor/aSaveDeck"] = parseSequenceString("Ctrl+S");
     defaultShortCuts["TabDeckEditor/aSaveDeckAs"] = parseSequenceString("");
-    defaultShortCuts["TabDeckEditor/aSaveDeckToClipboard"] = parseSequenceString("Ctrl+C");
+    defaultShortCuts["TabDeckEditor/aSaveDeckToClipboard"] = parseSequenceString("Ctrl+Shift+C");
 
     defaultShortCuts["DeckViewContainer/loadLocalButton"] = parseSequenceString("Ctrl+O");
     defaultShortCuts["DeckViewContainer/loadRemoteButton"] = parseSequenceString("Ctrl+Alt+O");
@@ -185,6 +186,7 @@ void ShortcutsSettings::fillDefaultShorcuts()
     defaultShortCuts["Player/aClone"] = parseSequenceString("Ctrl+J");
     defaultShortCuts["Player/aCreateAnotherToken"] = parseSequenceString("Ctrl+G");
     defaultShortCuts["Player/aCreateToken"] = parseSequenceString("Ctrl+T");
+    defaultShortCuts["Player/aCreateRelatedTokens"] = parseSequenceString("Ctrl+Shift+T");
     defaultShortCuts["Player/aDecP"] = parseSequenceString("Ctrl+-");
     defaultShortCuts["Player/aDecPT"] = parseSequenceString("Ctrl+Alt+-");
     defaultShortCuts["Player/aDecT"] = parseSequenceString("Alt+-");
@@ -216,7 +218,6 @@ void ShortcutsSettings::fillDefaultShorcuts()
     defaultShortCuts["Player/aTap"] = parseSequenceString("");
     defaultShortCuts["Player/aUnattach"] = parseSequenceString("");
     defaultShortCuts["Player/aUndoDraw"] = parseSequenceString("Ctrl+Shift+D");
-    defaultShortCuts["Player/aUntap"] = parseSequenceString("");
     defaultShortCuts["Player/aUntapAll"] = parseSequenceString("Ctrl+U");
     defaultShortCuts["Player/aViewGraveyard"] = parseSequenceString("F4");
     defaultShortCuts["Player/aViewLibrary"] = parseSequenceString("F3");
@@ -241,6 +242,36 @@ void ShortcutsSettings::fillDefaultShorcuts()
     defaultShortCuts["Player/phase7"] = parseSequenceString("");
     defaultShortCuts["Player/phase8"] = parseSequenceString("");
     defaultShortCuts["Player/phase9"] = parseSequenceString("F9");
+
+
+    defaultShortCuts["Player/aIncCounter_w"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_w"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_w"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_u"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_u"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_u"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_b"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_b"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_b"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_r"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_r"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_r"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_g"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_g"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_g"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_x"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_x"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_x"] = parseSequenceString("");
+
+    defaultShortCuts["Player/aIncCounter_storm"] = parseSequenceString("");
+    defaultShortCuts["Player/aDecCounter_storm"] = parseSequenceString("");
+    defaultShortCuts["Player/aSetCounter_storm"] = parseSequenceString("");
+
     defaultShortCuts["tab_room/aClearChat"] = parseSequenceString("F12");
     defaultShortCuts["DlgLoadDeckFromClipboard/refreshButton"] = parseSequenceString("F5");
     defaultShortCuts["Player/aResetLayout"] = parseSequenceString("");

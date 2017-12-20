@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QPainter>
 #include <QMenu>
-#include <QAction>
 #include <QGraphicsSceneMouseEvent>
 #include "gamescene.h"
 #include "carditem.h"
@@ -91,7 +90,8 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     
     int i = 0;
     QMapIterator<int, int> counterIterator(counters);
-    while (counterIterator.hasNext()) {
+    while (counterIterator.hasNext())
+    {
         counterIterator.next();
         QColor color;
         color.setHsv(counterIterator.key() * 60, 150, 255);
@@ -103,24 +103,34 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     QSizeF translatedSize = getTranslatedSize(painter);
     qreal scaleFactor = translatedSize.width() / boundingRect().width();
     
-    if (!pt.isEmpty()) {
+    if (!pt.isEmpty())
+    {
         painter->save();
         transformPainter(painter, translatedSize, tapAngle);
 
-        QStringList ptDbSplit = db->getCard(name)->getPowTough().split("/");
-        QStringList ptSplit = pt.split("/");
+        if(info)
+        {
+            QStringList ptSplit = pt.split("/");
+            QStringList ptDbSplit = info->getPowTough().split("/");
         
-        if (getFaceDown() || ptDbSplit.at(0) != ptSplit.at(0) || ptDbSplit.at(1) != ptSplit.at(1))
-            painter->setPen(QColor(255, 150, 0));
+            if (getFaceDown() || ptDbSplit.at(0) != ptSplit.at(0) || ptDbSplit.at(1) != ptSplit.at(1))
+                painter->setPen(QColor(255, 150, 0));
+            else
+                painter->setPen(Qt::white);
+        }
         else
+        {
             painter->setPen(Qt::white);
+        }
         painter->setBackground(Qt::black);
         painter->setBackgroundMode(Qt::OpaqueMode);
         
         painter->drawText(QRectF(4 * scaleFactor, 4 * scaleFactor, translatedSize.width() - 10 * scaleFactor, translatedSize.height() - 8 * scaleFactor), Qt::AlignRight | Qt::AlignBottom, pt);
         painter->restore();
     }
-    if (!annotation.isEmpty()) {
+
+    if (!annotation.isEmpty())
+    {
         painter->save();
 
         transformPainter(painter, translatedSize, tapAngle);
@@ -131,9 +141,29 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawText(QRectF(4 * scaleFactor, 4 * scaleFactor, translatedSize.width() - 8 * scaleFactor, translatedSize.height() - 8 * scaleFactor), Qt::AlignCenter | Qt::TextWrapAnywhere, annotation);
         painter->restore();
     }
+
     if (getBeingPointedAt())
+    {
         painter->fillRect(boundingRect(), QBrush(QColor(255, 0, 0, 100)));
-    painter->restore();
+        painter->restore();
+    }
+
+    if (doesntUntap)
+    {
+        painter->save();
+
+        painter->setRenderHint(QPainter::Antialiasing, false);
+        transformPainter(painter, translatedSize, tapAngle);
+
+        QPen pen;
+        pen.setColor(Qt::magenta);
+        const int penWidth = 1;
+        pen.setWidth(penWidth);
+        painter->setPen(pen);
+        painter->drawRect(QRectF(0, 0, translatedSize.width() + penWidth, translatedSize.height() - penWidth));
+
+        painter->restore();
+    }
 }
 
 void CardItem::setAttacking(bool _attacking)
@@ -160,6 +190,7 @@ void CardItem::setAnnotation(const QString &_annotation)
 void CardItem::setDoesntUntap(bool _doesntUntap)
 {
     doesntUntap = _doesntUntap;
+    update();
 }
 
 void CardItem::setPT(const QString &_pt)
@@ -302,7 +333,7 @@ void CardItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QList<QGraphicsItem *> sel = scene()->selectedItems();
         int j = 0;
         for (int i = 0; i < sel.size(); i++) {
-            CardItem *c = (CardItem *) sel.at(i);
+            CardItem *c = static_cast<CardItem *>(sel.at(i));
             if ((c == this) || (c->getZone() != zone))
                 continue;
             ++j;
@@ -329,27 +360,28 @@ void CardItem::playCard(bool faceDown)
     if (tz)
         tz->toggleTapped();
     else
-        zone->getPlayer()->playCard(this, faceDown, info->getCipt());
+        zone->getPlayer()->playCard(this, faceDown, info ? info->getCipt() : false);
 }
 
 void CardItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::RightButton) {
-        if (cardMenu)
-            if (!cardMenu->isEmpty())
-                cardMenu->exec(event->screenPos());
+        if (cardMenu && !cardMenu->isEmpty() && owner) {
+            owner->updateCardMenu(this);
+            cardMenu->exec(event->screenPos());
+        }
     } else if ((event->button() == Qt::LeftButton) && !settingsCache->getDoubleClickToPlay()) {
-        
         bool hideCard = false;
-        if (zone->getIsView()) {
+        if (zone && zone->getIsView()) {
             ZoneViewZone *view = static_cast<ZoneViewZone *>(zone);
             if (view->getRevealZone() && !view->getWriteableRevealZone())
                 hideCard = true;
         }
-        if (hideCard)
+        if (zone && hideCard) {
             zone->removeCard(this);
-        else
+        } else {
             playCard(event->modifiers().testFlag(Qt::ShiftModifier));
+        }
     }
 
     setCursor(Qt::OpenHandCursor);

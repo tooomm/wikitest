@@ -6,6 +6,7 @@
 #include <QCompleter>
 #include "tab.h"
 #include "pb/serverinfo_game.pb.h"
+#include "pb/event_leave.pb.h"
 
 class AbstractClient;
 class CardDatabase;
@@ -92,6 +93,7 @@ private slots:
     void refreshShortcuts();
 signals:
     void newCardAdded(AbstractCardItem *card);
+    void notIdle();
 public:
     DeckViewContainer(int _playerId, TabGame *parent);
     void retranslateUi();
@@ -111,6 +113,7 @@ private:
     QMap<int, QString> roomGameTypes;
     int hostId;
     int localPlayerId;
+    const bool isLocalGame;
     bool spectator;
     QMap<int, Player *> players;
     QMap<int, ServerInfo_User> spectators;
@@ -184,6 +187,7 @@ private:
     void createPlayAreaWidget(bool bReplay=false);
     void createDeckViewContainerWidget(bool bReplay=false);
     void createReplayDock();
+    QString getLeaveReason(Event_Leave::LeaveReason reason);
 signals:
     void gameClosing(TabGame *tab);
     void playerAdded(Player *player);
@@ -192,6 +196,7 @@ signals:
     void containerProcessingDone();
     void openMessageDialog(const QString &userName, bool focus);
     void openDeckEditor(const DeckLoader *deck);
+    void notIdle();
 private slots:
     void replayNextEvent();
     void replayFinished();
@@ -234,17 +239,20 @@ public:
     TabGame(TabSupervisor *_tabSupervisor, GameReplay *replay);
     ~TabGame();
     void retranslateUi();
+    void updatePlayerListDockTitle();
     void closeRequest();
     const QMap<int, Player *> &getPlayers() const { return players; }
     CardItem *getCard(int playerId, const QString &zoneName, int cardId) const;
     bool isHost() const { return hostId == localPlayerId; }
+    bool getIsLocalGame() const { return isLocalGame; }
     int getGameId() const { return gameInfo.game_id(); }
     QString getTabText() const;
     bool getSpectator() const { return spectator; }
     bool getSpectatorsSeeEverything() const { return gameInfo.spectators_omniscient(); }
+    bool isSpectator();
     Player *getActiveLocalPlayer() const;
     AbstractClient *getClientForPlayer(int playerId) const;
-    
+
     void setActiveCard(CardItem *_card) { activeCard = _card; }
     CardItem *getActiveCard() const { return activeCard; }
 

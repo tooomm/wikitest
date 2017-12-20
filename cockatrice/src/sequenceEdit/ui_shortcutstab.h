@@ -80,6 +80,8 @@ public:
     SequenceEdit *TabDeckEditor_aIncrement;
     QLabel *lbl_TabDeckEditor_aSaveDeck;
     SequenceEdit *TabDeckEditor_aSaveDeck;
+    QLabel *lbl_TabDeckEditor_aExportDeckDecklist;
+    SequenceEdit *TabDeckEditor_aExportDeckDecklist;
     QLabel *lbl_TabDeckEditor_aDecrement;
     SequenceEdit *TabDeckEditor_aDecrement;
     QLabel *lbl_TabDeckEditor_aSaveDeckAs;
@@ -89,7 +91,7 @@ public:
     QLabel *lbl_TabDeckEditor_aSaveDeckToClipboard;
     SequenceEdit *TabDeckEditor_aSaveDeckToClipboard;
     QGroupBox *groupBox_3;
-    QHBoxLayout *horizontalLayout;
+    QGridLayout *counterLayout;
     QGroupBox *groupBox_4;
     QGridLayout *gridLayout_4;
     QLabel *lbl_abstractCounter_sSet;
@@ -122,6 +124,70 @@ public:
     SequenceEdit *Player_aCCYellow;
     QLabel *lbl_Player_aRCYellow;
     SequenceEdit *Player_aRCYellow;
+
+    QGroupBox *groupBox_counterStorm;
+    QGridLayout *gridLayout_Storm;
+    QLabel *lbl_Player_aSetCStorm;
+    SequenceEdit *Player_aSetCStorm;
+    QLabel *lbl_Player_aIncCStorm;
+    SequenceEdit *Player_aIncCStorm;
+    QLabel *lbl_Player_aDecCStorm;
+    SequenceEdit *Player_aDecCStorm;
+
+    QGroupBox *groupBox_counterW;//W Counter
+    QGridLayout *gridLayout_W;
+    QLabel *lbl_Player_aSetCW;
+    SequenceEdit *Player_aSetCW;
+    QLabel *lbl_Player_aIncCW;
+    SequenceEdit *Player_aIncCW;
+    QLabel *lbl_Player_aDecCW;
+    SequenceEdit *Player_aDecCW;
+
+    QGroupBox *groupBox_counterU;//U Counter
+    QGridLayout *gridLayout_U;
+    QLabel *lbl_Player_aSetCU;
+    SequenceEdit *Player_aSetCU;
+    QLabel *lbl_Player_aIncCU;
+    SequenceEdit *Player_aIncCU;
+    QLabel *lbl_Player_aDecCU;
+    SequenceEdit *Player_aDecCU;
+
+    QGroupBox *groupBox_counterB;//B Counter
+    QGridLayout *gridLayout_B;
+    QLabel *lbl_Player_aSetCB;
+    SequenceEdit *Player_aSetCB;
+    QLabel *lbl_Player_aIncCB;
+    SequenceEdit *Player_aIncCB;
+    QLabel *lbl_Player_aDecCB;
+    SequenceEdit *Player_aDecCB;
+
+    QGroupBox *groupBox_counterR;//R Counter
+    QGridLayout *gridLayout_R;
+    QLabel *lbl_Player_aSetCR;
+    SequenceEdit *Player_aSetCR;
+    QLabel *lbl_Player_aIncCR;
+    SequenceEdit *Player_aIncCR;
+    QLabel *lbl_Player_aDecCR;
+    SequenceEdit *Player_aDecCR;
+
+    QGroupBox *groupBox_counterG;//G Counter
+    QGridLayout *gridLayout_G;
+    QLabel *lbl_Player_aSetCG;
+    SequenceEdit *Player_aSetCG;
+    QLabel *lbl_Player_aIncCG;
+    SequenceEdit *Player_aIncCG;
+    QLabel *lbl_Player_aDecCG;
+    SequenceEdit *Player_aDecCG;
+
+    QGroupBox *groupBox_counterX;//X Counter
+    QGridLayout *gridLayout_X;
+    QLabel *lbl_Player_aSetCX;
+    SequenceEdit *Player_aSetCX;
+    QLabel *lbl_Player_aIncCX;
+    SequenceEdit *Player_aIncCX;
+    QLabel *lbl_Player_aDecCX;
+    SequenceEdit *Player_aDecCX;
+
     QSpacerItem *verticalSpacer;
     QWidget *tab_2;
     QGridLayout *gridLayout_17;
@@ -179,7 +245,6 @@ public:
     QGridLayout *gridLayout_13;
     QLabel *lbl_Player_aTap;
     SequenceEdit *Player_aTap;
-    QLabel *lbl_Player_aUntap;
     SequenceEdit *Player_aUntap;
     QLabel *lbl_Player_aUntapAll;
     SequenceEdit *Player_aUntapAll;
@@ -199,6 +264,8 @@ public:
     SequenceEdit *Player_aClone;
     QLabel *lbl_Player_aCreateToken;
     SequenceEdit *Player_aCreateToken;
+    QLabel *lbl_Player_aCreateRelatedTokens;
+    SequenceEdit *Player_aCreateRelatedTokens;
     QLabel *lbl_Player_aCreateAnotherToken;
     SequenceEdit *Player_aCreateAnotherToken;
     QLabel *lbl_Player_aSetAnnotation;
@@ -576,13 +643,23 @@ public:
         TabDeckEditor_aSaveDeckToClipboard->setObjectName("TabDeckEditor_aSaveDeckToClipboard");
 
         gridLayout->addWidget(TabDeckEditor_aSaveDeckToClipboard, 8, 3, 1, 1);
+        
+        lbl_TabDeckEditor_aExportDeckDecklist = new QLabel(groupBox_2);
+        lbl_TabDeckEditor_aExportDeckDecklist->setObjectName("lbl_TabDeckEditor_aExportDeckDecklist");
+        
+        gridLayout->addWidget(lbl_TabDeckEditor_aExportDeckDecklist, 9, 2, 1, 1);
+        
+        TabDeckEditor_aExportDeckDecklist = new SequenceEdit("TabDeckEditor/aExportDeckDecklist",groupBox_2);
+        TabDeckEditor_aExportDeckDecklist->setObjectName("TabDeckEditor_aExportDeckDecklist");
+        
+        gridLayout->addWidget(TabDeckEditor_aExportDeckDecklist, 9, 3, 1, 1);
 
         gridLayout_3->addWidget(groupBox_2, 0, 1, 1, 1);
 
         groupBox_3 = new QGroupBox(tab);
         groupBox_3->setObjectName("groupBox_3");
-        horizontalLayout = new QHBoxLayout(groupBox_3);
-        horizontalLayout->setObjectName("horizontalLayout");
+        counterLayout = new QGridLayout(groupBox_3);
+        counterLayout->setObjectName("counterLayout");
         groupBox_4 = new QGroupBox(groupBox_3);
         groupBox_4->setObjectName("groupBox_4");
         gridLayout_4 = new QGridLayout(groupBox_4);
@@ -617,7 +694,7 @@ public:
 
         gridLayout_4->addWidget(abstractCounter_aDec, 2, 1, 1, 1);
 
-        horizontalLayout->addWidget(groupBox_4);
+        counterLayout->addWidget(groupBox_4, 0, 0, 1, 1);
 
         groupBox_5 = new QGroupBox(groupBox_3);
         groupBox_5->setObjectName("groupBox_5");
@@ -653,7 +730,7 @@ public:
 
         gridLayout_6->addWidget(Player_aRCRed, 2, 1, 1, 1);
 
-        horizontalLayout->addWidget(groupBox_5);
+        counterLayout->addWidget(groupBox_5, 0, 1, 1, 1);
 
         groupBox_6 = new QGroupBox(groupBox_3);
         groupBox_6->setObjectName("groupBox_6");
@@ -689,7 +766,7 @@ public:
 
         gridLayout_7->addWidget(Player_aRCGreen, 2, 1, 1, 1);
 
-        horizontalLayout->addWidget(groupBox_6);
+        counterLayout->addWidget(groupBox_6, 0, 2, 1, 1);
 
         groupBox_7 = new QGroupBox(groupBox_3);
         groupBox_7->setObjectName("groupBox_7");
@@ -725,7 +802,196 @@ public:
 
         gridLayout_8->addWidget(Player_aRCYellow, 2, 1, 1, 1);
 
-        horizontalLayout->addWidget(groupBox_7);
+        counterLayout->addWidget(groupBox_7, 0, 3, 1, 1);
+
+        groupBox_counterStorm = new QGroupBox(groupBox_3);
+        groupBox_counterStorm->setObjectName("groupBox_counterStorm");
+        gridLayout_Storm = new QGridLayout(groupBox_counterStorm);
+        gridLayout_Storm->setObjectName("gridLayout_Storm");
+        lbl_Player_aSetCStorm = new QLabel(groupBox_counterStorm);
+        lbl_Player_aSetCStorm->setObjectName("lbl_Player_aSetCStorm");
+        gridLayout_Storm->addWidget(lbl_Player_aSetCStorm, 0, 0, 1, 1);
+        Player_aSetCStorm = new SequenceEdit("Player/aSetCounter_storm", groupBox_counterStorm);
+        Player_aSetCStorm->setObjectName("Player_aSetCStorm");
+        gridLayout_Storm->addWidget(Player_aSetCStorm, 0, 1, 1, 1);
+
+        lbl_Player_aIncCStorm = new QLabel(groupBox_counterStorm);
+        lbl_Player_aIncCStorm->setObjectName("lbl_Player_aIncCStorm");
+        gridLayout_Storm->addWidget(lbl_Player_aIncCStorm, 1, 0, 1, 1);
+        Player_aIncCStorm = new SequenceEdit("Player/aIncCounter_storm", groupBox_counterStorm);
+        Player_aIncCStorm->setObjectName("Player_aIncCStorm");
+        gridLayout_Storm->addWidget(Player_aIncCStorm, 1, 1, 1, 1);
+
+        lbl_Player_aDecCStorm = new QLabel(groupBox_counterStorm);
+        lbl_Player_aDecCStorm->setObjectName("lbl_Player_aDecCStorm");
+        gridLayout_Storm->addWidget(lbl_Player_aDecCStorm, 2, 0, 1, 1);
+        Player_aDecCStorm = new SequenceEdit("Player/aDecCounter_storm", groupBox_counterStorm);
+        Player_aDecCStorm->setObjectName("Player_aDecCStorm");
+        gridLayout_Storm->addWidget(Player_aDecCStorm, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterStorm, 1, 0, 1, 1);
+
+        groupBox_counterW = new QGroupBox(groupBox_3);
+        groupBox_counterW->setObjectName("groupBox_counterW");
+        gridLayout_W = new QGridLayout(groupBox_counterW);
+        gridLayout_W->setObjectName("gridLayout_W");
+        lbl_Player_aSetCW = new QLabel(groupBox_counterW);
+        lbl_Player_aSetCW->setObjectName("lbl_Player_aSetCW");
+        gridLayout_W->addWidget(lbl_Player_aSetCW, 0, 0, 1, 1);
+        Player_aSetCW = new SequenceEdit("Player/aSetCounter_w", groupBox_counterW);
+        Player_aSetCW->setObjectName("Player_aSetCW");
+        gridLayout_W->addWidget(Player_aSetCW, 0, 1, 1, 1);
+
+        lbl_Player_aIncCW = new QLabel(groupBox_counterW);
+        lbl_Player_aIncCW->setObjectName("lbl_Player_aIncCW");
+        gridLayout_W->addWidget(lbl_Player_aIncCW, 1, 0, 1, 1);
+        Player_aIncCW = new SequenceEdit("Player/aIncCounter_w", groupBox_counterW);
+        Player_aIncCW->setObjectName("Player_aIncCW");
+        gridLayout_W->addWidget(Player_aIncCW, 1, 1, 1, 1);
+
+        lbl_Player_aDecCW = new QLabel(groupBox_counterW);
+        lbl_Player_aDecCW->setObjectName("lbl_Player_aDecCW");
+        gridLayout_W->addWidget(lbl_Player_aDecCW, 2, 0, 1, 1);
+        Player_aDecCW = new SequenceEdit("Player/aDecCounter_w", groupBox_counterW);
+        Player_aDecCW->setObjectName("Player_aDecCW");
+        gridLayout_W->addWidget(Player_aDecCW, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterW, 1, 1, 1, 1);
+
+        groupBox_counterU = new QGroupBox(groupBox_3);
+        groupBox_counterU->setObjectName("groupBox_counterU");
+        gridLayout_U = new QGridLayout(groupBox_counterU);
+        gridLayout_U->setObjectName("gridLayout_U");
+        lbl_Player_aSetCU = new QLabel(groupBox_counterU);
+        lbl_Player_aSetCU->setObjectName("lbl_Player_aSetCU");
+        gridLayout_U->addWidget(lbl_Player_aSetCU, 0, 0, 1, 1);
+        Player_aSetCU = new SequenceEdit("Player/aSetCounter_u", groupBox_counterU);
+        Player_aSetCU->setObjectName("Player_aSetCU");
+        gridLayout_U->addWidget(Player_aSetCU, 0, 1, 1, 1);
+
+        lbl_Player_aIncCU = new QLabel(groupBox_counterU);
+        lbl_Player_aIncCU->setObjectName("lbl_Player_aIncCU");
+        gridLayout_U->addWidget(lbl_Player_aIncCU, 1, 0, 1, 1);
+        Player_aIncCU = new SequenceEdit("Player/aIncCounter_u", groupBox_counterU);
+        Player_aIncCU->setObjectName("Player_aIncCU");
+        gridLayout_U->addWidget(Player_aIncCU, 1, 1, 1, 1);
+
+        lbl_Player_aDecCU = new QLabel(groupBox_counterU);
+        lbl_Player_aDecCU->setObjectName("lbl_Player_aDecCU");
+        gridLayout_U->addWidget(lbl_Player_aDecCU, 2, 0, 1, 1);
+        Player_aDecCU = new SequenceEdit("Player/aDecCounter_u", groupBox_counterU);
+        Player_aDecCU->setObjectName("Player_aDecCU");
+        gridLayout_U->addWidget(Player_aDecCU, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterU, 1, 2, 1, 1);
+
+        groupBox_counterB = new QGroupBox(groupBox_3);
+        groupBox_counterB->setObjectName("groupBox_counterB");
+        gridLayout_B = new QGridLayout(groupBox_counterB);
+        gridLayout_B->setObjectName("gridLayout_B");
+        lbl_Player_aSetCB = new QLabel(groupBox_counterB);
+        lbl_Player_aSetCB->setObjectName("lbl_Player_aSetCB");
+        gridLayout_B->addWidget(lbl_Player_aSetCB, 0, 0, 1, 1);
+        Player_aSetCB = new SequenceEdit("Player/aSetCounter_b", groupBox_counterB);
+        Player_aSetCB->setObjectName("Player_aSetCB");
+        gridLayout_B->addWidget(Player_aSetCB, 0, 1, 1, 1);
+
+        lbl_Player_aIncCB = new QLabel(groupBox_counterB);
+        lbl_Player_aIncCB->setObjectName("lbl_Player_aIncCB");
+        gridLayout_B->addWidget(lbl_Player_aIncCB, 1, 0, 1, 1);
+        Player_aIncCB = new SequenceEdit("Player/aIncCounter_b", groupBox_counterB);
+        Player_aIncCB->setObjectName("Player_aIncCB");
+        gridLayout_B->addWidget(Player_aIncCB, 1, 1, 1, 1);
+
+        lbl_Player_aDecCB = new QLabel(groupBox_counterB);
+        lbl_Player_aDecCB->setObjectName("lbl_Player_aDecCB");
+        gridLayout_B->addWidget(lbl_Player_aDecCB, 2, 0, 1, 1);
+        Player_aDecCB = new SequenceEdit("Player/aDecCounter_b", groupBox_counterB);
+        Player_aDecCB->setObjectName("Player_aDecCB");
+        gridLayout_B->addWidget(Player_aDecCB, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterB, 1, 3, 1, 1);
+
+        groupBox_counterR = new QGroupBox(groupBox_3);
+        groupBox_counterR->setObjectName("groupBox_counterR");
+        gridLayout_R = new QGridLayout(groupBox_counterR);
+        gridLayout_R->setObjectName("gridLayout_R");
+        lbl_Player_aSetCR = new QLabel(groupBox_counterR);
+        lbl_Player_aSetCR->setObjectName("lbl_Player_aSetCR");
+        gridLayout_R->addWidget(lbl_Player_aSetCR, 0, 0, 1, 1);
+        Player_aSetCR = new SequenceEdit("Player/aSetCounter_r", groupBox_counterR);
+        Player_aSetCR->setObjectName("Player_aSetCR");
+        gridLayout_R->addWidget(Player_aSetCR, 0, 1, 1, 1);
+
+        lbl_Player_aIncCR = new QLabel(groupBox_counterR);
+        lbl_Player_aIncCR->setObjectName("lbl_Player_aIncCR");
+        gridLayout_R->addWidget(lbl_Player_aIncCR, 1, 0, 1, 1);
+        Player_aIncCR = new SequenceEdit("Player/aIncCounter_r", groupBox_counterR);
+        Player_aIncCR->setObjectName("Player_aIncCR");
+        gridLayout_R->addWidget(Player_aIncCR, 1, 1, 1, 1);
+
+        lbl_Player_aDecCR = new QLabel(groupBox_counterR);
+        lbl_Player_aDecCR->setObjectName("lbl_Player_aDecCR");
+        gridLayout_R->addWidget(lbl_Player_aDecCR, 2, 0, 1, 1);
+        Player_aDecCR = new SequenceEdit("Player/aDecCounter_r", groupBox_counterR);
+        Player_aDecCR->setObjectName("Player_aDecCR");
+        gridLayout_R->addWidget(Player_aDecCR, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterR, 2, 0, 1, 1);
+
+        groupBox_counterG = new QGroupBox(groupBox_3);
+        groupBox_counterG->setObjectName("groupBox_counterG");
+        gridLayout_G = new QGridLayout(groupBox_counterG);
+        gridLayout_G->setObjectName("gridLayout_G");
+        lbl_Player_aSetCG = new QLabel(groupBox_counterG);
+        lbl_Player_aSetCG->setObjectName("lbl_Player_aSetCG");
+        gridLayout_G->addWidget(lbl_Player_aSetCG, 0, 0, 1, 1);
+        Player_aSetCG = new SequenceEdit("Player/aSetCounter_g", groupBox_counterG);
+        Player_aSetCG->setObjectName("Player_aSetCG");
+        gridLayout_G->addWidget(Player_aSetCG, 0, 1, 1, 1);
+
+        lbl_Player_aIncCG = new QLabel(groupBox_counterG);
+        lbl_Player_aIncCG->setObjectName("lbl_Player_aIncCG");
+        gridLayout_G->addWidget(lbl_Player_aIncCG, 1, 0, 1, 1);
+        Player_aIncCG = new SequenceEdit("Player/aIncCounter_g", groupBox_counterG);
+        Player_aIncCG->setObjectName("Player_aIncCG");
+        gridLayout_G->addWidget(Player_aIncCG, 1, 1, 1, 1);
+
+        lbl_Player_aDecCG = new QLabel(groupBox_counterG);
+        lbl_Player_aDecCG->setObjectName("lbl_Player_aDecCG");
+        gridLayout_G->addWidget(lbl_Player_aDecCG, 2, 0, 1, 1);
+        Player_aDecCG = new SequenceEdit("Player/aDecCounter_g", groupBox_counterG);
+        Player_aDecCG->setObjectName("Player_aDecCG");
+        gridLayout_G->addWidget(Player_aDecCG, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterG, 2, 1, 1, 1);
+
+        groupBox_counterX = new QGroupBox(groupBox_3);
+        groupBox_counterX->setObjectName("groupBox_counterX");
+        gridLayout_X = new QGridLayout(groupBox_counterX);
+        gridLayout_X->setObjectName("gridLayout_X");
+        lbl_Player_aSetCX = new QLabel(groupBox_counterX);
+        lbl_Player_aSetCX->setObjectName("lbl_Player_aSetCX");
+        gridLayout_X->addWidget(lbl_Player_aSetCX, 0, 0, 1, 1);
+        Player_aSetCX = new SequenceEdit("Player/aSetCounter_x", groupBox_counterX);
+        Player_aSetCX->setObjectName("Player_aSetCX");
+        gridLayout_X->addWidget(Player_aSetCX, 0, 1, 1, 1);
+
+        lbl_Player_aIncCX = new QLabel(groupBox_counterX);
+        lbl_Player_aIncCX->setObjectName("lbl_Player_aIncCX");
+        gridLayout_X->addWidget(lbl_Player_aIncCX, 1, 0, 1, 1);
+        Player_aIncCX = new SequenceEdit("Player/aIncCounter_x", groupBox_counterX);
+        Player_aIncCX->setObjectName("Player_aIncCX");
+        gridLayout_X->addWidget(Player_aIncCX, 1, 1, 1, 1);
+
+        lbl_Player_aDecCX = new QLabel(groupBox_counterX);
+        lbl_Player_aDecCX->setObjectName("lbl_Player_aDecCX");
+        gridLayout_X->addWidget(lbl_Player_aDecCX, 2, 0, 1, 1);
+        Player_aDecCX = new SequenceEdit("Player/aDecCounter_x", groupBox_counterX);
+        Player_aDecCX->setObjectName("Player_aDecCX");
+        gridLayout_X->addWidget(Player_aDecCX, 2, 1, 1, 1);
+
+        counterLayout->addWidget(groupBox_counterX, 2, 2, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -980,16 +1246,6 @@ public:
 
         gridLayout_13->addWidget(Player_aTap, 0, 1, 1, 1);
 
-        lbl_Player_aUntap = new QLabel(groupBox_13);
-        lbl_Player_aUntap->setObjectName("lbl_Player_aUntap");
-
-        gridLayout_13->addWidget(lbl_Player_aUntap, 1, 0, 1, 1);
-
-        Player_aUntap = new SequenceEdit("Player/aUntap",groupBox_13);
-        Player_aUntap->setObjectName("Player_aUntap");
-
-        gridLayout_13->addWidget(Player_aUntap, 1, 1, 1, 1);
-
         lbl_Player_aUntapAll = new QLabel(groupBox_13);
         lbl_Player_aUntapAll->setObjectName("lbl_Player_aUntapAll");
 
@@ -1080,25 +1336,35 @@ public:
 
         gridLayout_13->addWidget(Player_aCreateToken, 10, 1, 1, 1);
 
+        lbl_Player_aCreateRelatedTokens = new QLabel(groupBox_13);
+        lbl_Player_aCreateRelatedTokens->setObjectName("lbl_Player_aCreateRelatedTokens");
+
+        gridLayout_13->addWidget(lbl_Player_aCreateRelatedTokens, 11, 0, 1, 1);
+
+        Player_aCreateRelatedTokens = new SequenceEdit("Player/aCreateRelatedTokens",groupBox_13);
+        Player_aCreateRelatedTokens->setObjectName("Player_aCreateRelatedTokens");
+
+        gridLayout_13->addWidget(Player_aCreateRelatedTokens, 11, 1, 1, 1);
+
         lbl_Player_aCreateAnotherToken = new QLabel(groupBox_13);
         lbl_Player_aCreateAnotherToken->setObjectName("lbl_Player_aCreateAnotherToken");
 
-        gridLayout_13->addWidget(lbl_Player_aCreateAnotherToken, 11, 0, 1, 1);
+        gridLayout_13->addWidget(lbl_Player_aCreateAnotherToken, 12, 0, 1, 1);
 
         Player_aCreateAnotherToken = new SequenceEdit("Player/aCreateAnotherToken",groupBox_13);
         Player_aCreateAnotherToken->setObjectName("Player_aCreateAnotherToken");
 
-        gridLayout_13->addWidget(Player_aCreateAnotherToken, 11, 1, 1, 1);
+        gridLayout_13->addWidget(Player_aCreateAnotherToken, 12, 1, 1, 1);
 
         lbl_Player_aSetAnnotation = new QLabel(groupBox_13);
         lbl_Player_aSetAnnotation->setObjectName("lbl_Player_aSetAnnotation");
 
-        gridLayout_13->addWidget(lbl_Player_aSetAnnotation, 12, 0, 1, 1);
+        gridLayout_13->addWidget(lbl_Player_aSetAnnotation, 13, 0, 1, 1);
 
         Player_aSetAnnotation = new SequenceEdit("Player/aSetAnnotation",groupBox_13);
         Player_aSetAnnotation->setObjectName("Player_aSetAnnotation");
 
-        gridLayout_13->addWidget(Player_aSetAnnotation, 12, 1, 1, 1);
+        gridLayout_13->addWidget(Player_aSetAnnotation, 13, 1, 1, 1);
 
         gridLayout_17->addWidget(groupBox_13, 0, 2, 1, 1);
 
@@ -1451,14 +1717,13 @@ public:
         gridLayout_20->setSpacing(3);
 
         verticalLayout->setSpacing(3);
-        horizontalLayout->setSpacing(3);
+        counterLayout->setSpacing(3);
         QMetaObject::connectSlotsByName(shortcutsTab);
         retranslateUi(shortcutsTab);
     } // setupUi
 
-    void retranslateUi(QWidget *shortcutsTab)
+    void retranslateUi(QWidget * /*shortcutsTab */)
     {
-        shortcutsTab->setWindowTitle(QApplication::translate("shortcutsTab", "Form", 0));
         groupBox->setTitle(QApplication::translate("shortcutsTab", "Main Window", 0));
         lbl_MainWindow_aDeckEditor->setText(QApplication::translate("shortcutsTab", "Deck editor", 0));
         lbl_MainWindow_aSinglePlayer->setText(QApplication::translate("shortcutsTab", "Local gameplay", 0));
@@ -1485,6 +1750,7 @@ public:
         lbl_TabDeckEditor_aResetLayout->setText(QApplication::translate("shortcutsTab", "Reset layout", 0));
         lbl_TabDeckEditor_aIncrement->setText(QApplication::translate("shortcutsTab", "Add card", 0));
         lbl_TabDeckEditor_aSaveDeck->setText(QApplication::translate("shortcutsTab", "Save deck", 0));
+        lbl_TabDeckEditor_aExportDeckDecklist->setText(QApplication::translate("shortcutsTab", "Export deck", 0));
         lbl_TabDeckEditor_aDecrement->setText(QApplication::translate("shortcutsTab", "Remove card", 0));
         lbl_TabDeckEditor_aSaveDeckAs->setText(QApplication::translate("shortcutsTab", "Save deck as", 0));
         lbl_TabDeckEditor_aLoadDeck->setText(QApplication::translate("shortcutsTab", "Load deck", 0));
@@ -1503,6 +1769,39 @@ public:
         lbl_Player_aCCGreen->setText(QApplication::translate("shortcutsTab", "Add", 0));
         lbl_Player_aRCGreen->setText(QApplication::translate("shortcutsTab", "Remove", 0));
         groupBox_7->setTitle(QApplication::translate("shortcutsTab", "Yellow", 0));
+        lbl_Player_aSCYellow->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aCCYellow->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aRCYellow->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+
+        groupBox_counterStorm->setTitle(QApplication::translate("shortcutsTab", "Storm", 0));
+        lbl_Player_aSetCStorm->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCStorm->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCStorm->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterW->setTitle(QApplication::translate("shortcutsTab", "W", 0));
+        lbl_Player_aSetCW->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCW->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCW->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterU->setTitle(QApplication::translate("shortcutsTab", "U", 0));
+        lbl_Player_aSetCU->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCU->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCU->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterB->setTitle(QApplication::translate("shortcutsTab", "B", 0));
+        lbl_Player_aSetCB->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCB->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCB->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterR->setTitle(QApplication::translate("shortcutsTab", "R", 0));
+        lbl_Player_aSetCR->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCR->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCR->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterG->setTitle(QApplication::translate("shortcutsTab", "G", 0));
+        lbl_Player_aSetCG->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCG->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCG->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+        groupBox_counterX->setTitle(QApplication::translate("shortcutsTab", "X", 0));
+        lbl_Player_aSetCX->setText(QApplication::translate("shortcutsTab", "Set", 0));
+        lbl_Player_aIncCX->setText(QApplication::translate("shortcutsTab", "Add", 0));
+        lbl_Player_aDecCX->setText(QApplication::translate("shortcutsTab", "Remove", 0));
+
         lbl_Player_aSCYellow->setText(QApplication::translate("shortcutsTab", "Set", 0));
         lbl_Player_aCCYellow->setText(QApplication::translate("shortcutsTab", "Add", 0));
         lbl_Player_aRCYellow->setText(QApplication::translate("shortcutsTab", "Remove", 0));
@@ -1533,10 +1832,9 @@ public:
         lbl_TabGame_aNextPhase->setText(QApplication::translate("shortcutsTab", "Next phase", 0));
         lbl_TabGame_aNextTurn->setText(QApplication::translate("shortcutsTab", "Next turn", 0));
         groupBox_13->setTitle(QApplication::translate("shortcutsTab", "Playing Area", 0));
-        lbl_Player_aTap->setText(QApplication::translate("shortcutsTab", "Tap Card", 0));
-        lbl_Player_aUntap->setText(QApplication::translate("shortcutsTab", "Untap Card", 0));
+        lbl_Player_aTap->setText(QApplication::translate("shortcutsTab", "Tap / Untap Card", 0));
         lbl_Player_aUntapAll->setText(QApplication::translate("shortcutsTab", "Untap all", 0));
-        lbl_Player_aDoesntUntap->setText(QApplication::translate("shortcutsTab", "Toogle untap", 0));
+        lbl_Player_aDoesntUntap->setText(QApplication::translate("shortcutsTab", "Toggle untap", 0));
         lbl_Player_aFlip->setText(QApplication::translate("shortcutsTab", "Flip card", 0));
         lbl_Player_aPeek->setText(QApplication::translate("shortcutsTab", "Peek card", 0));
         lbl_Player_aPlay->setText(QApplication::translate("shortcutsTab", "Play card", 0));
@@ -1544,6 +1842,7 @@ public:
         lbl_Player_aUnattach->setText(QApplication::translate("shortcutsTab", "Unattach card", 0));
         lbl_Player_aClone->setText(QApplication::translate("shortcutsTab", "Clone card", 0));
         lbl_Player_aCreateToken->setText(QApplication::translate("shortcutsTab", "Create token", 0));
+        lbl_Player_aCreateRelatedTokens->setText(QApplication::translate("shortcutsTab", "Create all related tokens", 0));
         lbl_Player_aCreateAnotherToken->setText(QApplication::translate("shortcutsTab", "Create another token", 0));
         lbl_Player_aSetAnnotation->setText(QApplication::translate("shortcutsTab", "Set annotation", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("shortcutsTab", "Phases | P/T | Playing Area", 0));

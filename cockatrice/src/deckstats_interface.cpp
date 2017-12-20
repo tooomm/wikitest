@@ -6,10 +6,7 @@
 #include <QRegExp>
 #include <QMessageBox>
 #include <QDesktopServices>
-
-#if QT_VERSION >= 0x050000
 #include <QUrlQuery>
-#endif
 
 DeckStatsInterface::DeckStatsInterface(
     CardDatabase &_cardDatabase,
@@ -31,9 +28,9 @@ void DeckStatsInterface::queryFinished(QNetworkReply *reply)
         
     QString data(reply->readAll());
     reply->deleteLater();
-    
-    QRegExp rx("<meta property=\"og:url\" content=\"([^\"]+)\"/>");
-    if (!rx.indexIn(data)) {
+
+    QRegExp rx("<meta property=\"og:url\" content=\"([^\"]+)\"");
+    if (-1 == rx.indexIn(data)) {
         QMessageBox::critical(0, tr("Error"), tr("The reply from the server could not be parsed."));
         deleteLater();
         return;
@@ -50,19 +47,12 @@ void DeckStatsInterface::getAnalyzeRequestData(DeckList *deck, QByteArray *data)
     DeckList deckWithoutTokens;
     copyDeckWithoutTokens(*deck, deckWithoutTokens);
 
-#if QT_VERSION < 0x050000
-    QUrl params;
-    params.addQueryItem("deck", deckWithoutTokens.writeToString_Plain());
-    params.addQueryItem("decktitle", deck->getName());
-    data->append(params.encodedQuery());
-#else
     QUrl params;
     QUrlQuery urlQuery;
     urlQuery.addQueryItem("deck", deckWithoutTokens.writeToString_Plain());
     urlQuery.addQueryItem("decktitle", deck->getName());
     params.setQuery(urlQuery);
     data->append(params.query(QUrl::EncodeReserved));
-#endif
 }
 
 void DeckStatsInterface::analyzeDeck(DeckList *deck)
@@ -70,7 +60,7 @@ void DeckStatsInterface::analyzeDeck(DeckList *deck)
     QByteArray data;
     getAnalyzeRequestData(deck, &data);
     
-    QNetworkRequest request(QUrl("http://deckstats.net/index.php"));
+    QNetworkRequest request(QUrl("https://deckstats.net/index.php"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     
     manager->post(request, data);
@@ -89,7 +79,8 @@ struct CopyIfNotAToken {
         const InnerDecklistNode *node,
         const DecklistCardNode *card
     ) const {
-        if (!cardDatabase.getCard(card->getName())->getIsToken()) {
+        CardInfo * dbCard = cardDatabase.getCard(card->getName());
+        if (dbCard && !dbCard->getIsToken()) {
             DecklistCardNode *addedCard = destination.addCard(
                 card->getName(),
                 node->getName()

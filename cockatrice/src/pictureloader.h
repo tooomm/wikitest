@@ -39,7 +39,7 @@ private:
     static QStringList md5Blacklist;
 
     QThread *pictureLoaderThread;
-    QString picsPath;
+    QString picsPath, customPicsPath;
     QList<PictureToLoad> loadQueue;
     QMutex mutex;
     QNetworkAccessManager *networkManager;
@@ -75,18 +75,17 @@ public:
 private:
     PictureLoader();
     ~PictureLoader();
-    // Don't implement
+    // Singleton - Don't implement copy constructor and assign operator
     PictureLoader(PictureLoader const&);
     void operator=(PictureLoader const&); 
 
     PictureLoaderWorker * worker;
 public:
     static void getPixmap(QPixmap &pixmap, CardInfo *card, QSize size);
+    static void getCardBackPixmap(QPixmap &pixmap, QSize size);
     static void clearPixmapCache(CardInfo *card);
     static void clearPixmapCache();
     static void cacheCardPixmaps(QList<CardInfo *> cards);
-protected:
-    static void internalGetCardBackPixmap(QPixmap &pixmap, QSize size);
 private slots:
     void picDownloadChanged();
     void picsPathChanged();

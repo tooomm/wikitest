@@ -36,11 +36,7 @@ TabReplays::TabReplays(TabSupervisor *_tabSupervisor, AbstractClient *_client)
     localDirView->setColumnHidden(1, true);
     localDirView->setRootIndex(localDirModel->index(localDirModel->rootPath(), 0));
     localDirView->setSortingEnabled(true);
-#if QT_VERSION < 0x050000
-    localDirView->header()->setResizeMode(QHeaderView::ResizeToContents);
-#else
     localDirView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
     localDirView->header()->setSortIndicator(0, Qt::AscendingOrder);
     
     leftToolBar = new QToolBar;
@@ -194,8 +190,13 @@ void TabReplays::actDownload()
     }
 
     ServerInfo_Replay const *curRight = serverDirView->getCurrentReplay();
+
     if (!curRight)
+    {
+        QMessageBox::information(this, tr("Downloading Replays"), tr("You cannot download replay folders at this time"));
         return;
+    }
+
     filePath += QString("/replay_%1.cor").arg(curRight->replay_id());
     
     Command_ReplayDownload cmd;

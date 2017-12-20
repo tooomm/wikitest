@@ -21,16 +21,17 @@
 #include <QDebug>
 #include <QSlider>
 #include <QSpinBox>
+#include <QDesktopWidget>
 #include "carddatabase.h"
 #include "dlg_settings.h"
 #include "main.h"
 #include "settingscache.h"
 #include "thememanager.h"
-#include "priceupdater.h"
+#include "releasechannel.h"
 #include "soundengine.h"
 #include "sequenceEdit/shortcutstab.h"
 
-#define WIKI_CUSTOM_PIC_URL "https://github.com/Cockatrice/Cockatrice/wiki/Custom-Download-URLs"
+#define WIKI_CUSTOM_PIC_URL "https://github.com/Cockatrice/Cockatrice/wiki/Custom-Picture-Download-URLs"
 
 GeneralSettingsPage::GeneralSettingsPage()
 {
@@ -39,13 +40,23 @@ GeneralSettingsPage::GeneralSettingsPage()
     for (int i = 0; i < qmFiles.size(); i++) {
         QString langName = languageName(qmFiles[i]);
         languageBox.addItem(langName, qmFiles[i]);
-        if ((qmFiles[i] == setLanguage) || (setLanguage.isEmpty() && langName == tr("English")))
+        if ((qmFiles[i] == setLanguage) || (setLanguage.isEmpty() && langName == QCoreApplication::translate("i18n", DEFAULT_LANG_NAME)))
             languageBox.setCurrentIndex(i);
     }
 
     picDownloadCheckBox.setChecked(settingsCache->getPicDownload());
+
+    // updates
+    QList<ReleaseChannel*> channels = settingsCache->getUpdateReleaseChannels();
+    foreach(ReleaseChannel* chan, channels)
+    {
+        updateReleaseChannelBox.insertItem(chan->getIndex(), tr(chan->getName().toUtf8()));
+    }
+    updateReleaseChannelBox.setCurrentIndex(settingsCache->getUpdateReleaseChannel()->getIndex());
+
     updateNotificationCheckBox.setChecked(settingsCache->getNotifyAboutUpdates());
 
+    // pixmap cache
     pixmapCacheEdit.setMinimum(PIXMAPCACHE_SIZE_MIN);
     // 2047 is the max value to avoid overflowing of QPixmapCache::setCacheLimit(int size)
     pixmapCacheEdit.setMaximum(PIXMAPCACHE_SIZE_MAX);
@@ -60,6 +71,7 @@ GeneralSettingsPage::GeneralSettingsPage()
     connect(&languageBox, SIGNAL(currentIndexChanged(int)), this, SLOT(languageBoxChanged(int)));
     connect(&picDownloadCheckBox, SIGNAL(stateChanged(int)), settingsCache, SLOT(setPicDownload(int)));
     connect(&pixmapCacheEdit, SIGNAL(valueChanged(int)), settingsCache, SLOT(setPixmapCacheSize(int)));
+    connect(&updateReleaseChannelBox, SIGNAL(currentIndexChanged(int)), settingsCache, SLOT(setUpdateReleaseChannel(int)));
     connect(&updateNotificationCheckBox, SIGNAL(stateChanged(int)), settingsCache, SLOT(setNotifyAboutUpdate(int)));
     connect(&picDownloadCheckBox, SIGNAL(clicked(bool)), this, SLOT(setEnabledStatus(bool)));
     connect(defaultUrlEdit, SIGNAL(textChanged(QString)), settingsCache, SLOT(setPicUrl(QString)));
@@ -72,18 +84,20 @@ GeneralSettingsPage::GeneralSettingsPage()
     QGridLayout *personalGrid = new QGridLayout;
     personalGrid->addWidget(&languageLabel, 0, 0);
     personalGrid->addWidget(&languageBox, 0, 1);
-    personalGrid->addWidget(&pixmapCacheLabel, 1, 0);
-    personalGrid->addWidget(&pixmapCacheEdit, 1, 1);
-    personalGrid->addWidget(&updateNotificationCheckBox, 2, 0);
-    personalGrid->addWidget(&picDownloadCheckBox, 3, 0, 1, 3);
-    personalGrid->addWidget(&defaultUrlLabel, 4, 0, 1, 1);
-    personalGrid->addWidget(defaultUrlEdit, 4, 1, 1, 1);
-    personalGrid->addWidget(&defaultUrlRestoreButton, 4, 2, 1, 1);
-    personalGrid->addWidget(&fallbackUrlLabel, 5, 0, 1, 1);
-    personalGrid->addWidget(fallbackUrlEdit, 5, 1, 1, 1);
-    personalGrid->addWidget(&fallbackUrlRestoreButton, 5, 2, 1, 1);
-    personalGrid->addWidget(&urlLinkLabel, 6, 1, 1, 1);
-    personalGrid->addWidget(&clearDownloadedPicsButton, 7, 0, 1, 3);
+    personalGrid->addWidget(&updateReleaseChannelLabel, 1, 0);
+    personalGrid->addWidget(&updateReleaseChannelBox, 1, 1);
+    personalGrid->addWidget(&pixmapCacheLabel, 2, 0);
+    personalGrid->addWidget(&pixmapCacheEdit, 2, 1);
+    personalGrid->addWidget(&updateNotificationCheckBox, 3, 0);
+    personalGrid->addWidget(&picDownloadCheckBox, 4, 0, 1, 3);
+    personalGrid->addWidget(&defaultUrlLabel, 5, 0, 1, 1);
+    personalGrid->addWidget(defaultUrlEdit, 5, 1, 1, 1);
+    personalGrid->addWidget(&defaultUrlRestoreButton, 5, 2, 1, 1);
+    personalGrid->addWidget(&fallbackUrlLabel, 6, 0, 1, 1);
+    personalGrid->addWidget(fallbackUrlEdit, 6, 1, 1, 1);
+    personalGrid->addWidget(&fallbackUrlRestoreButton, 6, 2, 1, 1);
+    personalGrid->addWidget(&urlLinkLabel, 7, 1, 1, 1);
+    personalGrid->addWidget(&clearDownloadedPicsButton, 8, 0, 1, 3);
     
     urlLinkLabel.setTextInteractionFlags(Qt::LinksAccessibleByMouse);
     urlLinkLabel.setOpenExternalLinks(true);
@@ -116,6 +130,21 @@ GeneralSettingsPage::GeneralSettingsPage()
     QPushButton *tokenDatabasePathButton = new QPushButton("...");
     connect(tokenDatabasePathButton, SIGNAL(clicked()), this, SLOT(tokenDatabasePathButtonClicked()));
     
+    if(settingsCache->getIsPortableBuild())
+    {
+        deckPathEdit->setEnabled(false);
+        replaysPathEdit->setEnabled(false);
+        picsPathEdit->setEnabled(false);
+        cardDatabasePathEdit->setEnabled(false);
+        tokenDatabasePathEdit->setEnabled(false);
+
+        deckPathButton->setVisible(false);
+        replaysPathButton->setVisible(false);
+        picsPathButton->setVisible(false);
+        cardDatabasePathButton->setVisible(false);
+        tokenDatabasePathButton->setVisible(false);
+    }
+
     QGridLayout *pathsGrid = new QGridLayout;
     pathsGrid->addWidget(&deckPathLabel, 0, 0);
     pathsGrid->addWidget(deckPathEdit, 0, 1);
@@ -152,10 +181,13 @@ QStringList GeneralSettingsPage::findQmFiles()
 
 QString GeneralSettingsPage::languageName(const QString &qmFile)
 {
+    if(qmFile == DEFAULT_LANG_CODE)
+        return DEFAULT_LANG_NAME;
+
     QTranslator translator;
     translator.load(translationPrefix + "_" + qmFile + ".qm", translationPath);
     
-    return translator.translate("GeneralSettingsPage", "English");
+    return translator.translate("i18n", DEFAULT_LANG_NAME);
 }
 
 void GeneralSettingsPage::defaultUrlRestoreButtonClicked()
@@ -256,7 +288,14 @@ void GeneralSettingsPage::retranslateUi()
     personalGroupBox->setTitle(tr("Personal settings"));
     languageLabel.setText(tr("Language:"));
     picDownloadCheckBox.setText(tr("Download card pictures on the fly"));
-    pathsGroupBox->setTitle(tr("Paths"));
+
+    if(settingsCache->getIsPortableBuild())
+    {
+        pathsGroupBox->setTitle(tr("Paths (editing disabled in portable mode)"));
+    } else {
+        pathsGroupBox->setTitle(tr("Paths"));
+    }
+
     deckPathLabel.setText(tr("Decks directory:"));
     replaysPathLabel.setText(tr("Replays directory:"));
     picsPathLabel.setText(tr("Pictures directory:"));
@@ -266,8 +305,9 @@ void GeneralSettingsPage::retranslateUi()
     defaultUrlLabel.setText(tr("Primary download URL:"));
     fallbackUrlLabel.setText(tr("Fallback download URL:"));
     urlLinkLabel.setText(QString("<a href='%1'>%2</a>").arg(WIKI_CUSTOM_PIC_URL).arg(tr("How to set a custom picture url")));
-    clearDownloadedPicsButton.setText(tr("Reset/Clear Downloaded Pictures"));
-    updateNotificationCheckBox.setText(tr("Notify when new client features are available"));
+    clearDownloadedPicsButton.setText(tr("Reset/clear downloaded pictures"));
+    updateReleaseChannelLabel.setText(tr("Update channel"));
+    updateNotificationCheckBox.setText(tr("Notify if a feature supported by the server is missing in my client"));
     defaultUrlRestoreButton.setText(tr("Reset"));
     fallbackUrlRestoreButton.setText(tr("Reset"));
 }
@@ -333,11 +373,19 @@ AppearanceSettingsPage::AppearanceSettingsPage()
     minPlayersForMultiColumnLayoutEdit.setValue(settingsCache->getMinPlayersForMultiColumnLayout());
     connect(&minPlayersForMultiColumnLayoutEdit, SIGNAL(valueChanged(int)), settingsCache, SLOT(setMinPlayersForMultiColumnLayout(int)));
     minPlayersForMultiColumnLayoutLabel.setBuddy(&minPlayersForMultiColumnLayoutEdit);
-    
+
+    connect(&maxFontSizeForCardsEdit, SIGNAL(valueChanged(int)), settingsCache, SLOT(setMaxFontSize(int)));
+    maxFontSizeForCardsEdit.setValue(settingsCache->getMaxFontSize());
+    maxFontSizeForCardsLabel.setBuddy(&maxFontSizeForCardsEdit);
+    maxFontSizeForCardsEdit.setMinimum(9);
+    maxFontSizeForCardsEdit.setMaximum(100);
+
     QGridLayout *tableGrid = new QGridLayout;
     tableGrid->addWidget(&invertVerticalCoordinateCheckBox, 0, 0, 1, 2);
     tableGrid->addWidget(&minPlayersForMultiColumnLayoutLabel, 1, 0, 1, 1);
     tableGrid->addWidget(&minPlayersForMultiColumnLayoutEdit, 1, 1, 1, 1);
+    tableGrid->addWidget(&maxFontSizeForCardsLabel, 2, 0, 1, 1);
+    tableGrid->addWidget(&maxFontSizeForCardsEdit, 2, 1, 1, 1);
     
     tableGroupBox = new QGroupBox;
     tableGroupBox->setLayout(tableGrid);
@@ -374,6 +422,7 @@ void AppearanceSettingsPage::retranslateUi()
     tableGroupBox->setTitle(tr("Table grid layout"));
     invertVerticalCoordinateCheckBox.setText(tr("Invert vertical coordinate"));
     minPlayersForMultiColumnLayoutLabel.setText(tr("Minimum player count for multi-column layout:"));
+    maxFontSizeForCardsLabel.setText(tr("Maximum font size for information displayed on cards:"));
 }
 
 UserInterfaceSettingsPage::UserInterfaceSettingsPage()
@@ -440,13 +489,7 @@ void UserInterfaceSettingsPage::retranslateUi()
 
 DeckEditorSettingsPage::DeckEditorSettingsPage()
 {
-    //priceTagsCheckBox.setChecked(settingsCache->getPriceTagFeature());
-    //connect(&priceTagsCheckBox, SIGNAL(stateChanged(int)), settingsCache, SLOT(setPriceTagFeature(int)));
-
-    //connect(this, SIGNAL(priceTagSourceChanged(int)), settingsCache, SLOT(setPriceTagSource(int)));
-
     QGridLayout *generalGrid = new QGridLayout;
-    //generalGrid->addWidget(&priceTagsCheckBox, 0, 0);
     
     generalGrid->addWidget(new QLabel(tr("Nothing is here... yet")), 0, 0);
     
@@ -461,20 +504,8 @@ DeckEditorSettingsPage::DeckEditorSettingsPage()
 
 void DeckEditorSettingsPage::retranslateUi()
 {
-    //priceTagsCheckBox.setText(tr("Enable &price tag feature from deckbrew.com"));
     generalGroupBox->setTitle(tr("General"));
 }
-
-/*
-void DeckEditorSettingsPage::radioPriceTagSourceClicked(bool checked)
-{
-    if(!checked)
-        return;
-
-    int source=AbstractPriceUpdater::DBPriceSource;
-    emit priceTagSourceChanged(source);
-}
-*/
 
 MessagesSettingsPage::MessagesSettingsPage()
 {
@@ -694,11 +725,6 @@ SoundSettingsPage::SoundSettingsPage()
     connect(masterVolumeSlider, SIGNAL(valueChanged(int)), masterVolumeSpinBox, SLOT(setValue(int)));
     connect(masterVolumeSpinBox, SIGNAL(valueChanged(int)), masterVolumeSlider, SLOT(setValue(int)));
 
-#if QT_VERSION < 0x050000
-    masterVolumeSlider->setEnabled(false);
-    masterVolumeSpinBox->setEnabled(false);
-#endif
-
     QGridLayout *soundGrid = new QGridLayout;
     soundGrid->addWidget(&soundEnabledCheckBox, 0, 0, 1, 3);
     soundGrid->addWidget(&masterVolumeLabel, 1, 0);
@@ -733,17 +759,16 @@ void SoundSettingsPage::retranslateUi() {
     themeLabel.setText(tr("Current sounds theme:"));
     soundTestButton.setText(tr("Test system sound engine"));
     soundGroupBox->setTitle(tr("Sound settings"));
-    #if QT_VERSION < 0x050000
-    masterVolumeLabel.setText(tr("Master volume requires QT5"));
-#else
-    masterVolumeLabel.setText(tr("Master volume"));
-#endif
-    
+    masterVolumeLabel.setText(tr("Master volume"));    
 }
 
 DlgSettings::DlgSettings(QWidget *parent)
     : QDialog(parent)
 {
+    QRect rec = QApplication::desktop()->availableGeometry();
+    this->setMinimumSize(rec.width() / 2, rec.height() - 100);
+    this->setBaseSize(rec.width(), rec.height());
+
     connect(settingsCache, SIGNAL(langChanged()), this, SLOT(updateLanguage()));
     
     contentsWidget = new QListWidget;

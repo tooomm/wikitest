@@ -276,7 +276,7 @@ void UserListTWI::setUserInfo(const ServerInfo_User &_userInfo)
     userInfo = _userInfo;
 
     setData(0, Qt::UserRole, userInfo.user_level());
-    setIcon(0, QIcon(UserLevelPixmapGenerator::generatePixmap(12, UserLevelFlags(userInfo.user_level()), false)));
+    setIcon(0, QIcon(UserLevelPixmapGenerator::generatePixmap(12, UserLevelFlags(userInfo.user_level()), false, QString::fromStdString(userInfo.privlevel()))));
     setIcon(1, QIcon(CountryPixmapGenerator::generatePixmap(12, QString::fromStdString(userInfo.country()))));
     setData(2, Qt::UserRole, QString::fromStdString(userInfo.name()));
     setData(2, Qt::DisplayRole, QString::fromStdString(userInfo.name()));
@@ -311,11 +311,7 @@ UserList::UserList(TabSupervisor *_tabSupervisor, AbstractClient *_client, UserL
     
     userTree = new QTreeWidget;
     userTree->setColumnCount(3);
-#if QT_VERSION < 0x050000
-    userTree->header()->setResizeMode(QHeaderView::ResizeToContents);
-#else
     userTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
     userTree->setHeaderHidden(true);
     userTree->setRootIsDecorated(false);
     userTree->setIconSize(QSize(20, 12));

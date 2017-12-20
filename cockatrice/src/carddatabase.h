@@ -11,6 +11,7 @@
 
 class CardDatabase;
 class CardInfo;
+class CardRelation;
 
 typedef QMap<QString, QString> QStringMap;
 
@@ -42,6 +43,8 @@ public:
     void setEnabled(bool _enabled);
     bool getIsKnown() const { return isknown; }
     void setIsKnown(bool _isknown);
+    //Determine incomplete sets.
+    bool getIsKnownIgnored() const { return longName.length() + setType.length() + releaseDate.toString().length() == 0 ; }
 };
 
 class SetList : public QList<CardSet *> {
@@ -55,6 +58,7 @@ public:
     void markAllAsKnown();
     int getEnabledSetsNum();
     int getUnknownSetsNum();
+    QStringList getUnknownSetsNames();
 };
 
 class CardInfo : public QObject {
@@ -77,21 +81,21 @@ private:
     QString text;
     QStringList colors;
     // the cards i'm related to
-    QStringList relatedCards;
+    QList<CardRelation *> relatedCards;
     // the card i'm reverse-related to
-    QStringList reverseRelatedCards;
+    QList<CardRelation *> reverseRelatedCards;
     // the cards thare are reverse-related to me
-    QStringList reverseRelatedCardsToMe;
+    QList<CardRelation *> reverseRelatedCardsToMe;
     QString setsNames;
     bool upsideDownArt;
     int loyalty;
     QStringMap customPicURLs;
     MuidMap muIds;
+    QStringMap collectorNumbers;
+    QStringMap rarities;
     bool cipt;
     int tableRow;
     QString pixmapCacheKey;
-
-    void refreshCachedSetNames();
 public:
     CardInfo(const QString &_name = QString(),
         bool _isToken = false,
@@ -101,15 +105,17 @@ public:
         const QString &_powtough = QString(),
         const QString &_text = QString(),
         const QStringList &_colors = QStringList(),
-        const QStringList &_relatedCards = QStringList(),
-        const QStringList &_reverseRelatedCards = QStringList(),
+        const QList<CardRelation *> &_relatedCards = QList<CardRelation *>(),
+        const QList<CardRelation *> &_reverseRelatedCards = QList<CardRelation *>(),
         bool _upsideDownArt = false,
         int _loyalty = 0,
         bool _cipt = false,
         int _tableRow = 0,
         const SetList &_sets = SetList(),
         const QStringMap &_customPicURLs = QStringMap(),
-        MuidMap muids = MuidMap()
+        MuidMap muids = MuidMap(),
+        QStringMap _collectorNumbers = QStringMap(),
+        QStringMap _rarities = QStringMap()
         );
     ~CardInfo();
     inline const QString &getName() const { return name; }
@@ -131,15 +137,19 @@ public:
     void setPowTough(const QString &_powTough) { powtough = _powTough; emit cardInfoChanged(this); }
     void setText(const QString &_text) { text = _text; emit cardInfoChanged(this); }
     void setColors(const QStringList &_colors) { colors = _colors; emit cardInfoChanged(this); }
+    const QChar getColorChar() const;
     const QStringList &getColors() const { return colors; }
-    const QStringList &getRelatedCards() const { return relatedCards; }
-    const QStringList &getReverseRelatedCards() const { return reverseRelatedCards; }
-    const QStringList &getReverseRelatedCards2Me() const { return reverseRelatedCardsToMe; }
-    void resetReverseRelatedCards2Me() { reverseRelatedCardsToMe = QStringList(); }
-    void addReverseRelatedCards2Me(QString & cardName) { reverseRelatedCardsToMe.append(cardName); }
+    const QList<CardRelation *> &getRelatedCards() const { return relatedCards; }
+    const QList<CardRelation *> &getReverseRelatedCards() const { return reverseRelatedCards; }
+    const QList<CardRelation *> &getReverseRelatedCards2Me() const { return reverseRelatedCardsToMe; }
+    void resetReverseRelatedCards2Me();
+    void addReverseRelatedCards2Me(CardRelation * cardRelation) { reverseRelatedCardsToMe.append(cardRelation); }
     bool getUpsideDownArt() const { return upsideDownArt; }
     QString getCustomPicURL(const QString &set) const { return customPicURLs.value(set); }
     int getMuId(const QString &set) const { return muIds.value(set); }
+    QString getCollectorNumber(const QString &set) const { return collectorNumbers.value(set); }
+    QString getRarity(const QString &set) const { return rarities.value(set); }
+    QStringMap getRarities() const { return rarities; }
     QString getMainCardType() const;
     QString getCorrectedName() const;
     int getTableRow() const { return tableRow; }
@@ -147,8 +157,11 @@ public:
     void setLoyalty(int _loyalty) { loyalty = _loyalty; emit cardInfoChanged(this); }
     void setCustomPicURL(const QString &_set, const QString &_customPicURL) { customPicURLs.insert(_set, _customPicURL); }
     void setMuId(const QString &_set, const int &_muId) { muIds.insert(_set, _muId); }
+    void setSetNumber(const QString &_set, const QString &_setNumber) { collectorNumbers.insert(_set, _setNumber); }
+    void setRarity(const QString &_set, const QString &_setNumber) { rarities.insert(_set, _setNumber); }
     void addToSet(CardSet *set);
     void emitPixmapUpdated() { emit pixmapUpdated(); }
+    void refreshCachedSetNames();
 
     /**
      * Simplify a name to have no punctuation and lowercase all letters, for
@@ -183,20 +196,15 @@ protected:
      */
     SetNameMap sets;
 
-    /*
-     * A dummy card returned by getCard() ad a fallback
-     */
-    CardInfo *noCard;
-
     LoadStatus loadStatus;
-    bool detectedFirstRun;
 private:
     static const int versionNeeded;
-    void loadCardsFromXml(QXmlStreamReader &xml, bool tokens);
+    void loadCardsFromXml(QXmlStreamReader &xml);
     void loadSetsFromXml(QXmlStreamReader &xml);
 
-    CardInfo *getCardFromMap(CardNameMap &cardMap, const QString &cardName, bool createIfNotFound);
+    CardInfo *getCardFromMap(const CardNameMap &cardMap, const QString &cardName) const;
     void checkUnknownSets();
+    void refreshCachedReverseRelatedCards();
 public:
     static const char* TOKENS_SETNAME;
 
@@ -205,40 +213,62 @@ public:
     void clear();
     void addCard(CardInfo *card);
     void removeCard(CardInfo *card);
-    /*
-     * Get card object by name. Ensured to return a valid CardInfo * object; check noCard
-     */
-    CardInfo *getCard(const QString &cardName = QString(), bool createIfNotFound = false);
-    QList <CardInfo *> getCards(const QStringList &cardNames);
+    CardInfo *getCard(const QString &cardName) const;
+    QList <CardInfo *> getCards(const QStringList &cardNames) const;
 
     /*
      * Get a card by its simple name. The name will be simplified in this
      * function, so you don't need to simplify it beforehand.
      */
-    CardInfo *getCardBySimpleName(const QString &cardName = QString(), bool createIfNotFound = false);
+    CardInfo *getCardBySimpleName(const QString &cardName) const;
 
     CardSet *getSet(const QString &setName);
     QList<CardInfo *> getCardList() const { return cards.values(); }
     SetList getSetList() const;
-    LoadStatus loadFromFile(const QString &fileName, bool tokens = false);
+    LoadStatus loadFromFile(const QString &fileName);
     bool saveToFile(const QString &fileName, bool tokens = false);
+    bool saveCustomTokensToFile();
     QStringList getAllColors() const;
     QStringList getAllMainCardTypes() const;
     LoadStatus getLoadStatus() const { return loadStatus; }
-    bool getLoadSuccess() const { return loadStatus == Ok; }
-    bool hasDetectedFirstRun();
-    void refreshCachedReverseRelatedCards();
+    void enableAllUnknownSets();
+    void markAllSetsAsKnown();
+    void notifyEnabledSetsChanged();
+
 public slots:
-    LoadStatus loadCardDatabase();
-    LoadStatus loadTokenDatabase();
-    void loadCustomCardDatabases(const QString &path);
-    void emitCardListChanged();
+    LoadStatus loadCardDatabases();
 private slots:
-    LoadStatus loadCardDatabase(const QString &path, bool tokens = false);
+    LoadStatus loadCardDatabase(const QString &path);
 signals:
-    void cardListChanged();
+    void cardDatabaseLoadingFailed();
+    void cardDatabaseNewSetsFound(int numUnknownSets, QStringList unknownSetsNames);
+    void cardDatabaseAllNewSetsEnabled();
+    void cardDatabaseEnabledSetsChanged();
     void cardAdded(CardInfo *card);
     void cardRemoved(CardInfo *card);
+};
+
+class CardRelation : public QObject {
+    Q_OBJECT
+private:
+    QString name;
+    bool doesAttach;
+    bool isCreateAllExclusion;
+    bool isVariableCount;
+    int defaultCount;
+public:
+    CardRelation(const QString &_name = QString(),
+            bool _doesAttach = false,
+            bool _isCreateAllExclusion = false,
+            bool _isVariableCount = false,
+            int _defaultCount = 1
+            );
+    inline const QString &getName() const { return name; }
+    bool getDoesAttach() const { return doesAttach; }
+    bool getCanCreateAnother() const { return !doesAttach; }
+    bool getIsCreateAllExclusion() const { return isCreateAllExclusion; }
+    bool getIsVariable() const { return isVariableCount; }
+    int getDefaultCount() const { return defaultCount; }
 };
 
 #endif

@@ -12,10 +12,8 @@
 #include "pending_command.h"
 
 #include <QtGui>
-#if QT_VERSION >= 0x050000
 #include <QtWidgets>
 #include <QSignalMapper>
-#endif
 
 #include "pb/commands.pb.h"
 #include "pb/session_commands.pb.h"
@@ -247,7 +245,7 @@ void UserContextMenu::warnUser_dialogFinished()
 {
     WarningDialog *dlg = static_cast<WarningDialog *>(sender());
 
-    if (dlg->getName().isEmpty() || QString::fromStdString(tabSupervisor->getUserInfo()->name()).simplified().isEmpty())
+    if (dlg->getName().isEmpty() || tabSupervisor->getOwnUsername().simplified().isEmpty())
         return;
 
     Command_WarnUser cmd;
@@ -269,13 +267,13 @@ void UserContextMenu::showContextMenu(const QPoint &pos, const QString &userName
     menu->addAction(aDetails);
     menu->addAction(aShowGames);
     menu->addAction(aChat);
-    if (userLevel.testFlag(ServerInfo_User::IsRegistered) && (tabSupervisor->getUserInfo()->user_level() & ServerInfo_User::IsRegistered)) {
+    if (userLevel.testFlag(ServerInfo_User::IsRegistered) && tabSupervisor->isOwnUserRegistered()) {
         menu->addSeparator();
-        if (tabSupervisor->getUserListsTab()->getBuddyList()->getUsers().contains(userName))
+        if (tabSupervisor->isUserBuddy(userName))
             menu->addAction(aRemoveFromBuddyList);
         else
             menu->addAction(aAddToBuddyList);
-        if (tabSupervisor->getUserListsTab()->getIgnoreList()->getUsers().contains(userName))
+        if (tabSupervisor->isUserIgnored(userName))
             menu->addAction(aRemoveFromIgnoreList);
         else
             menu->addAction(aAddToIgnoreList);
@@ -300,10 +298,10 @@ void UserContextMenu::showContextMenu(const QPoint &pos, const QString &userName
             menu->addAction(aPromoteToMod);
         }
     }
-    bool anotherUser = userName != QString::fromStdString(tabSupervisor->getUserInfo()->name());
+    bool anotherUser = userName != tabSupervisor->getOwnUsername();
     aDetails->setEnabled(true);
     aChat->setEnabled(anotherUser && online);
-    aShowGames->setEnabled(anotherUser);
+    aShowGames->setEnabled(online);
     aAddToBuddyList->setEnabled(anotherUser);
     aRemoveFromBuddyList->setEnabled(anotherUser);
     aAddToIgnoreList->setEnabled(anotherUser);

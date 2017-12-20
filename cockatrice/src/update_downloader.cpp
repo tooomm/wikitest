@@ -1,4 +1,5 @@
 #include <QUrl>
+#include <QDebug>
 
 #include "update_downloader.h"
 
@@ -7,23 +8,20 @@ UpdateDownloader::UpdateDownloader(QObject *parent) : QObject(parent) {
 }
 
 void UpdateDownloader::beginDownload(QUrl downloadUrl) {
-
     //Save the original URL because we need it for the filename
     if (originalUrl.isEmpty())
         originalUrl = downloadUrl;
 
     response = netMan->get(QNetworkRequest(downloadUrl));
-    connect(response, SIGNAL(finished()),
-            this, SLOT(fileFinished()));
-    connect(response, SIGNAL(readyRead()),
-            this, SLOT(fileReadyRead()));
-    connect(response, SIGNAL(downloadProgress(qint64, qint64)),
-            this, SLOT(downloadProgress(qint64, qint64)));
-    connect(response, SIGNAL(error(QNetworkReply::NetworkError)),
-            this, SLOT(downloadError(QNetworkReply::NetworkError)));
+    connect(response, SIGNAL(finished()), this, SLOT(fileFinished()));
+    connect(response, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadProgress(qint64, qint64)));
+    connect(this, SIGNAL(stopDownload()), response, SLOT(abort()));
 }
 
 void UpdateDownloader::downloadError(QNetworkReply::NetworkError) {
+    if (response == nullptr)
+        return;
+
     emit error(response->errorString().toUtf8());
 }
 
@@ -49,7 +47,7 @@ void UpdateDownloader::fileFinished() {
     //Save the build in a temporary directory
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
-        emit error("Could not open the file for reading.");
+        emit error(tr("Could not open the file for reading."));
         return;
     }
 

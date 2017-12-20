@@ -1,35 +1,30 @@
 #include "settingscache.h"
+#include "releasechannel.h"
+
 #include <QSettings>
 #include <QFile>
+#include <QDir>
+#include <QDebug>
 #include <QApplication>
+#include <QStandardPaths>
 
-#if QT_VERSION >= 0x050000
-    #include <QStandardPaths>
-#else
-    #include <QDesktopServices>
-#endif
+QString SettingsCache::getDataPath()
+{
+    if(isPortableBuild)
+        return qApp->applicationDirPath() + "/data/";
+    else
+        return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+}
 
 QString SettingsCache::getSettingsPath()
 {
-    QString file = qApp->applicationDirPath() + "/settings/";
-
-#ifndef PORTABLE_BUILD
-    #if QT_VERSION >= 0x050000
-        file = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-    #else
-        file = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    #endif
-        file.append("/settings/");
-#endif        
-
-    return file;
+    return getDataPath() + "/settings/";
 }
 
 void SettingsCache::translateLegacySettings()
 {
-#ifdef PORTABLE_BUILD
-    return;
-#endif
+    if(isPortableBuild)
+        return;
 
     //Layouts
     QFile layoutFile(getSettingsPath()+"layouts/deckLayout.ini");
@@ -60,13 +55,15 @@ void SettingsCache::translateLegacySettings()
     legacySetting.beginGroup("server");
     servers().setPreviousHostLogin(legacySetting.value("previoushostlogin").toInt());
     servers().setPreviousHostList(legacySetting.value("previoushosts").toStringList());
-    servers().setPrevioushostindex(legacySetting.value("previoushostindex").toInt());
     servers().setHostName(legacySetting.value("hostname").toString());
     servers().setPort(legacySetting.value("port").toString());
     servers().setPlayerName(legacySetting.value("playername").toString());
     servers().setPassword(legacySetting.value("password").toString());
     servers().setSavePassword(legacySetting.value("save_password").toInt());
     servers().setAutoConnect(legacySetting.value("auto_connect").toInt());
+    servers().setFPHostName(legacySetting.value("fphostname").toString());
+    servers().setFPPort(legacySetting.value("fpport").toString());
+    servers().setFPPlayerName(legacySetting.value("fpplayername").toString());
     usedKeys.append(legacySetting.allKeys());
     QStringList allKeysServer = legacySetting.allKeys();
     for (int i = 0; i < allKeysServer.size(); ++i) {
@@ -96,8 +93,13 @@ void SettingsCache::translateLegacySettings()
     gameFilters().setUnavailableGamesVisible(legacySetting.value("unavailable_games_visible").toBool());
     gameFilters().setShowPasswordProtectedGames(legacySetting.value("show_password_protected_games").toBool());
     gameFilters().setGameNameFilter(legacySetting.value("game_name_filter").toString());
+    gameFilters().setShowBuddiesOnlyGames(legacySetting.value("show_buddies_only_games").toBool());
     gameFilters().setMinPlayers(legacySetting.value("min_players").toInt());
-    gameFilters().setMaxPlayers(legacySetting.value("max_players").toInt());
+
+    if (legacySetting.value("max_players").toInt() > 1)
+        gameFilters().setMaxPlayers(legacySetting.value("max_players").toInt());
+    else
+        gameFilters().setMaxPlayers(99); // This prevents a bug where no games will show if max was not set before
 
     QStringList allFilters = legacySetting.allKeys();
     for (int i = 0; i < allFilters.size(); ++i) {
@@ -119,8 +121,39 @@ void SettingsCache::translateLegacySettings()
     }
 }
 
+QString SettingsCache::getSafeConfigPath(QString configEntry, QString defaultPath) const
+{
+    QString tmp = settings->value(configEntry).toString();
+    // if the config settings is empty or refers to a not-existing folder,
+    // ensure that the defaut path exists and return it
+    if (!QDir(tmp).exists() || tmp.isEmpty()) {
+        if(!QDir().mkpath(defaultPath))
+            qDebug() << "[SettingsCache] Could not create folder:" << defaultPath;
+        tmp = defaultPath;
+    }
+    return tmp;
+}
+
+QString SettingsCache::getSafeConfigFilePath(QString configEntry, QString defaultPath) const
+{
+    QString tmp = settings->value(configEntry).toString();
+    // if the config settings is empty or refers to a not-existing file,
+    // return the default Path
+    if (!QFile::exists(tmp) || tmp.isEmpty())
+        tmp = defaultPath;
+    return tmp;
+}
 SettingsCache::SettingsCache()
 {
+    // first, figure out if we are running in portable mode
+    isPortableBuild = QFile::exists(qApp->applicationDirPath() + "/portable.dat");
+    if(isPortableBuild)
+        qDebug() << "Portable mode enabled";
+
+    // define a dummy context that will be used where needed
+    QString dummy = QT_TRANSLATE_NOOP("i18n", "English");
+
+    QString dataPath = getDataPath();
     QString settingsPath = getSettingsPath();
     settings = new QSettings(settingsPath+"global.ini", QSettings::IniFormat, this);
     shortcutsSettings = new ShortcutsSettings(settingsPath,this);
@@ -133,20 +166,27 @@ SettingsCache::SettingsCache()
     if(!QFile(settingsPath+"global.ini").exists())
         translateLegacySettings();
 
-#ifdef PORTABLE_BUILD
-    setDeckPath(qApp->applicationDirPath() + "data/decks");
-    setReplaysPath(qApp->applicationDirPath() +"data/replays");
-    setPicsPath(qApp->applicationDirPath() +  "data/pics");
-#endif
+    // updates - don't reorder them or their index in the settings won't match
+    // append channels one by one, or msvc will add them in the wrong order.
+    releaseChannels << new StableReleaseChannel();
+    releaseChannels << new DevReleaseChannel();
 
     notifyAboutUpdates = settings->value("personal/updatenotification", true).toBool();
+    updateReleaseChannel = settings->value("personal/updatereleasechannel", 0).toInt();
+
     lang = settings->value("personal/lang").toString();
     keepalive = settings->value("personal/keepalive", 5).toInt();
-    deckPath = settings->value("paths/decks").toString();
-    replaysPath = settings->value("paths/replays").toString();
-    picsPath = settings->value("paths/pics").toString();
-    cardDatabasePath = settings->value("paths/carddatabase").toString();
-    tokenDatabasePath = settings->value("paths/tokendatabase").toString();
+
+    deckPath = getSafeConfigPath("paths/decks", dataPath + "/decks/");
+    replaysPath = getSafeConfigPath("paths/replays", dataPath + "/replays/");
+    picsPath = getSafeConfigPath("paths/pics", dataPath + "/pics/");
+    // this has never been exposed as an user-configurable setting
+    customPicsPath = getSafeConfigPath("paths/custompics", picsPath + "/CUSTOM/");
+    // this has never been exposed as an user-configurable setting
+    customCardDatabasePath = getSafeConfigPath("paths/customsets", dataPath + "/customsets/");    
+
+    cardDatabasePath = getSafeConfigFilePath("paths/carddatabase", dataPath + "/cards.xml");
+    tokenDatabasePath = getSafeConfigFilePath("paths/tokendatabase", dataPath + "/tokens.xml");
 
     themeName = settings->value("theme/name").toString();
 
@@ -170,12 +210,12 @@ SettingsCache::SettingsCache()
     picUrlFallback = settings->value("personal/picUrlFallback", PIC_URL_FALLBACK).toString();
 
     mainWindowGeometry = settings->value("interface/main_window_geometry").toByteArray();
+    tokenDialogGeometry = settings->value("interface/token_dialog_geometry").toByteArray();
     notificationsEnabled = settings->value("interface/notificationsenabled", true).toBool();
     spectatorNotificationsEnabled = settings->value("interface/specnotificationsenabled", false).toBool();
     doubleClickToPlay = settings->value("interface/doubleclicktoplay", true).toBool();
     playToStack = settings->value("interface/playtostack", true).toBool();
     annotateTokens = settings->value("interface/annotatetokens", false).toBool();
-    cardInfoMinimized = settings->value("interface/cardinfominimized", 0).toInt();
     tabGameSplitterSizes = settings->value("interface/tabgame_splittersizes").toByteArray();
     displayCardNames = settings->value("cards/displaycardnames", true).toBool();
     horizontalHand = settings->value("hand/horizontal", true).toBool();
@@ -196,8 +236,7 @@ SettingsCache::SettingsCache()
     soundEnabled = settings->value("sound/enabled", false).toBool();
     soundThemeName = settings->value("sound/theme").toString();
 
-    priceTagFeature = settings->value("deckeditor/pricetags", false).toBool();
-    priceTagSource = settings->value("deckeditor/pricetagsource", 0).toInt();
+    maxFontSize = settings->value("game/maxfontsize", DEFAULT_FONT_SIZE).toInt();
 
     ignoreUnregisteredUsers = settings->value("chat/ignore_unregistered", false).toBool();
     ignoreUnregisteredUserMessages = settings->value("chat/ignore_unregistered_messages", false).toBool();
@@ -224,6 +263,12 @@ SettingsCache::SettingsCache()
     spectatorsCanSeeEverything = settings->value("game/spectatorscanseeeverything", false).toBool();
     rememberGameSettings = settings->value("game/remembergamesettings", true).toBool();
     clientID = settings->value("personal/clientid", "notset").toString();
+    knownMissingFeatures = settings->value("interface/knownmissingfeatures", "").toString();
+}
+
+void SettingsCache::setKnownMissingFeatures(QString _knownMissingFeatures) {
+    knownMissingFeatures = _knownMissingFeatures;
+    settings->setValue("interface/knownmissingfeatures", knownMissingFeatures);
 }
 
 void SettingsCache::setCardInfoViewMode(const int _viewMode) {
@@ -291,6 +336,8 @@ void SettingsCache::setPicsPath(const QString &_picsPath)
 {
     picsPath = _picsPath;
     settings->setValue("paths/pics", picsPath);
+    // get a new value for customPicsPath, currently derived from picsPath
+    customPicsPath = getSafeConfigPath("paths/custompics", picsPath + "CUSTOM/");
     emit picsPathChanged();
 }
 
@@ -305,7 +352,7 @@ void SettingsCache::setTokenDatabasePath(const QString &_tokenDatabasePath)
 {
     tokenDatabasePath = _tokenDatabasePath;
     settings->setValue("paths/tokendatabase", tokenDatabasePath);
-    emit tokenDatabasePathChanged();
+    emit cardDatabasePathChanged();
 }
 
 void SettingsCache::setThemeName(const QString &_themeName)
@@ -361,12 +408,6 @@ void SettingsCache::setAnnotateTokens(int _annotateTokens)
 {
     annotateTokens = _annotateTokens;
     settings->setValue("interface/annotatetokens", annotateTokens);
-}
-
-void SettingsCache::setCardInfoMinimized(int _cardInfoMinimized)
-{
-        cardInfoMinimized = _cardInfoMinimized;
-    settings->setValue("interface/cardinfominimized", cardInfoMinimized);
 }
 
 void SettingsCache::setTabGameSplitterSizes(const QByteArray &_tabGameSplitterSizes)
@@ -472,19 +513,6 @@ void SettingsCache::setSoundThemeName(const QString &_soundThemeName)
     emit soundThemeChanged();
 }
 
-void SettingsCache::setPriceTagFeature(int _priceTagFeature)
-{
-    priceTagFeature = _priceTagFeature;
-    settings->setValue("deckeditor/pricetags", priceTagFeature);
-    emit priceTagFeatureChanged(priceTagFeature);
-}
-
-void SettingsCache::setPriceTagSource(int _priceTagSource)
-{
-    priceTagSource = _priceTagSource;
-    settings->setValue("deckeditor/pricetagsource", priceTagSource);
-}
-
 void SettingsCache::setIgnoreUnregisteredUsers(int _ignoreUnregisteredUsers)
 {
     ignoreUnregisteredUsers = _ignoreUnregisteredUsers;
@@ -501,6 +529,12 @@ void SettingsCache::setMainWindowGeometry(const QByteArray &_mainWindowGeometry)
 {
     mainWindowGeometry = _mainWindowGeometry;
     settings->setValue("interface/main_window_geometry", mainWindowGeometry);
+}
+
+void SettingsCache::setTokenDialogGeometry(const QByteArray &_tokenDialogGeometry)
+{
+    tokenDialogGeometry = _tokenDialogGeometry;
+    settings->setValue("interface/token_dialog_geometry", tokenDialogGeometry);
 }
 
 void SettingsCache::setPixmapCacheSize(const int _pixmapCacheSize)
@@ -612,4 +646,16 @@ void SettingsCache::setNotifyAboutUpdate(int _notifyaboutupdate)
 {
     notifyAboutUpdates = _notifyaboutupdate;
     settings->setValue("personal/updatenotification", notifyAboutUpdates);
+}
+
+void SettingsCache::setUpdateReleaseChannel(int _updateReleaseChannel)
+{
+    updateReleaseChannel = _updateReleaseChannel;
+    settings->setValue("personal/updatereleasechannel", updateReleaseChannel);
+}
+
+void SettingsCache::setMaxFontSize(int _max)
+{
+    maxFontSize = _max;
+    settings->setValue("game/maxfontsize", maxFontSize);
 }

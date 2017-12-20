@@ -27,7 +27,6 @@
 #include <QLibraryInfo>
 #include <QDateTime>
 #include <QDir>
-#include <QDesktopServices>
 #include <QDebug>
 #include <QSystemTrayIcon>
 #include "QtNetwork/QNetworkInterface"
@@ -42,8 +41,7 @@
 #include "rng_sfmt.h"
 #include "soundengine.h"
 #include "featureset.h"
-
-//Q_IMPORT_PLUGIN(qjpeg)
+#include "logger.h"
 
 CardDatabase *db;
 QTranslator *translator, *qtTranslator;
@@ -56,25 +54,9 @@ ThemeManager *themeManager;
 const QString translationPrefix = "cockatrice";
 QString translationPath;
 
-#if QT_VERSION < 0x050000
-static void myMessageOutput(QtMsgType /*type*/, const char *msg)
-{
-    QFile file("qdebug.txt");
-    file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
-    QTextStream out(&file);
-    out << msg << endl;
-    file.close();
+static void CockatriceLogger(QtMsgType type, const QMessageLogContext &ctx, const QString &message) {
+    Logger::getInstance().log(type, ctx, message);
 }
-#else
-static void myMessageOutput(QtMsgType /*type*/, const QMessageLogContext &, const QString &msg)
-{
-    QFile file("qdebug.txt");
-    file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
-    QTextStream out(&file);
-    out << msg << endl;
-    file.close();
-}
-#endif
 
 void installNewTranslator()
 {
@@ -84,14 +66,6 @@ void installNewTranslator()
     qApp->installTranslator(qtTranslator);
     translator->load(translationPrefix + "_" + lang, translationPath);
     qApp->installTranslator(translator);
-}
-
-bool settingsValid()
-{
-    return QDir(settingsCache->getDeckPath()).exists() &&
-        !settingsCache->getDeckPath().isEmpty() &&
-        QDir(settingsCache->getPicsPath()).exists() &&
-        !settingsCache->getPicsPath().isEmpty();
 }
 
 QString const generateClientID()
@@ -111,21 +85,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    qInstallMessageHandler(CockatriceLogger);
     if (app.arguments().contains("--debug-output"))
-    {
-#if QT_VERSION < 0x050000
-        qInstallMsgHandler(myMessageOutput);
-#else
-        qInstallMessageHandler(myMessageOutput);
-#endif
-    }
+        Logger::getInstance().logToFile(true);
+
 #ifdef Q_OS_WIN
     app.addLibraryPath(app.applicationDirPath() + "/plugins");
-#endif
-
-#if QT_VERSION < 0x050000
-    // gone in Qt5, all source files _MUST_ be utf8-encoded
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 #endif
 
     QCoreApplication::setOrganizationName("Cockatrice");
@@ -155,74 +120,20 @@ int main(int argc, char *argv[])
     installNewTranslator();
 
     qsrand(QDateTime::currentDateTime().toTime_t());
+    qDebug("main(): starting main program");
 
-#ifdef PORTABLE_BUILD
-    const QString dataDir = "data/";
-#elif QT_VERSION < 0x050000
-    const QString dataDir = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#else
-    const QString dataDir = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-#endif
+    MainWindow ui;
+    qDebug("main(): MainWindow constructor finished");
 
-    if (settingsCache->getCardDatabasePath().isEmpty() ||
-        db->loadCardDatabase() != Ok)
-        settingsCache->setCardDatabasePath(dataDir + "/cards.xml");
+    ui.setWindowIcon(QPixmap("theme:cockatrice"));
+    
+    settingsCache->setClientID(generateClientID());
 
-    if (settingsCache->getTokenDatabasePath().isEmpty() ||
-        db->loadTokenDatabase() != Ok)
-        settingsCache->setTokenDatabasePath(dataDir + "/tokens.xml");
+    ui.show();
+    qDebug("main(): ui.show() finished");
 
-    if (!QDir(settingsCache->getDeckPath()).exists() || settingsCache->getDeckPath().isEmpty()) {
-        QDir().mkpath(dataDir + "/decks");
-        settingsCache->setDeckPath(dataDir + "/decks");
-    }
-    if (!QDir(settingsCache->getReplaysPath()).exists() || settingsCache->getReplaysPath().isEmpty()) {
-        QDir().mkpath(dataDir + "/replays");
-        settingsCache->setReplaysPath(dataDir + "/replays");
-    }
-    if (!QDir(settingsCache->getPicsPath()).exists() || settingsCache->getPicsPath().isEmpty()) {
-        QDir().mkpath(dataDir + "/pics");
-        settingsCache->setPicsPath(dataDir + "/pics");
-    }
-    if (!QDir().mkpath(settingsCache->getPicsPath() + "/CUSTOM"))
-        qDebug() << "Could not create " + settingsCache->getPicsPath().toUtf8() + "/CUSTOM. Will fall back on default card images.";
-
-    if (!settingsValid() || db->getLoadStatus() != Ok) {
-        qDebug("main(): invalid settings or load status");
-        DlgSettings dlgSettings;
-        dlgSettings.show();
-        app.exec();
-    }
-
-    // load custom databased after LoadStatus check, so that they don't bring up the settings dialog
-    if (QDir().mkpath(dataDir + "/customsets"))
-    {
-        // if the dir exists (or has just been created)
-        db->loadCustomCardDatabases(dataDir + "/customsets");
-    } else {
-        qDebug() << "Could not create " + dataDir + "/customsets folder.";
-    }
-
-    // when all the cards have been loaded, resolve the reverse-related tags
-    db->refreshCachedReverseRelatedCards();
-
-    if (settingsValid()) {
-        qDebug("main(): starting main program");
-
-        MainWindow ui;
-        qDebug("main(): MainWindow constructor finished");
-
-        ui.setWindowIcon(QPixmap("theme:cockatrice"));
-        
-        settingsCache->setClientID(generateClientID());
-
-        ui.show();
-        qDebug("main(): ui.show() finished");
-#if QT_VERSION > 0x050000
-        app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-#endif
-        app.exec();
-    }
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    app.exec();
 
     qDebug("Event loop finished, terminating...");
     delete db;

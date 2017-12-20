@@ -18,8 +18,6 @@ public:
     DecklistModelCardNode(DecklistCardNode *_dataNode, InnerDecklistNode *_parent) : AbstractDecklistCardNode(_parent), dataNode(_dataNode) { }
     int getNumber() const { return dataNode->getNumber(); }
     void setNumber(int _number) { dataNode->setNumber(_number); }
-        float getPrice() const { return dataNode->getPrice(); }
-    void setPrice(const float _price) { dataNode->setPrice(_price); }
     QString getName() const { return dataNode->getName(); }
     void setName(const QString &_name) { dataNode->setName(_name); }
     DecklistCardNode *getDataNode() const { return dataNode; }
@@ -37,7 +35,7 @@ public:
     DeckListModel(QObject *parent = 0);
     ~DeckListModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        int columnCount(const QModelIndex &/*parent*/ = QModelIndex()) const;
+    int columnCount(const QModelIndex &/*parent*/ = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -46,12 +44,11 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     QModelIndex findCard(const QString &cardName, const QString &zoneName) const;
-    QModelIndex addCard(const QString &cardName, const QString &zoneName);
+    QModelIndex addCard(const QString &cardName, const QString &zoneName, bool abAddAnyway = false);
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     void cleanList();
     DeckLoader *getDeckList() const { return deckList; }
     void setDeckList(DeckLoader *_deck);
-    void pricesUpdated();
 private:
     DeckLoader *deckList;
     InnerDecklistNode *root;

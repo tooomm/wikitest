@@ -11,7 +11,7 @@
 #endif /* _WIN32 */
 
 PlayerCounter::PlayerCounter(Player *_player, int _id, const QString &_name, int _value, QGraphicsItem *parent)
-    : AbstractCounter(_player, _id, _name, false, _value, parent)
+    : AbstractCounter(_player, _id, _name, false, _value, false, parent)
 {
 }
 
@@ -81,11 +81,7 @@ void PlayerTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*o
     QSize translatedSize = translatedRect.size().toSize();
     QPixmap cachedPixmap;
     const QString cacheKey = "avatar" + QString::number(translatedSize.width()) + "_" + QString::number(info->user_level()) + "_" + QString::number(fullPixmap.cacheKey());
-#if QT_VERSION >= 0x040600
     if (!QPixmapCache::find(cacheKey, &cachedPixmap)) {
-#else
-    if (!QPixmapCache::find(cacheKey, cachedPixmap)) {
-#endif
         cachedPixmap = QPixmap(translatedSize.width(), translatedSize.height());
         
         QPainter tempPainter(&cachedPixmap);
@@ -97,7 +93,7 @@ void PlayerTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem * /*o
         
         QPixmap tempPixmap;
         if (fullPixmap.isNull())
-            tempPixmap = UserLevelPixmapGenerator::generatePixmap(translatedSize.height(), UserLevelFlags(info->user_level()), false);
+            tempPixmap = UserLevelPixmapGenerator::generatePixmap(translatedSize.height(), UserLevelFlags(info->user_level()), false, QString::fromStdString(info->privlevel()));
         else
             tempPixmap = fullPixmap.scaled(translatedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         

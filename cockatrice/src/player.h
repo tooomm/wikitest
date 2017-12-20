@@ -5,6 +5,7 @@
 #include <QPoint>
 #include <QMap>
 #include "abstractgraphicsitem.h"
+#include "carddatabase.h"
 #include "pb/game_event.pb.h"
 #include "pb/card_attributes.pb.h"
 
@@ -55,6 +56,8 @@ class Event_DrawCards;
 class Event_RevealCards;
 class Event_ChangeZoneProperties;
 class PendingCommand;
+
+const int MAX_TOKENS_PER_DIALOG = 99;
 
 class PlayerArea : public QObject, public QGraphicsItem {
     Q_OBJECT
@@ -126,6 +129,7 @@ public slots:
     void actViewTopCards();
     void actAlwaysRevealTopCard();
     void actViewGraveyard();
+    void actRevealRandomGraveyardCard();
     void actViewRfg();
     void actViewSideboard();
     
@@ -141,7 +145,9 @@ private slots:
     void actOpenDeckInDeckEditor();
     void actCreatePredefinedToken();
     void actCreateRelatedCard();
+    void actCreateAllRelatedCards();
     void cardMenuAction();
+    void actMoveCardXCardsFromTop();
     void actCardCounterTrigger();
     void actAttach();
     void actUnattach();
@@ -163,7 +169,7 @@ private slots:
 private:
     TabGame *game;
     QMenu *playerMenu, *handMenu, *moveHandMenu, *graveMenu, *moveGraveMenu, *rfgMenu, *moveRfgMenu, *libraryMenu, *sbMenu, *countersMenu, *sayMenu, *createPredefinedTokenMenu,
-        *mRevealLibrary, *mRevealTopCard, *mRevealHand, *mRevealRandomHandCard;
+        *mRevealLibrary, *mRevealTopCard, *mRevealHand, *mRevealRandomHandCard, *mRevealRandomGraveyardCard;
     QList<QMenu *> playerLists;
     QList<QAction *> allPlayersActions;
     QAction *aMoveHandToTopLibrary, *aMoveHandToBottomLibrary, *aMoveHandToGrave, *aMoveHandToRfg,
@@ -178,11 +184,12 @@ private:
     QList<QAction *> aAddCounter, aSetCounter, aRemoveCounter;
     QAction *aPlay, *aPlayFacedown,
         *aHide,
-        *aTap, *aUntap, *aDoesntUntap, *aAttach, *aUnattach, *aDrawArrow, *aSetPT, *aIncP, *aDecP, *aIncT, *aDecT, *aIncPT, *aDecPT, *aSetAnnotation, *aFlip, *aPeek, *aClone,
-        *aMoveToTopLibrary, *aMoveToBottomLibrary, *aMoveToHand, *aMoveToGraveyard, *aMoveToExile;
+        *aTap, *aDoesntUntap, *aAttach, *aUnattach, *aDrawArrow, *aSetPT, *aIncP, *aDecP, *aIncT, *aDecT, *aIncPT, *aDecPT, *aSetAnnotation, *aFlip, *aPeek, *aClone,
+        *aMoveToTopLibrary, *aMoveToBottomLibrary, *aMoveToHand, *aMoveToGraveyard, *aMoveToExile, *aMoveToXfromTopOfLibrary;
 
     bool shortcutsActive;
     int defaultNumberTopCards;
+    int defaultNumberTopCardsToPlaceBelow;
     QString lastTokenName, lastTokenColor, lastTokenPT, lastTokenAnnotation;
     bool lastTokenDestroy;
     int lastTokenTableRow;
@@ -209,6 +216,11 @@ private:
     PlayerTarget *playerTarget;
     
     void setCardAttrHelper(const GameEventContext &context, CardItem *card, CardAttribute attribute, const QString &avalue, bool allCards);
+    void addRelatedCardActions(const CardItem *card, QMenu *cardMenu);
+    void createCard(const CardItem *sourceCard, const QString &dbCardName, bool attach = false);
+    void createAttachedCard(const CardItem *sourceCard, const QString &dbCardName);
+    bool createRelatedFromRelation(const CardItem *sourceCard, const CardRelation *cardRelation);
+    QString dbNameFromTokenDisplayName(const QString &tokenName);
 
     QRectF bRect;
 
@@ -242,7 +254,8 @@ private:
 public:
     static const int counterAreaWidth = 55;
     enum CardMenuActionType { cmTap, cmUntap, cmDoesntUntap, cmFlip, cmPeek, cmClone, cmMoveToTopLibrary, cmMoveToBottomLibrary, cmMoveToHand, cmMoveToGraveyard, cmMoveToExile };
-    
+    enum CardsToReveal {RANDOM_CARD_FROM_ZONE = -2};
+
     enum { Type = typeOther };
     int type() const { return Type; }
     QRectF boundingRect() const;
@@ -281,7 +294,7 @@ public:
     const QMap<int, ArrowItem *> &getArrows() const { return arrows; }
     void setCardMenu(QMenu *menu);
     QMenu *getCardMenu() const;
-    void updateCardMenu(CardItem *card);
+    void updateCardMenu(const CardItem *card);
     bool getActive() const { return active; }
     void setActive(bool _active);
     void setShortcutsActive();
@@ -306,6 +319,8 @@ public:
     PendingCommand *prepareGameCommand(const QList< const ::google::protobuf::Message * > &cmdList);
     void sendGameCommand(PendingCommand *pend);
     void sendGameCommand(const google::protobuf::Message &command);
+
+    void setLastToken(CardInfo *cardInfo);
 };
 
 #endif

@@ -1,9 +1,6 @@
 #include "oracleimporter.h"
-#if QT_VERSION < 0x050000
-    #include <QtGui>
-#else
-    #include <QtWidgets>
-#endif
+
+#include <QtWidgets>
 #include <QDebug>
 
 #include "qt-json/json.h"
@@ -59,6 +56,7 @@ CardInfo *OracleImporter::addCard(const QString &setName,
                                   QString cardName,
                                   bool isToken,
                                   int cardId,
+                                  QString &setNumber,
                                   QString &cardCost,
                                   QString &cmc,
                                   const QString &cardType,
@@ -66,9 +64,10 @@ CardInfo *OracleImporter::addCard(const QString &setName,
                                   int cardLoyalty,
                                   const QString &cardText,
                                   const QStringList & colors,
-                                  const QStringList & relatedCards,
-                                  const QStringList & reverseRelatedCards,
-                                  bool upsideDown
+                                  const QList<CardRelation *> & relatedCards,
+                                  const QList<CardRelation *> & reverseRelatedCards,
+                                  bool upsideDown,
+                                  QString &rarity
                                   )
 {
     QStringList cardTextRows = cardText.split("\n");
@@ -110,6 +109,8 @@ CardInfo *OracleImporter::addCard(const QString &setName,
         cards.insert(cardName, card);
     }
     card->setMuId(setName, cardId);
+    card->setSetNumber(setName, setNumber);
+    card->setRarity(setName, rarity);
 
     return card;
 }
@@ -146,9 +147,11 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
     QString cardPT;
     QString cardText;
     QStringList colors;
-    QStringList relatedCards;
-    QStringList reverseRelatedCards; // dummy
+    QList<CardRelation *> relatedCards;
+    QList<CardRelation *> reverseRelatedCards; // dummy
     int cardId;
+    QString setNumber;
+    QString rarity;
     int cardLoyalty;
     bool upsideDown = false;
     QMap<int, QVariantMap> splitCards;
@@ -162,7 +165,7 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
         if(layout == "token")
             continue;
 
-        if(layout == "split")
+        if(layout == "split" || layout == "aftermath")
         {
             // Enqueue split card for later handling
             cardId = map.contains("multiverseid") ? map.value("multiverseid").toInt() : 0;
@@ -179,9 +182,15 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
         cardPT = map.contains("power") || map.contains("toughness") ? map.value("power").toString() + QString('/') + map.value("toughness").toString() : QString("");
         cardText = map.contains("text") ? map.value("text").toString() : QString("");
         cardId = map.contains("multiverseid") ? map.value("multiverseid").toInt() : 0;
+        setNumber = map.contains("number") ? map.value("number").toString() : QString("");
+        rarity = map.contains("rarity") ? map.value("rarity").toString() : QString("");
         cardLoyalty = map.contains("loyalty") ? map.value("loyalty").toInt() : 0;
-        relatedCards = map.contains("names") ? map.value("names").toStringList() : QStringList();
-        relatedCards.removeAll(cardName);
+        relatedCards = QList<CardRelation *>();
+        if(map.contains("names"))
+            foreach(const QString & name, map.value("names").toStringList()) {
+                if(name != cardName)
+                    relatedCards.append(new CardRelation(name, true));
+            }
 
         if(0 == QString::compare(map.value("layout").toString(), QString("flip"), Qt::CaseInsensitive)) 
         {
@@ -194,7 +203,7 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
         colors.clear();
         extractColors(map.value("colors").toStringList(), colors);
 
-        CardInfo *card = addCard(set->getShortName(), cardName, false, cardId, cardCost, cmc, cardType, cardPT, cardLoyalty, cardText, colors, relatedCards, reverseRelatedCards, upsideDown);
+        CardInfo *card = addCard(set->getShortName(), cardName, false, cardId, setNumber, cardCost, cmc, cardType, cardPT, cardLoyalty, cardText, colors, relatedCards, reverseRelatedCards, upsideDown, rarity);
 
         if (!set->contains(card)) {
             card->addToSet(set);
@@ -227,6 +236,8 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
         cardType = "";
         cardPT = "";
         cardText = "";
+        setNumber = ""; 
+        rarity = "";
         colors.clear();
         // this is currently an integer; can't accept 2 values
         cardLoyalty = 0;
@@ -239,7 +250,7 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
             if(map.contains("name"))
             {
                 if(!cardName.isEmpty())
-                    cardName += prefix;
+                  cardName += (orderedMaps.count() > 2) ? QString("/") : prefix;
                 cardName += map.value("name").toString();
             }
             if(map.contains("manaCost"))
@@ -272,17 +283,23 @@ int OracleImporter::importTextSpoiler(CardSet *set, const QVariant &data)
                     cardText += prefix2;
                 cardText += map.value("text").toString();
             }
+            if(map.contains("number"))
+            {
+                if(setNumber.isEmpty())
+                    setNumber = map.value("number").toString();
+            }
 
             extractColors(map.value("colors").toStringList(), colors);
         }
 
         colors.removeDuplicates();
-        relatedCards = QStringList();
-        reverseRelatedCards = QStringList();
+        //Fortunately, there are no split cards that flip, transform or meld.
+        relatedCards = QList<CardRelation *>();
+        reverseRelatedCards = QList<CardRelation *>();
         upsideDown = false;
 
         // add the card
-        CardInfo *card = addCard(set->getShortName(), cardName, false, muid, cardCost, cmc, cardType, cardPT, cardLoyalty, cardText, colors, relatedCards, reverseRelatedCards, upsideDown);
+        CardInfo *card = addCard(set->getShortName(), cardName, false, muid, setNumber, cardCost, cmc, cardType, cardPT, cardLoyalty, cardText, colors, relatedCards, reverseRelatedCards, upsideDown, rarity);
 
         if (!set->contains(card)) {
             card->addToSet(set);

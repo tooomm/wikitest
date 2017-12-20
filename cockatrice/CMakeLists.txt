@@ -2,7 +2,7 @@
 #
 # provides the cockatrice binary
 
-PROJECT(cockatrice)
+PROJECT(Cockatrice)
 
 SET(cockatrice_SOURCES
     src/abstractcounter.cpp 
@@ -15,8 +15,12 @@ SET(cockatrice_SOURCES
     src/dlg_edit_password.cpp
     src/dlg_edit_tokens.cpp
     src/dlg_edit_user.cpp
+    src/dlg_forgotpasswordrequest.cpp
+    src/dlg_forgotpasswordreset.cpp
+    src/dlg_forgotpasswordchallenge.cpp
     src/dlg_register.cpp 
     src/dlg_update.cpp
+    src/dlg_viewlog.cpp
     src/abstractclient.cpp
     src/remoteclient.cpp 
     src/main.cpp 
@@ -60,7 +64,6 @@ SET(cockatrice_SOURCES
     src/abstractgraphicsitem.cpp 
     src/abstractcarddragitem.cpp 
     src/dlg_settings.cpp 
-    src/dlg_cardsearch.cpp 
     src/phasestoolbar.cpp 
     src/gamescene.cpp 
     src/arrowitem.cpp 
@@ -79,7 +82,9 @@ SET(cockatrice_SOURCES
     src/tab_logs.cpp
     src/replay_timeline_widget.cpp
     src/deckstats_interface.cpp
-    src/chatview.cpp 
+    src/tappedout_interface.cpp
+    src/chatview/chatview.cpp
+    src/chatview/userlistProxy.h
     src/userlist.cpp 
     src/userinfobox.cpp 
     src/user_context_menu.cpp
@@ -92,8 +97,7 @@ SET(cockatrice_SOURCES
     src/thememanager.cpp 
     src/localserver.cpp 
     src/localserverinterface.cpp 
-    src/localclient.cpp 
-    src/priceupdater.cpp 
+    src/localclient.cpp
     src/qt-json/json.cpp
     src/soundengine.cpp
     src/pending_command.cpp
@@ -108,16 +112,21 @@ SET(cockatrice_SOURCES
     src/settings/messagesettings.cpp
     src/settings/gamefilterssettings.cpp
     src/settings/layoutssettings.cpp
-    src/update_checker.cpp
     src/update_downloader.cpp
+    src/logger.cpp
+    src/releasechannel.cpp
+    src/userconnection_information.cpp
     ${VERSION_STRING_CPP}
 )
+
+add_subdirectory(sounds)
+add_subdirectory(themes)
 
 set(cockatrice_RESOURCES cockatrice.qrc)
 
 IF(UPDATE_TRANSLATIONS)
     FILE(GLOB_RECURSE translate_cockatrice_SRCS ${CMAKE_SOURCE_DIR}/cockatrice/src/*.cpp ${CMAKE_SOURCE_DIR}/cockatrice/src/*.h)
-    FILE(GLOB_RECURSE translate_common_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/common/*.h)
+    FILE(GLOB_RECURSE translate_common_SRCS ${CMAKE_SOURCE_DIR}/common/*.cpp ${CMAKE_SOURCE_DIR}/common/*.h)
     SET(translate_SRCS ${translate_cockatrice_SRCS} ${translate_common_SRCS})
     SET(cockatrice_TS "${CMAKE_CURRENT_SOURCE_DIR}/translations/cockatrice_en.ts")
 ELSE()
@@ -136,40 +145,17 @@ ENDIF(APPLE)
 
 set(COCKATRICE_LIBS)
 
-# Qt4 stuff
-if(Qt4_FOUND)
-    if (NOT QT_QTMULTIMEDIA_FOUND)
-        FIND_PACKAGE(QtMobility REQUIRED)
-    endif()
-
-    SET(QT_USE_QTNETWORK TRUE)
-    SET(QT_USE_QTMULTIMEDIA TRUE)
-    SET(QT_USE_QTSVG TRUE)
-
-    # Include directories
-    INCLUDE(${QT_USE_FILE})
-    INCLUDE_DIRECTORIES(${QT_INCLUDES})
-    INCLUDE_DIRECTORIES(${QT_MOBILITY_INCLUDE_DIR})
-    INCLUDE_DIRECTORIES(${QT_MOBILITY_MULTIMEDIAKIT_INCLUDE_DIR})
-    LIST(APPEND COCKATRICE_LIBS ${QT_LIBRARIES})
-    LIST(APPEND COCKATRICE_LIBS ${QT_QTMAIN_LIBRARY})
-    LIST(APPEND COCKATRICE_LIBS ${QT_MOBILITY_MULTIMEDIAKIT_LIBRARY})
-
-    # Let cmake chew Qt4's translations and resource files
-    # Note: header files are MOC-ed automatically by cmake
-    IF(UPDATE_TRANSLATIONS)
-        QT4_CREATE_TRANSLATION(cockatrice_QM ${translate_SRCS} ${cockatrice_TS})
-    ELSE(UPDATE_TRANSLATIONS)
-        QT4_ADD_TRANSLATION(cockatrice_QM ${cockatrice_TS})
-    ENDIF(UPDATE_TRANSLATIONS)
-
-    QT4_ADD_RESOURCES(cockatrice_RESOURCES_RCC ${cockatrice_RESOURCES})
-endif()
-
 # qt5 stuff
 if(Qt5Widgets_FOUND)
     include_directories(${Qt5Widgets_INCLUDE_DIRS})
     list(APPEND COCKATRICE_LIBS Widgets)
+
+    # QtConcurrent
+    find_package(Qt5Concurrent)
+    if(Qt5Concurrent_FOUND)
+        include_directories(${Qt5Concurrent_INCLUDE_DIRS})
+        list(APPEND ORACLE_LIBS Concurrent)
+    endif()
 
     # QtNetwork
     find_package(Qt5Network)
@@ -234,36 +220,22 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 # Build cockatrice binary and link it
 ADD_EXECUTABLE(cockatrice WIN32 MACOSX_BUNDLE ${cockatrice_SOURCES} ${cockatrice_QM} ${cockatrice_RESOURCES_RCC} ${cockatrice_MOC_SRCS})
-set_property(TARGET cockatrice PROPERTY CXX_STANDARD 11)
-set_property(TARGET cockatrice PROPERTY CXX_STANDARD_REQUIRED ON)
 
-if(Qt4_FOUND)
-    if(MSVC) 
-        set(QT_USE_QTMAIN true) 
-    endif() 
-    TARGET_LINK_LIBRARIES(cockatrice cockatrice_common ${COCKATRICE_LIBS})
-endif()
-if(Qt5Widgets_FOUND)
-    if(MSVC)
-        TARGET_LINK_LIBRARIES(cockatrice cockatrice_common Qt5::WinMain)
-    else()
-        TARGET_LINK_LIBRARIES(cockatrice cockatrice_common)
-    endif()
-    qt5_use_modules(cockatrice ${COCKATRICE_LIBS})
-endif()
+TARGET_LINK_LIBRARIES(cockatrice cockatrice_common)
+qt5_use_modules(cockatrice ${COCKATRICE_LIBS})
 
 if(UNIX)
     if(APPLE)
         set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}")
         set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.cockatrice.${PROJECT_NAME}")
         set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}-${PROJECT_VERSION}")
-        set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+        set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
         set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
         set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
         set_target_properties(cockatrice PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/cmake/Info.plist)
 
         INSTALL(TARGETS cockatrice BUNDLE DESTINATION ./)
-        INSTALL(FILES ${cockatrice_QM} DESTINATION ./cockatrice.app/Contents/Resources/translations)
+        INSTALL(FILES ${cockatrice_QM} DESTINATION ./Cockatrice.app/Contents/Resources/translations)
     else()
         # Assume linux
         INSTALL(TARGETS cockatrice RUNTIME DESTINATION bin/)
@@ -279,15 +251,13 @@ endif()
 
 if(APPLE)
     # these needs to be relative to CMAKE_INSTALL_PREFIX
-    set(plugin_dest_dir cockatrice.app/Contents/Plugins)
-    set(qtconf_dest_dir cockatrice.app/Contents/Resources)
+    set(plugin_dest_dir Cockatrice.app/Contents/Plugins)
+    set(qtconf_dest_dir Cockatrice.app/Contents/Resources)
     get_filename_component(QT_LIBRARY_DIR "${QT_LIBRARY_DIR}/.." ABSOLUTE)
 
-    # qt4: codecs, iconengines, imageformats
-    # qt5: audio, iconengines, imageformats, platforms, printsupport
-
+    # qt5 plugins: audio, iconengines, imageformats, platforms, printsupport
     install(DIRECTORY "${QT_PLUGINS_DIR}/" DESTINATION ${plugin_dest_dir} COMPONENT Runtime
-        FILES_MATCHING REGEX "(audio|codecs|iconengines|imageformats|platforms|printsupport)/.*\\.dylib"
+        FILES_MATCHING REGEX "(audio|iconengines|imageformats|platforms|printsupport)/.*\\.dylib"
         REGEX ".*_debug\\.dylib" EXCLUDE)
 
     install(CODE "
@@ -302,7 +272,7 @@ Data = Resources\")
             \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.dylib\")
         set(BU_CHMOD_BUNDLE_ITEMS ON)
         include(BundleUtilities)
-        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/cockatrice.app\" \"\${QTPLUGINS}\" \"${QT_LIBRARY_DIR}\")
+        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/Cockatrice.app\" \"\${QTPLUGINS}\" \"${QT_LIBRARY_DIR}\")
         " COMPONENT Runtime)
 endif()
 
@@ -311,11 +281,9 @@ if(WIN32)
     set(plugin_dest_dir Plugins)
     set(qtconf_dest_dir .)
 
-    # qt4: codecs, iconengines, imageformats
-    # qt5: audio, iconengines, imageformats, platforms, printsupport
-
+    # qt5 plugins: audio, iconengines, imageformats, platforms, printsupport
     install(DIRECTORY "${QT_PLUGINS_DIR}/" DESTINATION ${plugin_dest_dir} COMPONENT Runtime
-        FILES_MATCHING REGEX "(audio|codecs|iconengines|imageformats|platforms|printsupport)/.*[^d]\\.dll")
+        FILES_MATCHING REGEX "(audio|iconengines|imageformats|platforms|printsupport)/.*[^d]\\.dll")
 
     install(CODE "
         file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"[Paths]
@@ -329,15 +297,10 @@ Data = Resources\")
             \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.dll\")
         set(BU_CHMOD_BUNDLE_ITEMS ON)
         include(BundleUtilities)
-        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/cockatrice.exe\" \"\${QTPLUGINS}\" \"${QT_LIBRARY_DIR}\")
+        fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/Cockatrice.exe\" \"\${QTPLUGINS}\" \"${QT_LIBRARY_DIR}\")
         " COMPONENT Runtime)
 
     if(WIN32SSLRUNTIME_FOUND)
         install(FILES ${WIN32SSLRUNTIME_LIBRARIES} DESTINATION ./)
     endif()
-endif()
-#Compile a portable version, default off
-option(PORTABLE "portable build" OFF)
-IF(PORTABLE)
-add_definitions(-DPORTABLE_BUILD)
 endif()

@@ -11,6 +11,8 @@
 #include "settings/gamefilterssettings.h"
 #include "settings/layoutssettings.h"
 
+class ReleaseChannel;
+
 // the falbacks are used for cards without a muid
 #define PIC_URL_DEFAULT "http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=!cardid!&type=card"
 #define PIC_URL_FALLBACK "http://gatherer.wizards.com/Handlers/Image.ashx?name=!name!&type=card"
@@ -18,6 +20,11 @@
 #define PIXMAPCACHE_SIZE_DEFAULT 2047
 #define PIXMAPCACHE_SIZE_MIN 64
 #define PIXMAPCACHE_SIZE_MAX 2047
+
+#define DEFAULT_LANG_CODE "en"
+#define DEFAULT_LANG_NAME "English"
+
+#define DEFAULT_FONT_SIZE 12
 
 class QSettings;
 
@@ -27,7 +34,6 @@ signals:
     void langChanged();
     void picsPathChanged();
     void cardDatabasePathChanged();
-    void tokenDatabasePathChanged();
     void themeChanged();
     void picDownloadChanged();
     void displayCardNamesChanged();
@@ -37,7 +43,6 @@ signals:
     void minPlayersForMultiColumnLayoutChanged();
     void soundEnabledChanged();
     void soundThemeChanged();
-    void priceTagFeatureChanged(int enabled);
     void ignoreUnregisteredUsersChanged();
     void ignoreUnregisteredUserMessagesChanged();
     void pixmapCacheSizeChanged(int newSizeInMBs);
@@ -53,16 +58,18 @@ private:
     LayoutsSettings *layoutsSettings;
 
     QByteArray mainWindowGeometry;
+    QByteArray tokenDialogGeometry;
     QString lang;
-    QString deckPath, replaysPath, picsPath, cardDatabasePath, tokenDatabasePath, themeName;
+    QString deckPath, replaysPath, picsPath, customPicsPath, cardDatabasePath, customCardDatabasePath, tokenDatabasePath, themeName;
     bool notifyAboutUpdates;
+    int updateReleaseChannel;
+    int maxFontSize;
     bool picDownload;
     bool notificationsEnabled;
     bool spectatorNotificationsEnabled;
     bool doubleClickToPlay;
     bool playToStack;
     bool annotateTokens;
-    int cardInfoMinimized;
     QByteArray tabGameSplitterSizes;
     bool displayCardNames;
     bool horizontalHand;
@@ -78,13 +85,12 @@ private:
     bool zoneViewSortByName, zoneViewSortByType, zoneViewPileView;
     bool soundEnabled;
     QString soundThemeName;
-    bool priceTagFeature;
-    int priceTagSource;
     bool ignoreUnregisteredUsers;
     bool ignoreUnregisteredUserMessages;
     QString picUrl;
     QString picUrlFallback;
     QString clientID;
+    QString knownMissingFeatures;
     int pixmapCacheSize;
     bool scaleCards;
     bool showMessagePopups;
@@ -105,16 +111,24 @@ private:
     bool spectatorsCanSeeEverything;
     int keepalive;    
     void translateLegacySettings();
+    QString getSafeConfigPath(QString configEntry, QString defaultPath) const;
+    QString getSafeConfigFilePath(QString configEntry, QString defaultPath) const;
     bool rememberGameSettings;
+    QList<ReleaseChannel*> releaseChannels;
+    bool isPortableBuild;
 
 public:
     SettingsCache();
+    QString getDataPath();
     QString getSettingsPath();
     const QByteArray &getMainWindowGeometry() const { return mainWindowGeometry; }
+    const QByteArray &getTokenDialogGeometry() const { return tokenDialogGeometry; }
     QString getLang() const { return lang; }
     QString getDeckPath() const { return deckPath; }
     QString getReplaysPath() const { return replaysPath; }
     QString getPicsPath() const { return picsPath; }
+    QString getCustomPicsPath() const { return customPicsPath; }
+    QString getCustomCardDatabasePath() const { return customCardDatabasePath; }
     QString getCardDatabasePath() const { return cardDatabasePath; }
     QString getTokenDatabasePath() const { return tokenDatabasePath; }
     QString getThemeName() const { return themeName; }
@@ -124,11 +138,12 @@ public:
     bool getNotificationsEnabled() const { return notificationsEnabled; }
     bool getSpectatorNotificationsEnabled() const { return spectatorNotificationsEnabled; }
     bool getNotifyAboutUpdates() const { return notifyAboutUpdates; }
+    ReleaseChannel * getUpdateReleaseChannel() const { return releaseChannels.at(updateReleaseChannel); }
+    QList<ReleaseChannel*> getUpdateReleaseChannels() const { return releaseChannels; }
 
     bool getDoubleClickToPlay() const { return doubleClickToPlay; }
     bool getPlayToStack() const { return playToStack; }
     bool getAnnotateTokens() const { return annotateTokens; }
-    int  getCardInfoMinimized() const { return cardInfoMinimized; }
     QByteArray getTabGameSplitterSizes() const { return tabGameSplitterSizes; }
     bool getDisplayCardNames() const { return displayCardNames; }
     bool getHorizontalHand() const { return horizontalHand; }
@@ -148,8 +163,6 @@ public:
     bool getZoneViewPileView() const { return zoneViewPileView; }
     bool getSoundEnabled() const { return soundEnabled; }
     QString getSoundThemeName() const { return soundThemeName; }
-    bool getPriceTagFeature() const { return false; /* #859; priceTagFeature;*/ }
-    int getPriceTagSource() const { return priceTagSource; }
     bool getIgnoreUnregisteredUsers() const { return ignoreUnregisteredUsers; }
     bool getIgnoreUnregisteredUserMessages() const { return ignoreUnregisteredUserMessages; }
     QString getPicUrl() const { return picUrl; }
@@ -175,16 +188,21 @@ public:
     bool getSpectatorsCanSeeEverything() const { return spectatorsCanSeeEverything; }
     bool getRememberGameSettings() const { return rememberGameSettings; }
     int getKeepAlive() const { return keepalive; }
+    int getMaxFontSize() const { return maxFontSize; }
     void setClientID(QString clientID);
-    QString getClientID() { return clientID; }    
+    void setKnownMissingFeatures(QString _knownMissingFeatures);
+    QString getClientID() { return clientID; }
+    QString getKnownMissingFeatures() { return knownMissingFeatures; }
     ShortcutsSettings& shortcuts() const { return *shortcutsSettings; }
     CardDatabaseSettings& cardDatabase() const { return *cardDatabaseSettings; }
     ServersSettings& servers() const { return *serversSettings; }
     MessageSettings& messages() const { return *messageSettings; }
     GameFiltersSettings& gameFilters() const { return *gameFiltersSettings; }
     LayoutsSettings& layouts() const { return *layoutsSettings; }
+    bool getIsPortableBuild() const { return isPortableBuild; }
 public slots:
     void setMainWindowGeometry(const QByteArray &_mainWindowGeometry);
+    void setTokenDialogGeometry(const QByteArray &_tokenDialog);
     void setLang(const QString &_lang);
     void setDeckPath(const QString &_deckPath);
     void setReplaysPath(const QString &_replaysPath);
@@ -200,7 +218,6 @@ public slots:
     void setDoubleClickToPlay(int _doubleClickToPlay);
     void setPlayToStack(int _playToStack);
     void setAnnotateTokens(int _annotateTokens);
-    void setCardInfoMinimized(int _cardInfoMinimized);
     void setTabGameSplitterSizes(const QByteArray &_tabGameSplitterSizes);
     void setDisplayCardNames(int _displayCardNames);
     void setHorizontalHand(int _horizontalHand);
@@ -216,8 +233,6 @@ public slots:
     void setZoneViewPileView(int _zoneViewPileView);
     void setSoundEnabled(int _soundEnabled);
     void setSoundThemeName(const QString &_soundThemeName);
-    void setPriceTagFeature(int _priceTagFeature);
-    void setPriceTagSource(int _priceTagSource);
     void setIgnoreUnregisteredUsers(int _ignoreUnregisteredUsers);
     void setIgnoreUnregisteredUserMessages(int _ignoreUnregisteredUserMessages);
     void setPicUrl(const QString &_picUrl);
@@ -242,6 +257,8 @@ public slots:
     void setSpectatorsCanSeeEverything(const bool _spectatorsCanSeeEverything);
     void setRememberGameSettings(const bool _rememberGameSettings);
     void setNotifyAboutUpdate(int _notifyaboutupdate);
+    void setUpdateReleaseChannel(int _updateReleaseChannel);
+    void setMaxFontSize(int _max);
 };
 
 extern SettingsCache *settingsCache;

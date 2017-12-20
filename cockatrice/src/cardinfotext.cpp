@@ -8,24 +8,30 @@
 #include "main.h"
 
 CardInfoText::CardInfoText(QWidget *parent)
-    : QFrame(parent), info(0)
+    : QFrame(parent), info(nullptr)
 {
     nameLabel1 = new QLabel;
     nameLabel2 = new QLabel;
     nameLabel2->setWordWrap(true);
+    nameLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     manacostLabel1 = new QLabel;
     manacostLabel2 = new QLabel;
     manacostLabel2->setWordWrap(true);
+    manacostLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     colorLabel1 = new QLabel;
     colorLabel2 = new QLabel;
     colorLabel2->setWordWrap(true);
+    colorLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     cardtypeLabel1 = new QLabel;
     cardtypeLabel2 = new QLabel;
     cardtypeLabel2->setWordWrap(true);
+    cardtypeLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     powtoughLabel1 = new QLabel;
     powtoughLabel2 = new QLabel;
+    powtoughLabel2->setTextInteractionFlags(Qt::TextBrowserInteraction);
     loyaltyLabel1 = new QLabel;
     loyaltyLabel2 = new QLabel;
+    loyaltyLabel1->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
     textLabel = new QTextEdit();
     textLabel->setReadOnly(true);
@@ -53,13 +59,24 @@ CardInfoText::CardInfoText(QWidget *parent)
 
 void CardInfoText::setCard(CardInfo *card)
 {
-    nameLabel2->setText(card->getName());
-    manacostLabel2->setText(card->getManaCost());
-    colorLabel2->setText(card->getColors().join(""));
-    cardtypeLabel2->setText(card->getCardType());
-    powtoughLabel2->setText(card->getPowTough());
-    loyaltyLabel2->setText(card->getLoyalty() > 0 ? QString::number(card->getLoyalty()) : QString());
-    textLabel->setText(card->getText());
+    if(card)
+    {
+        nameLabel2->setText(card->getName());
+        manacostLabel2->setText(card->getManaCost());
+        colorLabel2->setText(card->getColors().join(""));
+        cardtypeLabel2->setText(card->getCardType());
+        powtoughLabel2->setText(card->getPowTough());
+        loyaltyLabel2->setText(card->getLoyalty() > 0 ? QString::number(card->getLoyalty()) : QString());
+        textLabel->setText(card->getText());
+    } else {
+        nameLabel2->setText("");
+        manacostLabel2->setText("");
+        colorLabel2->setText("");
+        cardtypeLabel2->setText("");
+        powtoughLabel2->setText("");
+        loyaltyLabel2->setText("");
+        textLabel->setText("");
+    }
 }
 
 void CardInfoText::retranslateUi()

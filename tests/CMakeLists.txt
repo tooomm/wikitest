@@ -36,3 +36,6 @@ endif()
 
 include_directories(${GTEST_INCLUDE_DIRS})
 target_link_libraries(dummy_test ${GTEST_BOTH_LIBRARIES})
+
+add_subdirectory(carddatabase)
+add_subdirectory(loading_from_clipboard)

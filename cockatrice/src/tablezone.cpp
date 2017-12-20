@@ -35,11 +35,7 @@ TableZone::TableZone(Player *_p, QGraphicsItem *parent)
     currentMinimumWidth = width;
 
     setCacheMode(DeviceCoordinateCache);
-#if QT_VERSION < 0x050000
-    setAcceptsHoverEvents(true);
-#else
     setAcceptHoverEvents(true);
-#endif
 }
 
 
@@ -148,7 +144,10 @@ void TableZone::handleDropEventByGrid(const QList<CardDragItem *> &dragItems, Ca
         CardToMove *ctm = cmd.mutable_cards_to_move()->add_card();
         ctm->set_card_id(dragItems[i]->getId());
         ctm->set_face_down(dragItems[i]->getFaceDown());
-        ctm->set_pt(startZone->getName() == name ? std::string() : dragItems[i]->getItem()->getInfo()->getPowTough().toStdString());
+        if(startZone->getName() != name && dragItems[i]->getItem()->getInfo())
+            ctm->set_pt(dragItems[i]->getItem()->getInfo()->getPowTough().toStdString());
+        else
+            ctm->set_pt(std::string());
     }
     
     startZone->getPlayer()->sendGameCommand(cmd);

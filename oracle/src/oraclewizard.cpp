@@ -1,10 +1,6 @@
 #include <QtGui>
-#if QT_VERSION < 0x050000
-    #include <QDesktopServices>
-#else 
-    #include <QStandardPaths>
-    #include <QtConcurrent>
-#endif
+#include <QStandardPaths>
+#include <QtConcurrent>
 #include <QAbstractButton>
 #include <QBuffer>
 #include <QCheckBox>
@@ -28,6 +24,7 @@
 #include "oracleimporter.h"
 #include "main.h"
 #include "settingscache.h"
+#include "version_string.h"
 
 #define ZIP_SIGNATURE "PK"
 #define ALLSETS_URL_FALLBACK "https://mtgjson.com/json/AllSets.json"
@@ -48,19 +45,7 @@ OracleWizard::OracleWizard(QWidget *parent)
     settings = new QSettings(settingsCache->getSettingsPath()+"global.ini",QSettings::IniFormat, this);
     connect(settingsCache, SIGNAL(langChanged()), this, SLOT(updateLanguage()));
 
-    QString dataDir;
-
-#ifndef PORTABLE_BUILD
-    #if QT_VERSION < 0x050000
-            QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-    #else
-            QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-    #endif
-#else
-    dataDir.append("data");
-#endif
-
-    importer = new OracleImporter(dataDir, this);
+    importer = new OracleImporter(settingsCache->getDataPath(), this);
 
     addPage(new IntroPage);
     addPage(new LoadSetsPage);
@@ -134,13 +119,14 @@ IntroPage::IntroPage(QWidget *parent)
     label->setWordWrap(true);
 
     languageLabel = new QLabel(this);
+    versionLabel = new QLabel(this);
     languageBox = new QComboBox(this);
     QString setLanguage = settingsCache->getLang();
     QStringList qmFiles = findQmFiles();
     for (int i = 0; i < qmFiles.size(); i++) {
         QString langName = languageName(qmFiles[i]);
         languageBox->addItem(langName, qmFiles[i]);
-        if ((qmFiles[i] == setLanguage) || (setLanguage.isEmpty() && langName == tr("English")))
+        if ((qmFiles[i] == setLanguage) || (setLanguage.isEmpty() && langName == QCoreApplication::translate("i18n", DEFAULT_LANG_NAME)))
             languageBox->setCurrentIndex(i);
     }
     connect(languageBox, SIGNAL(currentIndexChanged(int)), this, SLOT(languageBoxChanged(int)));
@@ -149,6 +135,7 @@ IntroPage::IntroPage(QWidget *parent)
     layout->addWidget(label, 0, 0, 1, 2);
     layout->addWidget(languageLabel, 1, 0);
     layout->addWidget(languageBox, 1, 1);
+    layout->addWidget(versionLabel, 4, 0);
 
     setLayout(layout);
 }
@@ -163,10 +150,13 @@ QStringList IntroPage::findQmFiles()
 
 QString IntroPage::languageName(const QString &qmFile)
 {
+    if(qmFile == DEFAULT_LANG_CODE)
+        return DEFAULT_LANG_NAME;
+
     QTranslator translator;
     translator.load(translationPrefix + "_" + qmFile + ".qm", translationPath);
     
-    return translator.translate("IntroPage", "English");
+    return translator.translate("i18n", DEFAULT_LANG_NAME);
 }
 
 void IntroPage::languageBoxChanged(int index)
@@ -178,10 +168,9 @@ void IntroPage::retranslateUi()
 {
     setTitle(tr("Introduction"));
     label->setText(tr("This wizard will import the list of sets, cards, and tokens "
-                      "that will be used by Cockatrice."
-                      "\nYou will need to specify a URL or a filename that "
-                      "will be used as a source."));
+                      "that will be used by Cockatrice."));
     languageLabel->setText(tr("Language:"));
+    versionLabel->setText(tr("Version:") + QString(" %1").arg(VERSION_STRING));
 }
 
 LoadSetsPage::LoadSetsPage(QWidget *parent)
@@ -503,9 +492,6 @@ void SaveSetsPage::retranslateUi()
                    "Press \"Save\" to save the imported cards to the Cockatrice database."));
 
     defaultPathCheckBox->setText(tr("Save to the default path (recommended)"));
-    #ifdef PORTABLE_BUILD
-    defaultPathCheckBox->setEnabled(false);
-    #endif
 }
 
 void SaveSetsPage::updateTotalProgress(int cardsImported, int /* setIndex */, const QString &setName)
@@ -521,47 +507,19 @@ void SaveSetsPage::updateTotalProgress(int cardsImported, int /* setIndex */, co
 bool SaveSetsPage::validatePage()
 {
     bool ok = false;
-    QString dataDir;
-    #ifndef PORTABLE_BUILD
-#if QT_VERSION < 0x050000
-        dataDir = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#else
-        dataDir = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-#endif
-#else
-    dataDir =  qApp->applicationDirPath() + "/data";
-#endif
-
-#ifdef PORTABLE_BUILD
-    QSettings* settings = new QSettings("settings/global.ini",QSettings::IniFormat,this);
-    QString defaultPath = "data/cards.xml";
-    settings->setValue("paths/carddatabase", defaultPath);
-#else
-    QSettings* settings = new QSettings(settingsCache->getSettingsPath()+"global.ini",QSettings::IniFormat,this);
-    QString defaultPath = settings->value("paths/carddatabase").toString();
-#endif
+    QString defaultPath = settingsCache->getCardDatabasePath();
     QString windowName = tr("Save card database");
     QString fileType = tr("XML; card database (*.xml)");
 
     do {
         QString fileName;
-        if (defaultPath.isEmpty()) {
-            if (defaultPathCheckBox->isChecked())
-                fileName = dataDir + "/cards.xml";
-            else
-                fileName = QFileDialog::getSaveFileName(this, windowName, dataDir + "/cards.xml", fileType);
+        if (defaultPathCheckBox->isChecked())
+            fileName = defaultPath;
+        else
+            fileName = QFileDialog::getSaveFileName(this, windowName, defaultPath, fileType);
 
-            settings->setValue("paths/carddatabase", fileName);
-        }
-        else {
-            if (defaultPathCheckBox->isChecked())
-                fileName = defaultPath;
-            else
-                fileName = QFileDialog::getSaveFileName(this, windowName, defaultPath, fileType);
-        }
-        if (fileName.isEmpty()) {
+        if (fileName.isEmpty())
             return false;
-        }
 
         QFileInfo fi(fileName);
         QDir fileDir(fi.path());
@@ -617,9 +575,7 @@ void LoadTokensPage::initializePage()
 void LoadTokensPage::retranslateUi()
 {
     setTitle(tr("Tokens source selection"));
-    setSubTitle(tr("Please specify a source for the list of tokens. "
-                   "You can specify a URL address that will be downloaded or "
-                   "use an existing file from your computer."));
+    setSubTitle(tr("Please specify a source for the list of tokens."));
 
     urlLabel->setText(tr("Download URL:"));
     urlButton->setText(tr("Restore default URL"));
@@ -741,55 +697,24 @@ void SaveTokensPage::retranslateUi()
                    "Press \"Save\" to save the imported tokens to the Cockatrice tokens database."));
 
     defaultPathCheckBox->setText(tr("Save to the default path (recommended)"));
-    #ifdef PORTABLE_BUILD
-    defaultPathCheckBox->setEnabled(false);
-    #endif
 }
 
 bool SaveTokensPage::validatePage()
 {
     bool ok = false;
-    QString dataDir;
-    #ifndef PORTABLE_BUILD
-#if QT_VERSION < 0x050000
-        dataDir = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#else
-        dataDir = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-#endif
-#else
-    dataDir = qApp->applicationDirPath() + "/data";
-#endif
-
-#ifdef PORTABLE_BUILD
-    QSettings* settings = new QSettings("settings/global.ini",QSettings::IniFormat,this);
-    QString defaultPath = "data/tokens.xml";
-    settings->setValue("paths/tokendatabase", defaultPath);
-#else
-    QSettings* settings = new QSettings(settingsCache->getSettingsPath()+"global.ini",QSettings::IniFormat,this);
-    QString defaultPath = settings->value("paths/tokendatabase").toString();
-#endif
-
+    QString defaultPath = settingsCache->getTokenDatabasePath();
     QString windowName = tr("Save token database");
     QString fileType = tr("XML; token database (*.xml)");
 
     do {
         QString fileName;
-        if (defaultPath.isEmpty()) {
-            if (defaultPathCheckBox->isChecked())
-                fileName = dataDir + "/tokens.xml";
-            else
-                fileName = QFileDialog::getSaveFileName(this, windowName, dataDir + "/tokens.xml", fileType);
-            settings->setValue("paths/tokendatabase", fileName);
-        }
-        else {
-            if (defaultPathCheckBox->isChecked())
-                fileName = defaultPath;
-            else
-                fileName = QFileDialog::getSaveFileName(this, windowName, defaultPath, fileType);
-        }
-        if (fileName.isEmpty()) {
+        if (defaultPathCheckBox->isChecked())
+            fileName = defaultPath;
+        else
+            fileName = QFileDialog::getSaveFileName(this, windowName, defaultPath, fileType);
+
+        if (fileName.isEmpty())
             return false;
-        }
 
         QFileInfo fi(fileName);
         QDir fileDir(fi.path());

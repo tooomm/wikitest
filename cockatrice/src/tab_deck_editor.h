@@ -3,6 +3,7 @@
 
 #include "tab.h"
 #include <QAbstractItemModel>
+#include <QDir>
 #include <QLineEdit>
 #include "keysignals.h"
 
@@ -51,12 +52,9 @@ class TabDeckEditor : public Tab {
             void actLoadDeckFromClipboard();
             void actSaveDeckToClipboard();
             void actPrintDeck();
-            void actAnalyzeDeck();
-            void actOpenCustomFolder();
-            void actOpenCustomsetsFolder();
-
-            void actEditSets();
-            void actEditTokens();
+            void actExportDeckDecklist();
+            void actAnalyzeDeckDeckstats();
+            void actAnalyzeDeckTappedout();
 
             void actClearFilterAll();
             void actClearFilterOne();
@@ -70,13 +68,9 @@ class TabDeckEditor : public Tab {
             void actDecrementCard();
             void actDecrementCardFromSideboard();
 
-            //void actUpdatePrices();
-
-            void finishedUpdatingPrices();
             void saveDeckRemoteFinished(const Response &r);
             void filterViewCustomContextMenu(const QPoint &point);
             void filterRemove(QAction *action);
-            void setPriceTagFeatureEnabled(int enabled);
 
             void loadLayout();
             void restartLayout();
@@ -87,6 +81,7 @@ class TabDeckEditor : public Tab {
             void dockVisibleTriggered();
             void dockFloatingTriggered();
             void dockTopLevelChanged(bool topLevel);
+            void saveDbHeaderState();
 private:
     CardInfo *currentCardInfo() const;
     void addCardHelper(QString zoneName);
@@ -113,12 +108,13 @@ private:
     QLabel *hashLabel;
     FilterTreeModel *filterModel;
     QTreeView *filterView;
+    KeySignals filterViewKeySignals;
     QWidget *filterBox;
 
-    QMenu *deckMenu, *dbMenu, *viewMenu, *cardInfoDockMenu, *deckDockMenu, *filterDockMenu;
-    QAction *aNewDeck, *aLoadDeck, *aSaveDeck, *aSaveDeckAs, *aLoadDeckFromClipboard, *aSaveDeckToClipboard, *aPrintDeck, *aAnalyzeDeck, *aClose, *aOpenCustomFolder, *aOpenCustomsetsFolder;
-    QAction *aEditSets, *aEditTokens, *aClearFilterAll, *aClearFilterOne;
-    QAction *aAddCard, *aAddCardToSideboard, *aRemoveCard, *aIncrement, *aDecrement;// *aUpdatePrices;
+    QMenu *deckMenu, *viewMenu, *cardInfoDockMenu, *deckDockMenu, *filterDockMenu, *analyzeDeckMenu;
+    QAction *aNewDeck, *aLoadDeck, *aSaveDeck, *aSaveDeckAs, *aLoadDeckFromClipboard, *aSaveDeckToClipboard, *aPrintDeck, *aExportDeckDecklist, *aAnalyzeDeckDeckstats, *aAnalyzeDeckTappedout, *aClose;
+    QAction *aClearFilterAll, *aClearFilterOne;
+    QAction *aAddCard, *aAddCardToSideboard, *aRemoveCard, *aIncrement, *aDecrement;
     QAction *aResetLayout;
     QAction *aCardInfoDockVisible, *aCardInfoDockFloating, *aDeckDockVisible, *aDeckDockFloating, *aFilterDockVisible, *aFilterDockFloating;
 
@@ -145,7 +141,6 @@ public:
 
 public slots:
     void closeRequest();
-    void checkFirstRunDetected();
 signals:
     void deckEditorClosing(TabDeckEditor *tab);
 };

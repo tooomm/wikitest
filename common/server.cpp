@@ -37,8 +37,8 @@
 #include <QThread>
 #include <QDebug>
 
-Server::Server(bool _threaded, QObject *parent)
-    : QObject(parent), threaded(_threaded), nextLocalGameId(0)
+Server::Server(QObject *parent)
+    : QObject(parent), nextLocalGameId(0), tcpUserCount(0), webSocketUserCount(0)
 {
     qRegisterMetaType<ServerInfo_Ban>("ServerInfo_Ban");
     qRegisterMetaType<ServerInfo_Game>("ServerInfo_Game");
@@ -59,34 +59,6 @@ Server::~Server()
 
 void Server::prepareDestroy()
 {
-    // dirty :(
-    if (threaded) {
-        clientsLock.lockForRead();
-        for (int i = 0; i < clients.size(); ++i)
-            QMetaObject::invokeMethod(clients.at(i), "prepareDestroy", Qt::QueuedConnection);
-        clientsLock.unlock();
-
-        bool done = false;
-
-        class SleeperThread : public QThread
-        {
-        public:
-            static void msleep(unsigned long msecs) { QThread::usleep(msecs); }
-        };
-
-        do {
-            SleeperThread::msleep(10);
-            clientsLock.lockForRead();
-            if (clients.isEmpty())
-                done = true;
-            clientsLock.unlock();
-        } while (!done);
-    } else {
-        // no locking is needed in unthreaded mode
-        while (!clients.isEmpty())
-            clients.first()->prepareDestroy();
-    }
-
     roomsLock.lockForWrite();
     QMapIterator<int, Server_Room *> roomIterator(rooms);
     while (roomIterator.hasNext())
@@ -106,7 +78,7 @@ Server_DatabaseInterface *Server::getDatabaseInterface() const
     return databaseInterfaces.value(QThread::currentThread());
 }
 
-AuthenticationResult Server::loginUser(Server_ProtocolHandler *session, QString &name, const QString &password, QString &reasonStr, int &secondsLeft, QString &clientid, QString &clientVersion)
+AuthenticationResult Server::loginUser(Server_ProtocolHandler *session, QString &name, const QString &password, QString &reasonStr, int &secondsLeft, QString &clientid, QString &clientVersion, QString & /* connectionType */)
 {
     if (name.size() > 35)
         name = name.left(35);
@@ -143,7 +115,7 @@ AuthenticationResult Server::loginUser(Server_ProtocolHandler *session, QString 
     } else if (authState == UnknownUser) {
         // Change user name so that no two users have the same names,
         // don't interfere with registered user names though.
-        if (getRegOnlyServer()) {
+        if (getRegOnlyServerEnabled()) {
             qDebug("Login denied: registration required");
             databaseInterface->unlockSessionTables();
             return RegistrationRequired;
@@ -162,7 +134,7 @@ AuthenticationResult Server::loginUser(Server_ProtocolHandler *session, QString 
     users.insert(name, session);
     qDebug() << "Server::loginUser:" << session << "name=" << name;
 
-    data.set_session_id(databaseInterface->startSession(name, session->getAddress(), clientid));
+    data.set_session_id(databaseInterface->startSession(name, session->getAddress(), clientid, session->getConnectionType()));
     databaseInterface->unlockSessionTables();
 
     usersBySessionId.insert(data.session_id(), session);
@@ -183,7 +155,7 @@ AuthenticationResult Server::loginUser(Server_ProtocolHandler *session, QString 
 
     if (clientid.isEmpty()){
         // client id is empty, either out dated client or client has been modified
-        if (getClientIdRequired())
+        if (getClientIDRequiredEnabled())
             return ClientIdRequired;
     }
     else {
@@ -230,12 +202,25 @@ Server_AbstractUserInterface *Server::findUser(const QString &userName) const
 
 void Server::addClient(Server_ProtocolHandler *client)
 {
+    if (client->getConnectionType() == "tcp")
+        tcpUserCount++;
+
+    if (client->getConnectionType() == "websocket")
+        webSocketUserCount++;
+
     QWriteLocker locker(&clientsLock);
     clients << client;
 }
 
 void Server::removeClient(Server_ProtocolHandler *client)
 {
+    
+    if (client->getConnectionType() == "tcp")
+        tcpUserCount--;
+
+    if (client->getConnectionType() == "websocket")
+        webSocketUserCount--;
+
     QWriteLocker locker(&clientsLock);
     clients.removeAt(clients.indexOf(client));
     ServerInfo_User *data = client->getUserInfo();
@@ -260,6 +245,23 @@ void Server::removeClient(Server_ProtocolHandler *client)
         }
     }
     qDebug() << "Server::removeClient: removed" << (void *) client << ";" << clients.size() << "clients; " << users.size() << "users left";
+}
+
+QList<QString> Server::getOnlineModeratorList()
+{
+    // clients list should be locked by calling function prior to iteration otherwise sigfaults may occur
+    QList<QString> results;
+    for (int i = 0; i < clients.size(); ++i) {
+        ServerInfo_User *data = clients[i]->getUserInfo();
+
+        //TODO: this line should be updated in the event there is any type of new user level created
+        if (data &&
+            (data->user_level() & ServerInfo_User::IsModerator ||
+             data->user_level() & ServerInfo_User::IsAdmin)
+           )
+            results << QString::fromStdString(data->name()).simplified();
+    }
+    return results;
 }
 
 void Server::externalUserJoined(const ServerInfo_User &userInfo)

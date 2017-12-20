@@ -3,26 +3,24 @@
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <cmath>
+#include <algorithm>
 #ifdef _WIN32
 #include "round.h"
 #endif /* _WIN32 */
 #include "carddatabase.h"
-#include "cardinfowidget.h"
 #include "abstractcarditem.h"
 #include "pictureloader.h"
 #include "settingscache.h"
 #include "main.h"
 #include "gamescene.h"
-#include <QDebug>
 
 AbstractCardItem::AbstractCardItem(const QString &_name, Player *_owner, int _id, QGraphicsItem *parent)
-    : ArrowTarget(_owner, parent), infoWidget(0), id(_id), name(_name), tapped(false), facedown(false), tapAngle(0), isHovered(false), realZValue(0)
+    : ArrowTarget(_owner, parent), id(_id), name(_name), tapped(false), facedown(false), tapAngle(0), bgColor(Qt::transparent), isHovered(false), realZValue(0)
 {
     setCursor(Qt::OpenHandCursor);
     setFlag(ItemIsSelectable);
     setCacheMode(DeviceCoordinateCache);
     
-    connect(db, SIGNAL(cardListChanged()), this, SLOT(cardInfoUpdated()));
     connect(settingsCache, SIGNAL(displayCardNamesChanged()), this, SLOT(callUpdate()));
     cardInfoUpdated();
 }
@@ -46,7 +44,11 @@ void AbstractCardItem::pixmapUpdated()
 void AbstractCardItem::cardInfoUpdated()
 {
     info = db->getCard(name);
-    connect(info, SIGNAL(pixmapUpdated()), this, SLOT(pixmapUpdated()));
+    if(info)
+        connect(info, SIGNAL(pixmapUpdated()), this, SLOT(pixmapUpdated()));
+
+    cacheBgColor();
+    update();
 }
 
 void AbstractCardItem::setRealZValue(qreal _zValue)
@@ -65,6 +67,9 @@ QSizeF AbstractCardItem::getTranslatedSize(QPainter *painter) const
 
 void AbstractCardItem::transformPainter(QPainter *painter, const QSizeF &translatedSize, int angle)
 {
+    const int MAX_FONT_SIZE = settingsCache->getMaxFontSize();
+    const int fontSize = std::max(9, MAX_FONT_SIZE);
+
     QRectF totalBoundingRect = painter->combinedTransform().mapRect(boundingRect());
     
     painter->resetTransform();
@@ -76,11 +81,6 @@ void AbstractCardItem::transformPainter(QPainter *painter, const QSizeF &transla
     painter->setTransform(pixmapTransform);
 
     QFont f;
-    int fontSize = round(translatedSize.height() / 8);
-    if (fontSize < 9)
-        fontSize = 9;
-    if (fontSize > 10)
-        fontSize = 10;
     f.setPixelSize(fontSize);
 
     painter->setFont(f);
@@ -89,45 +89,35 @@ void AbstractCardItem::transformPainter(QPainter *painter, const QSizeF &transla
 void AbstractCardItem::paintPicture(QPainter *painter, const QSizeF &translatedSize, int angle)
 {
     qreal scaleFactor = translatedSize.width() / boundingRect().width();
-    
-    CardInfo *imageSource = facedown ? db->getCard() : info;
     QPixmap translatedPixmap;
-    // don't even spend time trying to load the picture if our size is too small
-    if(translatedSize.width() > 10)
-        PictureLoader::getPixmap(translatedPixmap, imageSource, translatedSize.toSize());        
+    bool paintImage = true;
+
+    if(facedown || name.isEmpty())
+    {
+        // never reveal card color, always paint the card back
+        PictureLoader::getCardBackPixmap(translatedPixmap, translatedSize.toSize());
+    } else {
+        // don't even spend time trying to load the picture if our size is too small
+        if(translatedSize.width() > 10)
+        {
+            PictureLoader::getPixmap(translatedPixmap, info, translatedSize.toSize());
+            if(translatedPixmap.isNull())
+                paintImage = false;
+        } else {
+            paintImage = false;
+        }
+    }
 
     painter->save();
-    QColor bgColor = Qt::transparent;
-    if (translatedPixmap.isNull()) {
-        QString colorStr;
-        if (!color.isEmpty())
-            colorStr = color;
-        else if (info->getColors().size() > 1)
-            colorStr = "m";
-        else if (!info->getColors().isEmpty())
-            colorStr = info->getColors().first().toLower();
-        
-        if (colorStr == "b")
-            bgColor = QColor(0, 0, 0);
-        else if (colorStr == "u")
-            bgColor = QColor(0, 140, 180);
-        else if (colorStr == "w")
-            bgColor = QColor(255, 250, 140);
-        else if (colorStr == "r")
-            bgColor = QColor(230, 0, 0);
-        else if (colorStr == "g")
-            bgColor = QColor(0, 160, 0);
-        else if (colorStr == "m")
-            bgColor = QColor(250, 190, 30);
-        else
-            bgColor = QColor(230, 230, 230);
-    } else {
+    
+    if (paintImage) {
         painter->save();
         transformPainter(painter, translatedSize, angle);
         painter->drawPixmap(QPointF(1, 1), translatedPixmap);
         painter->restore();
+    } else {
+        painter->setBrush(bgColor);
     }
-    painter->setBrush(bgColor);
 
     QPen pen(Qt::black);
     pen.setJoinStyle(Qt::MiterJoin);
@@ -192,11 +182,11 @@ void AbstractCardItem::setName(const QString &_name)
         return;
     
     emit deleteCardInfoPopup(name);
-    disconnect(info, 0, this, 0);
+    if(info)
+        disconnect(info, nullptr, this, nullptr);
     name = _name;
-    info = db->getCard(name);
-    connect(info, SIGNAL(pixmapUpdated()), this, SLOT(pixmapUpdated()));
-    update();
+
+    cardInfoUpdated();
 }
 
 void AbstractCardItem::setHovered(bool _hovered)
@@ -216,7 +206,45 @@ void AbstractCardItem::setHovered(bool _hovered)
 void AbstractCardItem::setColor(const QString &_color)
 {
     color = _color;
+    cacheBgColor();
     update();
+}
+
+void AbstractCardItem::cacheBgColor()
+{
+    QChar colorChar;
+    if (color.isEmpty())
+    {
+        if(info)
+            colorChar = info->getColorChar();
+    } else {
+        colorChar = color.at(0);
+    }
+    
+    switch(colorChar.toLower().toLatin1())
+    {
+        case 'b':
+            bgColor = QColor(0, 0, 0);
+            break;
+        case 'u':
+            bgColor = QColor(0, 140, 180);
+            break;
+        case 'w':
+            bgColor = QColor(255, 250, 140);
+            break;
+        case 'r':
+            bgColor = QColor(230, 0, 0);
+            break;
+        case 'g':
+            bgColor = QColor(0, 160, 0);
+            break;
+        case 'm':
+            bgColor = QColor(250, 190, 30);
+            break;
+        default:
+            bgColor = QColor(230, 230, 230);
+            break;
+    }
 }
 
 void AbstractCardItem::setTapped(bool _tapped, bool canAnimate)

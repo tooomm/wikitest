@@ -2,8 +2,6 @@
 #
 # provides the protobuf interfaces
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-
 SET(PROTO_FILES
     admin_commands.proto
     card_attributes.proto
@@ -121,6 +119,7 @@ SET(PROTO_FILES
     response_deck_list.proto
     response_deck_upload.proto
     response_dump_zone.proto
+    response_forgotpasswordrequest.proto
     response_get_games_of_user.proto
     response_get_user_info.proto
     response_join_room.proto

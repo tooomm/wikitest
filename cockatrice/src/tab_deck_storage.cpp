@@ -38,11 +38,7 @@ TabDeckStorage::TabDeckStorage(TabSupervisor *_tabSupervisor, AbstractClient *_c
     localDirView->setColumnHidden(1, true);
     localDirView->setRootIndex(localDirModel->index(localDirModel->rootPath(), 0));
     localDirView->setSortingEnabled(true);
-#if QT_VERSION < 0x050000
-    localDirView->header()->setResizeMode(QHeaderView::ResizeToContents);
-#else
     localDirView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
-#endif
     localDirView->header()->setSortIndicator(0, Qt::AscendingOrder);
     
     leftToolBar = new QToolBar;
@@ -275,6 +271,10 @@ void TabDeckStorage::actNewFolder()
     if (folderName.isEmpty())
         return;
 
+    // '/' isn't a valid filename character on *nix so we're choosing to replace it with a different arbitrary character.
+    std::string folder = folderName.toStdString();
+    std::replace(folder.begin(), folder.end(), '/', '-');
+
     QString targetPath;
     RemoteDeckList_TreeModel::Node *curRight = serverDirView->getCurrentItem();
     if (!curRight)
@@ -286,8 +286,8 @@ void TabDeckStorage::actNewFolder()
     
     Command_DeckNewDir cmd;
     cmd.set_path(targetPath.toStdString());
-    cmd.set_dir_name(folderName.toStdString());
-    
+    cmd.set_dir_name(folder);
+
     PendingCommand *pend = client->prepareSessionCommand(cmd);
     connect(pend, SIGNAL(finished(Response, CommandContainer, QVariant)), this, SLOT(newFolderFinished(Response, CommandContainer)));
     client->sendCommand(pend);
