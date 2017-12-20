@@ -86,7 +86,7 @@ test: off
 deploy:
   provider: GitHub
   auth_token:
-    secure: p+7wPVry2XEa6TBm9XH8IaQZbBmXQ/J2ldbGmcIxUZD3NkkPrSRRlmE7Of1CBBIO
+    secure: p+7wPVry2XEa6TBm9XH8IaQZbBmXQ/4afal
   description: "Dev build of Cockatrice"
   artifact: /.*\.exe/
   draft: false
