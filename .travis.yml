@@ -1,25 +1,7 @@
-#sudo: required   # forces legacy build infrastructure
+sudo: required   # forces legacy build infrastructure
 group: travis_lts   # forces most stable build images
 
 language: cpp
-
-addons:
-  apt:
-    sources:
-    - debian-sid
-    packages:
-    - qt5-default
-    - cmake
-    - libprotobuf-dev
-    - protobuf-compiler
-    - bc
-    - qttools5-dev
-    - qttools5-dev-tools
-#    - qtmultimedia5-dev          # missing in https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-trusty
-#    - libqt5multimedia5-plugins
-    - libqt5svg5-dev
-    - libqt5sql5-mysql
-    - libgtest-dev
 
 matrix:
   fast_finish: true
