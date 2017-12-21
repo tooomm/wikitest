@@ -3,10 +3,6 @@ group: travis_lts   # forces most stable build images
 
 language: cpp
 
-env:
-  global:
-    - MAKEFLAGS="-j 2"
-
 matrix:
   fast_finish: true
   include:
