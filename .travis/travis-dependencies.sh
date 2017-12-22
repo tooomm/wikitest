@@ -7,6 +7,7 @@ if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
 else
   # common prerequisites
   sudo add-apt-repository -y ppa:smspillaz/cmake-master
+  sudo apt-add-repository -y ppa:beineri/opt-qt562-trusty
   sudo apt-get update -qq
   sudo apt-get -y purge cmake
   sudo apt-get install -y \
@@ -15,6 +16,7 @@ else
     bc \
     qt5-default qttools5-dev qttools5-dev-tools \
     qtmultimedia5-dev libqt5multimedia5-plugins libqt5svg5-dev libqt5sql5-mysql
+#	qt56multimedia qt56svg qt56tools
 
   # prerequisites for tests
   if [[ $BUILDTYPE == "Debug" ]]; then
