@@ -8,6 +8,7 @@ else
   # common prerequisites
   sudo add-apt-repository -y ppa:smspillaz/cmake-master
   sudo add-apt-repository -y ppa:beineri/opt-qt563-trusty
+#  sudo add-apt-repository -y ppa:beineri/opt-qt593-trusty
   sudo apt-get update -qq
   sudo apt-get -y purge cmake
   sudo apt-get install -y \
@@ -15,11 +16,14 @@ else
     cmake \
     bc \
 	qt56-meta-minimal \
-	qt56tools qt56multimedia \
+	qt56multimedia qt56tools qt56websockets \
     libqt5multimedia5-plugins libqt5svg5-dev libqt5sql5-mysql
 #    qt5-default qttools5-dev qttools5-dev-tools
 #    qtmultimedia5-dev
 #    qt56-meta-
+
+#    qt59-meta-minimal
+#    qt59multimedia qt59tools qt59websockets
 	
   # prerequisites for tests
   if [[ $BUILDTYPE == "Debug" ]]; then
