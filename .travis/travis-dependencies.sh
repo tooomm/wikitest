@@ -14,10 +14,12 @@ else
     libprotobuf-dev protobuf-compiler \
     cmake \
     bc \
-	qt56-meta-full \
+	qt56-meta-minimal \
+	qt56tools qt56multimedia \
     libqt5multimedia5-plugins libqt5svg5-dev libqt5sql5-mysql
-#    qt5-default qttools5-dev qttools5-dev-tools \
-#    qtmultimedia5-dev 
+#    qt5-default qttools5-dev qttools5-dev-tools
+#    qtmultimedia5-dev
+#    qt56-meta-
 	
   # prerequisites for tests
   if [[ $BUILDTYPE == "Debug" ]]; then
