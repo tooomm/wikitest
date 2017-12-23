@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
+  export HOMEBREW_NO_AUTO_UPDATE=1
   brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh)
   brew install --force qt@5.7
   brew install protobuf
