@@ -25,7 +25,7 @@ install: bash ./.travis/travis-dependencies.sh
 
 script: bash ./.travis/travis-compile.sh
 
-after_success: "echo $TRAVIS_TAG $BUILDTYPE"
+after_success: "echo $TRAVIS_TAG - $BUILDTYPE"
 
 # Builds for pull requests skip the deployment step altogether
 deploy:
