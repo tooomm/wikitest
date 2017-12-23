@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh)
+  brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh)
   brew install --force qt@5.7
   brew install protobuf
 else
@@ -15,15 +15,9 @@ else
     libprotobuf-dev protobuf-compiler \
     cmake \
     bc \
-	qt56-meta-minimal \
-	qt56multimedia qt56tools qt56websockets \
+    qt5-default qttools5-dev qttools5-dev-tools \
+    qtmultimedia5-dev \
     libqt5multimedia5-plugins libqt5svg5-dev libqt5sql5-mysql
-#    qt5-default qttools5-dev qttools5-dev-tools
-#    qtmultimedia5-dev
-#    qt56-meta-
-
-#    qt59-meta-minimal
-#    qt59multimedia qt59tools qt59websockets
 	
   # prerequisites for tests
   if [[ $BUILDTYPE == "Debug" ]]; then
