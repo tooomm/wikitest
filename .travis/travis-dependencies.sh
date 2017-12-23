@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh)
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install --force qt@5.7
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install protobuf
+  brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh)
+  brew install --force qt@5.7
+  brew install protobuf
 else
   # common prerequisites
   sudo add-apt-repository -y ppa:smspillaz/cmake-master
