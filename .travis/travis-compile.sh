@@ -8,7 +8,6 @@ mkdir -p build
 cd build
 prefix=""
 if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-  export "HOMEBREW_NO_AUTO_UPDATE=1"
   export PATH="/usr/local/opt/ccache/libexec:$PATH"
   prefix="-DCMAKE_PREFIX_PATH=$(echo /usr/local/opt/qt*/)"
 fi
