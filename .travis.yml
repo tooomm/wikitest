@@ -27,8 +27,6 @@ script: bash ./.travis/travis-compile.sh
 
 after_success: "echo $TRAVIS_TAG $BUILDTYPE"
 
-before_deploy: "echo $TRAVIS_TAG"
-
 # Builds for pull requests skip the deployment step altogether
 deploy:
 # Deploy config for "beta" releases
