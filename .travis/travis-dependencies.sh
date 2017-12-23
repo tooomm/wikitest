@@ -21,7 +21,7 @@ else
 #    qt5-default qttools5-dev qttools5-dev-tools
 #    qtmultimedia5-dev
 #    qt56-meta-
-
+ 
 #    qt59-meta-minimal
 #    qt59multimedia qt59tools qt59websockets
 	
