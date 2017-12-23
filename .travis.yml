@@ -8,26 +8,16 @@ matrix:
   include:
   - os: linux
     dist: trusty
-    env: BUILDTYPE=Debug DIST=trusty
+    env: BUILDTYPE=Debug
   - os: linux
     dist: trusty
-    env: BUILDTYPE=Release DIST=trusty
+    env: BUILDTYPE=Release
   - os: osx
     osx_image: xcode7.3
     env: BUILDTYPE=Debug
-    cache:
-      ccache: true
-      timeout: 360 # 6min timeout for cache uploading instead default 3
-      directories:
-        - $HOME/Library/Caches/Homebrew   # cache Homebrew ressources
   - os: osx
     osx_image: xcode7.3
     env: BUILDTYPE=Release
-    cache:
-      ccache: true
-      timeout: 360 # 6min timeout for cache uploading instead default 3
-      directories:
-        - $HOME/Library/Caches/Homebrew   # cache Homebrew ressources
 
 cache: ccache
 
