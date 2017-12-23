@@ -7,8 +7,6 @@ if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
 else
   # common prerequisites
   sudo add-apt-repository -y ppa:smspillaz/cmake-master
-  sudo add-apt-repository -y ppa:beineri/opt-qt563-trusty
-#  sudo add-apt-repository -y ppa:beineri/opt-qt593-trusty
   sudo apt-get update -qq
   sudo apt-get -y purge cmake
   sudo apt-get install -y \
