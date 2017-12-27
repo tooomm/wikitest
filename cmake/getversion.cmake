@@ -141,7 +141,7 @@ function(get_tag_name commit)
 	endif()
 
 	# Label
-	if(${GIT_TAG_LISTCOUNT} EQUAL 8)
+	if(${GIT_TAG_LISTCOUNT} EQUAL 8 OR ${GIT_TAG_LISTCOUNT} EQUAL 9)
 		list(GET GIT_TAG_EXPLODED 7 GIT_TAG_LABEL)
 	else()
 		SET(GIT_TAG_LABEL "")
