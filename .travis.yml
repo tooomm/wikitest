@@ -57,7 +57,7 @@ deploy:
     prerelease: false
     on:
       tags: true
-      condition: $BUILDTYPE = Release && $TRAVIS_TAG =~ (\\d|[1-9]\\d)(\.(\\d|[1-9]\\d)){2}$
+      condition: $BUILDTYPE = Release
 
 
 notifications:
