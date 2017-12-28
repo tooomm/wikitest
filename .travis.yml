@@ -42,8 +42,8 @@ deploy:
     draft: false
     prerelease: true
     on:
+      condition: $TRAVIS_TAG =~ (\d|[1-9]\d)(\.(\d|[1-9]\d)){2}-beta(|\.([2-9]|[1-9]\d))$
       tags: true
-      condition: $TRAVIS_TAG =~ (\d|[1-9]\d)(\.(\d|[1-9]\d)){2}-beta(\.([2-9]|[1-9]\d))?$
       
 # Deploy configuration for "stable" releases
   - provider: releases
