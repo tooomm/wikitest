@@ -15,9 +15,19 @@ matrix:
   - os: osx
     osx_image: xcode8 
     env: BUILDTYPE=Debug
+    cache:
+      ccache: true
+      timeout: 360 # 6min timeout for cache uploading instead default 3
+      directories:
+        - $HOME/Library/Caches/Homebrew   # cache Homebrew ressources
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Release
+    cache:
+      ccache: true
+      timeout: 360 # 6min timeout for cache uploading instead default 3
+      directories:
+        - $HOME/Library/Caches/Homebrew   # cache Homebrew ressources
 
 cache: ccache
 
