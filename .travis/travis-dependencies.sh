@@ -23,7 +23,7 @@ else
 
     sudo mkdir /usr/src/gtest/build
     cd /usr/src/gtest/build
-    sudo cmake .. -DBUILD_SHARED_LIBS=1 -DRULE_LAUNCH_COMPILE=ccache
+    sudo cmake .. -DBUILD_SHARED_LIBS=1 -DRULE_LAUNCH_COMPILE=ccache --debug-output
     sudo make -j2
     sudo ln -s /usr/src/gtest/build/libgtest.so /usr/lib/libgtest.so
     sudo ln -s /usr/src/gtest/build/libgtest_main.so /usr/lib/libgtest_main.so
