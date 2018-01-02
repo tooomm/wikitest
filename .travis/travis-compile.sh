@@ -21,6 +21,6 @@ if [[ $BUILDTYPE == "Debug" ]]; then
 	make -j2
 	make test
 else
-	cmake .. -DWITH_SERVER=1 -DRULE_LAUNCH_COMPILE=ccache --debug-output -DCMAKE_BUILD_TYPE=$BUILDTYPE $prefix
+	cmake .. -DWITH_SERVER=1 -DCMAKE_BUILD_TYPE=$BUILDTYPE $prefix
 	make package -j2
 fi
