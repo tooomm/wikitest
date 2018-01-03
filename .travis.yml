@@ -25,14 +25,6 @@ matrix:
 script: ./travis-compile.sh
 install: ./travis-dependencies.sh
 cache: apt
-notifications:
-  slack: cockatrice:dNA81maCU8SAHB7pYrCWiQg9
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/d94969c3b01b22cbdcb7
-    on_success: change
-    on_failure: change
-    on_start: never
 deploy:
   provider: bintray
   file: "build/bintray_deploy.json"
