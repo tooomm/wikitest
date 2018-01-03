@@ -4,12 +4,12 @@
 
 <p align='center'>
    <a href="#cockatrice--"><b>Cockatrice</b></a> <b>|</b> 
-   <a href="#downloads-">Downloads</a> <b>|</b> 
+   <a href="#download-">Download</a> <b>|</b> 
    <a href="#get-involved-">Get Involved</a> <b>|</b> 
    <a href="#community-resources">Community</a> <b>|</b> 
    <a href="#translation-status-">Translation</a> <b>|</b> 
-   <a href="#building--">Building</a> <b>|</b> 
-   <a href="#running">Running</a> <b>|</b> 
+   <a href="#build--">Build</a> <b>|</b> 
+   <a href="#run">Run</a> <b>|</b> 
    <a href="#license-">License</a>
 </p>
 
@@ -49,7 +49,7 @@ Cockatrice is an open-source multiplatform supported program for playing tableto
 This project is written in C++ and is using the Qt5 libraries.<br>
 
 
-# Downloads [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+# Download [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
 
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
@@ -140,7 +140,7 @@ Check out our [Translator FAQ](https://github.com/Cockatrice/Cockatrice/wiki/Tra
 
 # Building [![Travis Build Status - master](https://travis-ci.org/Cockatrice/Cockatrice.svg?branch=master)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?logo=appveyor)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master) ([![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master))
 
-# Building [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis&style=for-the-badge)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
+# Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis&style=for-the-badge)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
 
 **Detailed compiling instructions are on the Cockatrice wiki under [Compiling Cockatrice](https://github.com/Cockatrice/Cockatrice/wiki/Compiling-Cockatrice)**
 
@@ -179,12 +179,13 @@ The following flags can be passed to `cmake`:
 - `-DTEST=1` Enable regression tests (default 0 = no). Note: needs googletest, will be downloaded on the fly if unavailable. To run tests: ```make test```.
 
 
-# Running
+# Run
 
 `Cockatrice` is the game client    
 `Oracle` fetches card data    
 `Servatrice` is the server<br>
 
+> move docker stuff to wiki!
 
 #### Servatrice Docker container
 
