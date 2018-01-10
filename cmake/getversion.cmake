@@ -15,7 +15,7 @@ function(get_commit_id)
 
 	string(REPLACE "\n" "" GIT_COM_ID "${GIT_COM_ID}")
 	set(GIT_COMMIT_ID "${GIT_COM_ID}" PARENT_SCOPE)
-	set(PROJECT_VERSION_LABEL custom``[${GIT_COM_ID}``] PARENT_SCOPE)
+	set(PROJECT_VERSION_LABEL "custom``[${GIT_COM_ID}``]" PARENT_SCOPE)
 endfunction()
 
 function(get_commit_date)
