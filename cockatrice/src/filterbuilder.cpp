@@ -32,6 +32,7 @@ FilterBuilder::FilterBuilder(QWidget *parent)
 
     edit = new QLineEdit;
     edit->setObjectName("edit");
+    edit->setPlaceholderText(tr("Type your filter here"));
     edit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QGridLayout *layout = new QGridLayout;
