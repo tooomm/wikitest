@@ -653,7 +653,7 @@ void MessageLogWidget::logSetActivePhase(int phase)
             color = "black";
             break;
     }
-    appendHtml(QDateTime::currentDateTime().toString("[hh:mm:ss] ")
+    appendHtml("<font color=\"black\">" + QDateTime::currentDateTime().toString("[hh:mm:ss] ") + "</font>"
                + "<font color=\"" + color + "\"><b>"
 			   + QString("%1").arg(phaseName)
                + "</b></font>");
@@ -661,9 +661,8 @@ void MessageLogWidget::logSetActivePhase(int phase)
 
 void MessageLogWidget::logSetActivePlayer(Player *player)
 {
-    appendHtml("<br>" + QDateTime::currentDateTime().toString("[hh:mm:ss] ")
-               + "<font color=\"grey\"><b>"
-               + QString(tr("%1's turn.")).arg(player->getName())
+    appendHtml("<br><font color=\"grey\">" + QDateTime::currentDateTime().toString("[hh:mm:ss] ")
+               + "<b>" + QString(tr("%1's turn.")).arg(player->getName())
                + "</b></font>");
 }
 
