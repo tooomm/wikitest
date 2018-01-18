@@ -661,8 +661,8 @@ void MessageLogWidget::logSetActivePhase(int phase)
 
 void MessageLogWidget::logSetActivePlayer(Player *player)
 {
-    appendHtml("<br><center><font color=\"grey\">"
-               + "<b>" + QString(tr("%1's turn.")).arg(player->getName())
+    appendHtml("<br><center><font color=\"grey\"><b>" 
+               + QString(tr("%1's turn.")).arg(player->getName())
                + "</b></font></center>");
 }
 
