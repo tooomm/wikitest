@@ -653,17 +653,17 @@ void MessageLogWidget::logSetActivePhase(int phase)
             color = "black";
             break;
     }
-    appendHtml(QDateTime::currentDateTime().toString("[hh:mm:ss] ")
+    appendHtml("<center>" + QDateTime::currentDateTime().toString("[hh:mm:ss] ")
                + "<font color=\"" + color + "\"><b>"
-			   + QString("%1").arg(phaseName)
-               + "</b></font>");
+			   + "--------" + QString("%1").arg(phaseName) + "--------"
+               + "</b></font></center>");
 }
 
 void MessageLogWidget::logSetActivePlayer(Player *player)
 {
-    appendHtml("<br><font color=\"grey\">" + QDateTime::currentDateTime().toString("[hh:mm:ss] ")
-               + "<b>" + QString(tr("%1's turn.")).arg(player->getName())
-               + "</b></font>");
+    appendHtml("<br><center><font color=\"grey\">"
+               + "<b>--------" + QString(tr("%1's turn.")).arg(player->getName()) + "--------"
+               + "</b></font></center>");
 }
 
 void MessageLogWidget::logSetAnnotation(Player *player, CardItem *card, QString newAnnotation)
