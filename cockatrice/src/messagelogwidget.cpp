@@ -653,7 +653,7 @@ void MessageLogWidget::logSetActivePhase(int phase)
             color = "black";
             break;
     }
-    appendHtml("<font color=\"black\">" + QDateTime::currentDateTime().toString("[hh:mm:ss] ") + "</font>"
+    appendHtml(QDateTime::currentDateTime().toString("[hh:mm:ss] ")
                + "<font color=\"" + color + "\"><b>"
 			   + QString("%1").arg(phaseName)
                + "</b></font>");
