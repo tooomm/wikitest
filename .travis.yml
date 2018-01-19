@@ -10,16 +10,13 @@ env:
   - BUILDTYPE=Release
 
 matrix:
-  fast_finish: true
   include:
   - os: linux
     dist: trusty
-  - os: linux
-    dist: trusty
   - os: osx
     osx_image: xcode8.3
-  - os: osx
-    osx_image: xcode8.3
+
+fast_finish: true
 
 install: bash ./.travis/travis-dependencies.sh
 
