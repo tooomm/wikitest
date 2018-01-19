@@ -7,9 +7,7 @@ cache: ccache
 
 os:
   - linux
-  - osx
-
-osx_image: xcode9.2
+  - osx_image: xcode9.2
   
 env:
   - BUILDTYPE=Debug
@@ -17,12 +15,14 @@ env:
 
 matrix:
   fast_finish: true
-
+ 
+ 
 install: bash ./.travis/travis-dependencies.sh
 
 script: bash ./.travis/travis-compile.sh
 
 after_success: "echo $TRAVIS_TAG $BUILDTYPE"
+
 
 # Builds for pull requests skip the deployment step altogether
 deploy:
