@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ev
 
 ./servatrice/check_schema_version.sh
 
