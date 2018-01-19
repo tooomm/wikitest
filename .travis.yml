@@ -5,7 +5,7 @@ language: cpp
 
 cache: ccache
 
-environment:
+env:
   - BUILDTYPE=Debug
   - BUILDTYPE=Release
 
