@@ -1,23 +1,26 @@
 sudo: required   # forces legacy build infrastructure
-group: travis_lts   # forces most stable build images
 
 language: cpp
 
 cache: ccache
 
-os:
-  - linux
-  - osx
-
-env:
-  - BUILDTYPE=Debug
-  - BUILDTYPE=Release
-
 matrix:
   fast_finish: true
+  include:
+  - os: linux
+    group: travis_lts   # forces most stable build images
+    env: BUILDTYPE=Debug
+  - os: linux
+    group: travis_lts   # forces most stable build images
+    env: BUILDTYPE=Release
+  - os: osx
+    osx_image: xcode9.2
+    env: BUILDTYPE=Debug
+  - os: osx
+    osx_image: xcode9.2
+    env: BUILDTYPE=Release
 
-osx_image: xcode9.2
- 
+
 install: bash ./.travis/travis-dependencies.sh
 
 script: bash ./.travis/travis-compile.sh
