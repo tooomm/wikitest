@@ -7,16 +7,16 @@ cache: ccache
 
 os:
   - linux
-  
-osx_image: xcode9.2
-  
+  - osx
+
 env:
   - BUILDTYPE=Debug
   - BUILDTYPE=Release
 
 matrix:
   fast_finish: true
- 
+
+osx_image: xcode9.2
  
 install: bash ./.travis/travis-dependencies.sh
 
