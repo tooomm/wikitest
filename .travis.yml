@@ -3,25 +3,23 @@ group: travis_lts   # forces most stable build images
 
 language: cpp
 
+cache: ccache
+
+environment:
+  - BUILDTYPE=Debug
+  - BUILDTYPE=Release
+
 matrix:
   fast_finish: true
   include:
   - os: linux
     dist: trusty
-    env: BUILDTYPE=Debug
   - os: linux
     dist: trusty
-    env: BUILDTYPE=Release
   - os: osx
     osx_image: xcode8.3
-    xcode_sdk: macosx10.11
-    env: BUILDTYPE=Debug
   - os: osx
     osx_image: xcode8.3
-    xcode_sdk: macosx10.11
-    env: BUILDTYPE=Release
-
-cache: ccache
 
 install: bash ./.travis/travis-dependencies.sh
 
