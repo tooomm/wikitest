@@ -5,14 +5,15 @@ language: cpp
 
 cache: ccache
 
+os:
+  - linux
+  - osx
+    osx_image: xcode8.3
+  
 env:
   - BUILDTYPE=Debug
   - BUILDTYPE=Release
 
-os:
-  - linux
-  - osx
-  
 matrix:
   fast_finish: true
 
