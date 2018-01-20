@@ -1,5 +1,3 @@
-sudo: false   # forces container-based build infrastructure for linux
-
 language: cpp
 
 cache: ccache
