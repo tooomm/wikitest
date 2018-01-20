@@ -10,9 +10,11 @@ matrix:
   include:
   - os: linux
     dist: trusty
+    group: stable
     env: BUILDTYPE=Debug
   - os: linux
     dist: trusty
+    group: stable
     env: BUILDTYPE=Release
   - os: osx
     osx_image: xcode8
