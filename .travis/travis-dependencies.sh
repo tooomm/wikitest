@@ -4,7 +4,8 @@ if [[ $TRAVIS_OS_NAME == "osx" ]] ; then
   brew install ccache   # enable caching on mac (PATH only set in travis-compile.sh) https://docs.travis-ci.com/user/caching/#ccache-cache
   brew install --force qt@5.7
   brew install protobuf
-else
+fi
+if [[ $TRAVIS_OS_NAME == "linux" ]] ; then
   # common prerequisites
   sudo add-apt-repository -y ppa:smspillaz/cmake-master
   sudo apt-get update -qq
@@ -17,7 +18,7 @@ else
     qtmultimedia5-dev \
     libqt5multimedia5-plugins libqt5svg5-dev libqt5sql5-mysql
 	
-  # prerequisites for tests
+  # prerequisites for tests under linux
   if [[ $BUILDTYPE == "Debug" ]]; then
     sudo apt-get install -y libgtest-dev
 
