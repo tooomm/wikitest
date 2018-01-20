@@ -11,43 +11,31 @@ matrix:
   - os: linux
     dist: trusty
     env: BUILDTYPE=Debug
-    addons:
-      apt:
-        packages:
-        - bc
-        - cmake  
-        - libprotobuf-dev
-        - protobuf-compiler
-        - qt5-default
-        - qttools5-dev
-        - qttools5-dev-tools
-        - qtmultimedia5-dev
-        - libqt5multimedia5-plugins
-        - libqt5svg5-dev
-        - libqt5sql5-mysql
   - os: linux
     dist: trusty
     env: BUILDTYPE=Release
-    addons:
-      apt:
-        packages:
-        - bc
-        - cmake  
-        - libprotobuf-dev
-        - protobuf-compiler
-        - qt5-default
-        - qttools5-dev
-        - qttools5-dev-tools
-        - qtmultimedia5-dev
-        - libqt5multimedia5-plugins
-        - libqt5svg5-dev
-        - libqt5sql5-mysql
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Debug
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Release
+
+# install dependencies for container-based linux environment
+addons:
+  apt:
+    packages:
+    - bc
+    - cmake  
+    - libprotobuf-dev
+    - protobuf-compiler
+    - qt5-default
+    - qttools5-dev
+    - qttools5-dev-tools
+    - qtmultimedia5-dev
+    - libqt5multimedia5-plugins
+    - libqt5svg5-dev
+    - libqt5sql5-mysql
 
 
 before_install: bash ./.travis/travis-dependencies.sh
