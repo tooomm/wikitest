@@ -10,7 +10,6 @@ matrix:
   include:
   - os: linux
     dist: xenial
-    group: stable
     env: BUILDTYPE=Debug
     addons:
       apt:
@@ -28,7 +27,6 @@ matrix:
         - libqt5sql5-mysql
   - os: linux
     dist: xenial
-    group: stable
     env: BUILDTYPE=Release
     addons:
       apt:
