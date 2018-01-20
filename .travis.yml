@@ -9,16 +9,12 @@ matrix:
   fast_finish: true
   include:
   - os: linux
-    dist: trusty
     env: BUILDTYPE=Debug
   - os: linux
-    dist: trusty
     env: BUILDTYPE=Release
   - os: osx
-    osx_image: xcode8
     env: BUILDTYPE=Debug
   - os: osx
-    osx_image: xcode8
     env: BUILDTYPE=Release
 
 # install dependencies for container-based linux environment
@@ -36,6 +32,13 @@ addons:
     - libqt5multimedia5-plugins
     - libqt5svg5-dev
     - libqt5sql5-mysql
+
+#linux specific
+dist: trusty
+group: stable
+
+#osx specific
+osx_image: xcode8
 
 
 before_install: bash ./.travis/travis-dependencies.sh
