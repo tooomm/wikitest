@@ -9,9 +9,11 @@ matrix:
   fast_finish: true
   include:
   - os: linux
+    dist: xenial
     group: travis_lts   # forces most stable build images
     env: BUILDTYPE=Debug
   - os: linux
+    dist: xenial
     group: travis_lts   # forces most stable build images
     env: BUILDTYPE=Release
   - os: osx
