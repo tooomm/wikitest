@@ -10,11 +10,11 @@ matrix:
   include:
   - os: linux
     dist: xenial
-    group: travis_lts   # forces most stable build images
+    group: stable
     env: BUILDTYPE=Debug
   - os: linux
     dist: xenial
-    group: travis_lts   # forces most stable build images
+    group: stable
     env: BUILDTYPE=Release
   - os: osx
     osx_image: xcode9.2
