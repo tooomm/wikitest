@@ -75,7 +75,7 @@ ELSEIF (CMAKE_COMPILER_IS_GNUCXX)
     # linux/gcc, bsd/gcc, windows/mingw
     include(CheckCXXCompilerFlag)
 
-    set(CMAKE_CXX_FLAGS_RELEASE "-s -O2 -lto")
+    set(CMAKE_CXX_FLAGS_RELEASE "-s -O2")
     set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -O0 -Wall -Wextra -Werror")
 
     set(ADDITIONAL_DEBUG_FLAGS -Wcast-align -Wmissing-declarations -Wno-long-long -Wno-error=extra -Wno-error=delete-non-virtual-dtor -Wno-error=sign-compare -Wno-error=missing-declarations)
