@@ -18,10 +18,10 @@ fi
 
 if [[ $BUILDTYPE == "Debug" ]]; then
 	cmake .. -DWITH_SERVER=1 -DTEST=1 -DCMAKE_BUILD_TYPE=$BUILDTYPE $prefix
-	make -j4
+	make -j2
 	make test
 fi
 if [[ $BUILDTYPE == "Release" ]]; then
 	cmake .. -DWITH_SERVER=1 -DCMAKE_BUILD_TYPE=$BUILDTYPE $prefix
-	make package -j4
+	make package -j2
 fi
