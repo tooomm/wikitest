@@ -12,16 +12,16 @@ matrix:
     dist: trusty
     group: stable
     env: BUILDTYPE=Debug
-    if: (branch = master AND NOT type = pull_request) OR env(TRAVIS_TAG) IS NOT blank
+    if: tag IS NOT present
   - os: linux
     dist: trusty
     group: stable
     env: BUILDTYPE=Release
-    if: (branch = master AND NOT type = pull_request) OR tag IS NOT blank
+    if: (branch = master AND NOT type = pull_request) OR tag IS present
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Debug
-    if: (branch = master AND NOT type = pull_request) OR env(TRAVIS_TAG) IS present
+    if: tag IS NOT present
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Release
