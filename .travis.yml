@@ -12,7 +12,7 @@ matrix:
     dist: trusty
     group: stable
     env: BUILDTYPE=Debug
-    if: tag != env(TRAVIS_TAG)
+    if: tag = ""
   - os: linux
     dist: trusty
     group: stable
