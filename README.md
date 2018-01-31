@@ -21,32 +21,10 @@
 </pre><br>
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2017.svg "Repo Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repo Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
-
----
-
-tests with backup pic (real pic: ![](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg) / backup pic: ![](https://badges.gitter.im/Cockatrice/Cockatrice.svg))
-- nested `![]()` [works for real pic / works NOT for backup]
-![![](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg)
-
-- use object data in case img src unavailable [works for real pic / unknown]
-<object data="https://badges.gitter.im/Cockatrice/Cockatrice.svg" type="image/svg+xml">
-<img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg"/>
-</object>
-
-- use background image (first) which is overlayed by other if able to load main (second) [works NOT for real pic / unknown]
-<img style="background-image: url(https://badges.gitter.im/Cockatrice/Cockatrice.svg), url(https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg);"></img>
-
-- javascript onerror [works for real pic / unknown]
-<img src="https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg" onerror="javascript:this.src='https://badges.gitter.im/Cockatrice/Cockatrice.svg'">
-
-- javascript onerror (other appraoch - real forcefully broken to test) [works for real pic / unknown]
-<img src="http://google.com/testpic.png" onError="this.onerror=null;this.src='https://badges.gitter.im/Cockatrice/Cockatrice.svg';" />
-
----
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2018.svg "Repo Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repo Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
-This project is written in C++ and is using the Qt5 libraries.<br>
+This project is written in <kbd>C++</kbd> and is using the <kbd>Qt5</kbd> libraries.<br>
 
 
 # Download [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
@@ -54,12 +32,10 @@ This project is written in C++ and is using the Qt5 libraries.<br>
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
 >### TODO
->- **for better overview: use link shortcuts to not confuse badges - at other places in readme, too?!**<br>
->- **minimize badge labels for not displaying badges**<br>
->- **change colors for badges, uniformity + color system**<br>
+>- **change colors for badges, uniformity + color system**<br><br>
 >- **change alterative link names if badge can't get loaded - uniform, short, simple**<br>
->- **possible to have a backup pic once main badge doesn't load? original travis badge update for shields fail e.g**<br>
->- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br>
+>- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br><br>
+>- **for better overview: use link shortcuts to not confuse badges - at other places in readme, too?!**<br>
 >- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff & https://stackoverflow.com/questions/24580042/github-markdown-are-macros-and-variables-possible**<br>
 >- **actually that's just a use of footnotes?!** https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
 >- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
