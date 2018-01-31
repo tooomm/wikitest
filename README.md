@@ -21,6 +21,16 @@
 </pre><br>
 
 
+>### TODO
+>- **change colors for badges, uniformity + color system**<br><br>
+>- **change alterative link names if badge can't get loaded - uniform, short, simple**<br>
+>- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br><br>
+>- **for better overview: use link shortcuts to not confuse badges - at other places in readme, too?!**<br>
+>- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff & https://stackoverflow.com/questions/24580042/github-markdown-are-macros-and-variables-possible**<br>
+>- **actually that's just a use of footnotes?!** https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
+>- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
+
+
 # Cockatrice ![](https://img.shields.io/maintenance/yes/2018.svg "Repo Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repo Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
@@ -31,14 +41,6 @@ This project is written in <kbd>C++</kbd> and is using the <kbd>Qt5</kbd> librar
 
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
->### TODO
->- **change colors for badges, uniformity + color system**<br><br>
->- **change alterative link names if badge can't get loaded - uniform, short, simple**<br>
->- **have a mouse over tooltip: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_links**<br><br>
->- **for better overview: use link shortcuts to not confuse badges - at other places in readme, too?!**<br>
->- **experiement with placeholder/links: https://sourceforge.net/p/placeholder/wiki/markdown_syntax/#md_ex_reflinks ff & https://stackoverflow.com/questions/24580042/github-markdown-are-macros-and-variables-possible**<br>
->- **actually that's just a use of footnotes?!** https://help.ghost.org/hc/en-us/articles/224410728-Markdown-Guide
->- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
 
 <br><pre>
 **Latest stable release:**<br>
@@ -81,6 +83,8 @@ Latest **stable** release:<br>
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
 # Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice)
+
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/3Z9yzmA.svg)](https://discord.gg/3Z9yzmA)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
@@ -181,7 +185,8 @@ More infos on how to use Servatrice with Docker can be found in our [wiki](https
 
 # License [![GPLv2 License](https://img.shields.io/github/license/Cockatrice/Cockatrice.svg)](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE)
 
-# License [![GPLv2 License](https://img.shields.io/github/license/Cockatrice/Cockatrice.svg?style=for-the-badge)](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE)
+Cockatrice is free software, licensed under the [<kbd>GNU General Public License v2.0</kbd>](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE).
 
-Cockatrice is free software, licensed under the [GPLv2](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE).
-
+<p align='center'>
+Cockatrice is free software, licensed under the <a href="https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE"><kbd>GNU General Public License v2.0</kbd></a>
+</p>
