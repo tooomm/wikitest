@@ -3,13 +3,13 @@
 ---
 
 <p align='center'>
-   <a href="#cockatrice--"><b>Cockatrice</b></a> <b>|</b> 
-   <a href="#download-">Download</a> <b>|</b> 
-   <a href="#get-involved-">Get Involved</a> <b>|</b> 
-   <a href="#community-resources">Community</a> <b>|</b> 
-   <a href="#translation-status-">Translation</a> <b>|</b> 
-   <a href="#build--">Build</a> <b>|</b> 
-   <a href="#run">Run</a> <b>|</b> 
+   <a href="#cockatrice--"><b>Cockatrice</b></a> <b>|</b>
+   <a href="#download-">Download</a> <b>|</b>
+   <a href="#get-involved-">Get Involved</a> <b>|</b>
+   <a href="#community-resources">Community</a> <b>|</b>
+   <a href="#translate-">Translate</a> <b>|</b>
+   <a href="#build--">Build</a> <b>|</b>
+   <a href="#run">Run</a> <b>|</b>
    <a href="#license-">License</a>
 </p>
 
@@ -107,7 +107,7 @@ Check our long-term project **roadmap** with some [visions](https://docs.google.
 
 # Translation Status [![Cockatrice on Transiflex](https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png)](https://www.transifex.com/projects/p/cockatrice/)
 
-# Translation Status [![Cockatrice on Transiflex](https://img.shields.io/badge/translate-on%20transifex-blue.svg)](https://www.transifex.com/projects/p/cockatrice/)
+# Translate [![Cockatrice on Transiflex](https://img.shields.io/badge/translate-on%20transifex-blue.svg)](https://www.transifex.com/projects/p/cockatrice/)
 
 Cockatrice uses Transifex for translations. You can help us bring Cockatrice and Oracle to your language or just edit single wordings right from within your browser by simply visiting our [Transifex project page](https://www.transifex.com/projects/p/cockatrice/).<br>
 
@@ -187,6 +187,12 @@ More infos on how to use Servatrice with Docker can be found in our [wiki](https
 
 Cockatrice is free software, licensed under the [<kbd>GNU General Public License v2.0</kbd>](https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE).
 
+---
+
 <p align='center'>
 Cockatrice is free software, licensed under the <a href="https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE"><kbd>GNU General Public License v2.0</kbd></a>
+</p>
+
+<p align='center'>
+Cockatrice is free software, licensed under the <a href="https://github.com/Cockatrice/Cockatrice/blob/master/LICENSE"><b>GNU General Public License v2.0</b></a>
 </p>
