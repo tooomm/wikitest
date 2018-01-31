@@ -31,11 +31,13 @@
 >- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2018.svg "Repo Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repo Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2018.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
-Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br><br>
+Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br>
+<br>
 This project is written in <kbd>C++</kbd> and is using the <kbd>Qt5</kbd> libraries.<br>
 
+<br>
 
 # Download [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
 
