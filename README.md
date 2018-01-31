@@ -64,7 +64,7 @@ Download latest **beta** version to be a *Cockatrice Beta Tester*:
 </pre><pre>
 Download latest **beta** version to be a *Cockatrice Beta Tester*:
 [![Download Beta Release](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?label=download%20beta&colorA=6d6d6d&colorB=a0a0a0&style=for-the-badge "Download Latest Beta Release")](https://github.com/cockatrice/cockatrice/releases) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorA=6d6d6d&colorB=a0a0a0&style=for-the-badge)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorA=6d6d6d&colorB=f37f40&style=for-the-badge "Number of Changes Since Last Stable Release")](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Aclosed)
-&nbsp;&#9679; Use with caution! Beta builds may not be stable and/or contain several bugs
+&nbsp;&#9679; ⚠️ <b>Use with caution!</b> Beta builds may not be stable and/or contain several bugs
 &nbsp;&#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
 </pre>
 <br>
@@ -112,6 +112,8 @@ Check our long-term project **roadmap** with some [visions](https://docs.google.
 # Translate [![Cockatrice on Transiflex](https://img.shields.io/badge/translate-on%20transifex-blue.svg)](https://www.transifex.com/projects/p/cockatrice/)
 
 Cockatrice uses Transifex for translations. You can help us bring Cockatrice and Oracle to your language or just edit single wordings right from within your browser by simply visiting our [Transifex project page](https://www.transifex.com/projects/p/cockatrice/).<br>
+
+**Current Translation Status:**<br>
 
 | Cockatrice | Oracle |
 |:-:|:-:|
