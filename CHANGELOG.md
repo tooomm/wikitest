@@ -46,6 +46,10 @@ Group 1:
 - ![][fix] | Explanation here
 - ![][change] | Explanation here
 
+**Servatrice**
+- ![][servatrice-square]![][fix-square] | Explanation here
+- ![][servatrice-square]![][new-square] | Explanation here
+
 ## Version x.y.z
 Group 1:
 - ![](https://img.shields.io/badge/Cockatrice--grey.svg)
@@ -63,6 +67,8 @@ explanation here
 [Cockatrice]: https://img.shields.io/badge/Cockatrice--grey.svg
 [Oracle]: https://img.shields.io/badge/Oracle--grey.svg
 [Servatrice]: https://img.shields.io/badge/Servatrice--grey.svg
+[servatrice-square]: ttps://img.shields.io/badge/Servatrice--grey.svg?style=flat-square
 [Fix]: https://img.shields.io/badge/-Fix-red.svg
+[fix-square]: https://img.shields.io/badge/-Fix-red.svg?style=flat-square
 [New]: https://img.shields.io/badge/-New-green.svg
 [Change]: https://img.shields.io/badge/-Change-blue.svg
