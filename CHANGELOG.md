@@ -3,8 +3,8 @@
 ## Version x.y.z
 Group 1:
 - ![](https://img.shields.io/badge/Cockatrice-Fix-red.svg)
-- ![](https://img.shields.io/badge/Cockatrice-New-green.svg)
-- ![](https://img.shields.io/badge/Cockatrice-Change-blue.svg)
+- ![](https://img.shields.io/badge/Cockatrice-New-green.svg) ![](https://img.shields.io/badge/Cockatrice-New-brightgreen.svg)
+- ![](https://img.shields.io/badge/Cockatrice-Change-blue.svg) ![](https://img.shields.io/badge/Cockatrice-Change-yellow.svg) ![](https://img.shields.io/badge/Cockatrice-Change-orange.svg)
 - ![](https://img.shields.io/badge/Oracle-Fix-red.svg)
 - ![](https://img.shields.io/badge/Oracle-Fix-red.svg)
 - ![](https://img.shields.io/badge/Servatrice-New-green.svg)
