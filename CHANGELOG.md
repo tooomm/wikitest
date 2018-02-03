@@ -43,7 +43,7 @@ Group 1:
 - ![][change] Explanation here (#2222)
 
 **Servatrice**
-- ![][new] | Explanation here
+- ![][fix] | Explanation here
 - ![][change] | Explanation here
 
 ## Version x.y.z
