@@ -1,4 +1,6 @@
 <!-- hidden explanation -->
+<!-- must be easy to use, have copy paste example that people can fill out more or less naturally -->
+<!-- .md file has the advantage that people can preview how it looks if editing online -->
 
 ## Version x.y.z
 Group 1:
@@ -41,6 +43,14 @@ Group 1:
 ![][oracle]
 - ![][new] Explanation here (#1)
 - ![][change] Explanation here (#2222)
+
+![][oracle]
+- ![][new] (#1001) Explanation here
+- ![][change] (#2222) Explanation here
+
+![][oracle]
+- (#1001) ![][new] Explanation here
+- (#2222) ![][change] Explanation here
 
 **Servatrice**
 - ![][fix] | Explanation here
