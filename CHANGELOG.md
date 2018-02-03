@@ -47,6 +47,7 @@ Group 1:
 - ![][change] | Explanation here
 
 **Servatrice**
+- ![][servatrice]![][fix] | Explanation here
 - ![][servatrice-square]![][fix-square] | Explanation here
 - ![][servatrice-square]![][new-square] | Explanation here
 
@@ -71,4 +72,5 @@ explanation here
 [Fix]: https://img.shields.io/badge/-Fix-red.svg
 [fix-square]: https://img.shields.io/badge/-Fix-red.svg?style=flat-square
 [New]: https://img.shields.io/badge/-New-green.svg
+[new-square]: https://img.shields.io/badge/-New-green.svg?style=flat-square
 [Change]: https://img.shields.io/badge/-Change-blue.svg
