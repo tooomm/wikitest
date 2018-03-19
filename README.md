@@ -104,6 +104,7 @@ Check our long-term project **roadmap** with some [visions](https://docs.google.
 
 - [Cockatrice Official Site](https://cockatrice.github.io)
 - [Cockatrice Official Wiki](https://github.com/Cockatrice/Cockatrice/wiki)
+- [Cockatrice Official Discord](https://discord.gg/3Z9yzmA)
 - [reddit r/Cockatrice](https://reddit.com/r/cockatrice)
 
 
