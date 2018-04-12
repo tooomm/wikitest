@@ -112,7 +112,7 @@ Check our long-term project **roadmap** with some [visions](https://docs.google.
 
 # Translate [![Cockatrice on Transiflex](https://img.shields.io/badge/translate-on%20transifex-blue.svg)](https://www.transifex.com/projects/p/cockatrice/)
 
-Cockatrice uses Transifex for translations. You can help us bring Cockatrice and Oracle to your language or just edit single wordings right from within your browser by simply visiting our [Transifex project page](https://www.transifex.com/projects/p/cockatrice/).<br>
+Cockatrice uses Transifex for translations. You can help us bring `Cockatrice` and `Oracle` to your language or just edit single wordings right from within your browser by simply visiting our [Transifex project page](https://www.transifex.com/projects/p/cockatrice/).<br>
 
 **Current Translation Status:**<br>
 
