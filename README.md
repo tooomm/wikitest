@@ -97,7 +97,7 @@ We are also participating in every years [Hacktoberfest](https://hacktoberfest.d
 
 We try to be very responsive to new issues. We'll try to give you advice on how a feature should be implemented / advice on places the codebase is doing something similar before you get too far along with a PR.
 
-Check our long-term project **roadmap** with some [visions](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit) &mdash; or review our more short/mid term list: [![Issues tagged as "Roadmap"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Roadmap.svg)](https://github.com/Cockatrice/Cockatrice/labels/Roadmap)
+Check our long-term project **roadmap** with some [visions](https://docs.google.com/document/d/1Ewe5uSaRE2nR2pNPMaGmP6gVZdqgFbBgwSscGqIr4W0/edit) &mdash; or review our more short/mid term list: [![Issues tagged as "Roadmap"](https://img.shields.io/github/issues/Cockatrice/Cockatrice/Roadmap.svg)](https://github.com/Cockatrice/Cockatrice/labels/Roadmap), as well as our context-grouped [milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date).
 
 
 # Community Resources
