@@ -158,7 +158,7 @@ The following flags can be passed to `cmake`:
 
 | Flag | Explanation | "x" Values<br> (bold → default) |
 |:---|:---|:---:|
-| `-DWITH_SERVER=x` | Whether to build the server | **0 ("no")** / 1 ("yes") |
+| `-DWITH_SERVER=x` | Whether to build the server | **0 (no)** / 1 (yes) |
 | `-DWITH_CLIENT=x` | Whether to build the client | 0 / **1** |
 | `-DWITH_ORACLE=x` | Whether to build Oracle | 0 / **1**|
 | `-DCMAKE_BUILD_TYPE=x` | If compiled in debug mode, enables extra logging output,<br> debug symbols, and much more verbose compiler warnings | Debug / **Release** |
