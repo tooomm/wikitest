@@ -156,12 +156,14 @@ to create a system-specific installation package.
 
 The following flags can be passed to `cmake`:
 
-- `-DWITH_SERVER=1` Whether to build the server (default 0 = no).
-- `-DWITH_CLIENT=0` Whether to build the client (default 1 = yes).
-- `-DWITH_ORACLE=0` Whether to build oracle (default 1 = yes).
-- `-DCMAKE_BUILD_TYPE=Debug` Compile in debug mode. Enables extra logging output, debug symbols, and much more verbose compiler warnings (default `Release`).
-- `-DUPDATE_TRANSLATIONS=1` Configure `make` to update the translation .ts files for new strings in the source code. Note: Running `make clean` will remove the .ts files (default 0 = no).
-- `-DTEST=1` Enable regression tests (default 0 = no). Note: needs googletest, will be downloaded on the fly if unavailable. To run tests: ```make test```.
+| Flag | Explanation | "x" Values<br> (bold → default) |
+|:---|:---|:---:|
+| `-DWITH_SERVER=x` | Whether to build the server | **0 ("no")** / 1 ("yes") |
+| `-DWITH_CLIENT=x` | Whether to build the client | 0 / **1** |
+| `-DWITH_ORACLE=x` | Whether to build Oracle | 0 / **1**|
+| `-DCMAKE_BUILD_TYPE=x` | If compiled in debug mode, enables extra logging output,<br> debug symbols, and much more verbose compiler warnings | Debug / **Release** |
+| `-DUPDATE_TRANSLATIONS=x` | Configure `make` to update the translation .ts files for<br> new strings in the source code<br><br> **Note:**<br> Running `make clean` will remove the .ts files | **0** / 1 |
+| `-DTEST=x` | Enable regression tests<br><br> **Note:**<br> *googletest* will be downloaded on the fly if unavailable<br> To run tests: `make test` | **0** / 1 |
 
 
 # Run
