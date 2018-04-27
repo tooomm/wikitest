@@ -86,7 +86,7 @@ Latest **stable** release:<br>
 
 # Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/put-channel-id-here.svg)](https://discord.gg/put-channel-id-here)
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg)](https://discord.gg/3Z9yzmA)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
