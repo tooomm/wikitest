@@ -9,7 +9,7 @@ matrix:
   fast_finish: true
   include:
   - os: linux
-    dist: trusty
+    dist: xenial
     group: stable
     env: BUILDTYPE=Debug
     if: 
@@ -28,7 +28,7 @@ matrix:
           - libqt5svg5-dev
           - libqt5sql5-mysql
   - os: linux
-    dist: trusty
+    dist: xenial
     group: stable
     env: BUILDTYPE=Release
     if: (branch = master AND NOT type = pull_request) OR tag IS present
@@ -54,8 +54,9 @@ matrix:
     osx_image: xcode8
     env: BUILDTYPE=Release
     if: (branch = master AND NOT type = pull_request) OR tag IS present
-  - os: linux
-    dist: trusty
+  - name: Docker
+    os: linux
+    dist: xenial
     group: stable
     env: 
     if: 
