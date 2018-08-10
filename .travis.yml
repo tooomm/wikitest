@@ -13,11 +13,39 @@ matrix:
     group: stable
     env: BUILDTYPE=Debug
     if: 
+    addons:
+      apt:
+        packages:
+          - bc
+          - cmake  
+          - libprotobuf-dev
+          - protobuf-compiler
+          - qt5-default
+          - qttools5-dev
+          - qttools5-dev-tools
+          - qtmultimedia5-dev
+          - libqt5multimedia5-plugins
+          - libqt5svg5-dev
+          - libqt5sql5-mysql
   - os: linux
     dist: trusty
     group: stable
     env: BUILDTYPE=Release
     if: (branch = master AND NOT type = pull_request) OR tag IS present
+    addons:
+      apt:
+        packages:
+          - bc
+          - cmake  
+          - libprotobuf-dev
+          - protobuf-compiler
+          - qt5-default
+          - qttools5-dev
+          - qttools5-dev-tools
+          - qtmultimedia5-dev
+          - libqt5multimedia5-plugins
+          - libqt5svg5-dev
+          - libqt5sql5-mysql
   - os: osx
     osx_image: xcode8
     env: BUILDTYPE=Debug
@@ -26,23 +54,24 @@ matrix:
     osx_image: xcode8
     env: BUILDTYPE=Release
     if: (branch = master AND NOT type = pull_request) OR tag IS present
-
-# install dependencies for container-based linux environment
-addons:
-  apt:
-    packages:
-    - bc
-    - cmake  
-    - libprotobuf-dev
-    - protobuf-compiler
-    - qt5-default
-    - qttools5-dev
-    - qttools5-dev-tools
-    - qtmultimedia5-dev
-    - libqt5multimedia5-plugins
-    - libqt5svg5-dev
-    - libqt5sql5-mysql
-
+  - os: linux
+    dist: trusty
+    group: stable
+    env: 
+    if: 
+    language: generic
+    services: docker
+    addons:
+      apt:
+        packages:
+          - docker-ce
+    script:
+      - docker --version
+      - docker build --tag cockatrice-app .    # builds from the Dockerfile in repo root
+      - docker run -dp 4747:4747 cockatrice-app
+      - docker ps -a
+    after_script:
+      - docker images
 
 before_install: bash ./.travis/travis-dependencies.sh
 
