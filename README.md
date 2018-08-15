@@ -84,7 +84,7 @@ Latest **stable** release:<br>
 
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/badge/chat-on%20discord-blue.svg)](https://discord.gg/3Z9yzmA)
+# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf&logo=gitter&logoColor=white)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/badge/chat-on%20discord-blue.svg?logo=discord)](https://discord.gg/3Z9yzmA)
 
 # Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg?label=developer%20chat)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue)](https://discord.gg/3Z9yzmA)
 
