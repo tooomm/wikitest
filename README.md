@@ -84,9 +84,11 @@ Latest **stable** release:<br>
 
 # Get Involved [![Gitter Chat](https://badges.gitter.im/Cockatrice/Cockatrice.svg)](https://gitter.im/Cockatrice/Cockatrice)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice)
+# Get Involved [![Gitter Chat](https://img.shields.io/gitter/room/Cockatrice/Cockatrice.svg?colorB=0d7ebf)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/badge/chat-on%20discord-blue.svg)](https://discord.gg/3Z9yzmA)
 
 # Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg?label=developer%20chat)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue)](https://discord.gg/3Z9yzmA)
+
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg?label=developer%20chat&logo=gitter&logoColor=white)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord)](https://discord.gg/3Z9yzmA)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
@@ -126,6 +128,8 @@ Check out our [Translator FAQ](https://github.com/Cockatrice/Cockatrice/wiki/Tra
 # Building [![Travis Build Status - master](https://travis-ci.org/Cockatrice/Cockatrice.svg?branch=master)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?logo=appveyor)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master) ([![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=windows)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master))
 
 # Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis&style=for-the-badge)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
+
+# Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20mac%20build&logo=travis)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
 
 **Detailed compiling instructions are on the Cockatrice wiki under [Compiling Cockatrice](https://github.com/Cockatrice/Cockatrice/wiki/Compiling-Cockatrice)**
 
