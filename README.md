@@ -57,6 +57,22 @@ Download latest **beta** version to be a *Cockatrice Beta Tester*:
 
 ---
 
+<!-- getrickse hier, da grafiken in pre tags nur gehen wenn keine linebreaks dazwischen daher </pre><pre> z.b. -->
+
+<br><pre>
+**Latest stable release:** [![Download](https://img.shields.io/badge/Download-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
+
+[![Download Stable Release](https://img.shields.io/github/release/cockatrice/cockatrice.svg?label=download&colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?label=download%20count&colorB=4ac41d&style=for-the-badge "Number of Downloads")](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?label=released&colorB=4ac41d&style=for-the-badge "Release Date")
+</pre><pre>
+Download latest **beta** version to be a *Cockatrice Beta Tester*: [![Download Beta](https://img.shields.io/badge/Download%20Beta-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Beta Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
+
+[![Download Beta Release](https://img.shields.io/github/release/cockatrice/cockatrice/all.svg?label=download%20beta&colorA=6d6d6d&colorB=a0a0a0&style=for-the-badge "Download Latest Beta Release")](https://github.com/cockatrice/cockatrice/releases) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![DL Count on latest Pre-Release](https://img.shields.io/github/downloads-pre/cockatrice/cockatrice/latest/total.svg?colorA=6d6d6d&colorB=a0a0a0&style=for-the-badge)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) [![](https://img.shields.io/github/commits-since/Cockatrice/Cockatrice/latest.svg?label=changes&colorA=6d6d6d&colorB=f37f40&style=for-the-badge "Number of Changes Since Last Stable Release")](https://github.com/Cockatrice/Cockatrice/pulls?q=is%3Apr+is%3Amerged+created%3A%3E2018-04-16)
+&nbsp;&#9679; ⚠️ <b>Use with caution!</b> Beta builds may not be stable and/or contain several bugs
+&nbsp;&#9679; More information can be [found here](https://github.com/Cockatrice/Cockatrice/wiki/Release-Channels)
+</pre>
+<br>
+
+---
 
 <br><pre>
 **Latest stable release:**<br>
