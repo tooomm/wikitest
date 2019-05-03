@@ -55,6 +55,9 @@ Download latest **beta** version to be a *Cockatrice Beta Tester*:
 </pre>
 <br>
 
+Nice link to changes since badge: https://github.com/Cockatrice/Cockatrice/compare/release...master
+sadly not supported by github
+
 ---
 
 <!-- getrickse hier, da grafiken in pre tags nur gehen wenn keine linebreaks dazwischen daher </pre><pre> z.b. -->
