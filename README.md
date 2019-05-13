@@ -31,7 +31,7 @@
 >- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2018.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br>
 <br>
@@ -107,7 +107,9 @@ Latest **stable** release:<br>
 
 # Get Involved [![Gitter Chat](https://img.shields.io/badge/chat-gitter-blue.svg?label=developer%20chat)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue)](https://discord.gg/3Z9yzmA)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=white)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord)](https://discord.gg/3Z9yzmA)
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=white)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord&logoColor=white)](https://discord.gg/3Z9yzmA)
+
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=pink)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord)](https://discord.gg/3Z9yzmA)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
