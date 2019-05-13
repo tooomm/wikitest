@@ -137,7 +137,7 @@ Cockatrice uses Transifex for translations. You can help us bring `Cockatrice` a
 
 **Current Translation Status:**<br>
 
-| Cockatrice | Oracle |
+| **Cockatrice** <br> <sub>Game Client</sub> | **Oracle** <br> <sub>Card Database Updater</sub> |
 |:-:|:-:|
 | [![Cockatrice Translation Status](https://www.transifex.com/projects/p/cockatrice/resource/cockatrice/chart/image_png/)](https://www.transifex.com/projects/p/cockatrice/) | [![Oracle Translation Status](https://www.transifex.com/projects/p/cockatrice/resource/oracle/chart/image_png/)](https://www.transifex.com/projects/p/cockatrice/) |
 
