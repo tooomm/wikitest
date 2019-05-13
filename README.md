@@ -138,10 +138,14 @@ Check our long-term project **roadmap** with some [visions](https://docs.google.
 
 # Community Resources
 
+# Official Community Resources
+
 - [Webpage](https://cockatrice.github.io) (Official)
 - [Wiki (Official)](https://github.com/Cockatrice/Cockatrice/wiki)
-- [Discord](https://discord.gg/3Z9yzmA) <sub>(Official)</sub>
+- [Discord?](https://discord.gg/3Z9yzmA) <sub>(Official)</sub>
 - [reddit r/Cockatrice](https://reddit.com/r/cockatrice) <kbd>Official</kbd>
+- gitter?
+- twitter? (on new releases --> ci tweets + other important announcements about servers or feature teasers etc.)
 
 # Translation Status [![Cockatrice on Transiflex](https://tx-assets.scdn5.secure.raxcdn.com/static/charts/images/tx-logo-micro.c5603f91c780.png)](https://www.transifex.com/projects/p/cockatrice/)
 
