@@ -41,6 +41,8 @@ This project is written in <kbd>C++</kbd> and is using the <kbd>Qt5</kbd> librar
 
 # Download [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
 
+# Download [![Cockatrice Eternal Download Count](https://img.shields.io/github/downloads/cockatrice/cockatrice/total.svg?label=total%20app%20downloads&colorB=0d7ebf)](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice)
+
 We offer downloads for all full releases (recommended) and the latest development versions. Full releases are checkpoints with major feature or UI enhancements between them, but currently we don't have a set schedule for releasing new updates. The development version contains the most recently added features and bugfixes, but can be more unstable. Downloads for development versions are updated automatically with every change.
 
 
@@ -63,7 +65,7 @@ sadly not supported by github
 <!-- getrickse hier, da grafiken in pre tags nur gehen wenn keine linebreaks dazwischen daher </pre><pre> z.b. -->
 
 <br><pre>
-**Latest stable release:** [![Download](https://img.shields.io/badge/Download-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
+**Latest stable release:** [![Download](https://img.shields.io/badge/>%20Download%20<-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
 
 [![Download Stable Release](https://img.shields.io/github/release/cockatrice/cockatrice.svg?label=download&colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?label=download%20count&colorB=4ac41d&style=for-the-badge "Number of Downloads")](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?label=released&colorB=4ac41d&style=for-the-badge "Release Date")
 </pre><pre>
@@ -109,7 +111,7 @@ Latest **stable** release:<br>
 
 # Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=white)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord&logoColor=white)](https://discord.gg/3Z9yzmA)
 
-# Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=pink)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord)](https://discord.gg/3Z9yzmA)
+# Get Involved [![Gitter Chat](https://img.shields.io/badge/developer%20chat-grey.svg?logo=gitter&logoColor=ed1965)](https://gitter.im/Cockatrice/Cockatrice) [![Discord Chat](https://img.shields.io/discord/314987288398659595.svg?label=community%20chat&colorB=blue&logo=discord)](https://discord.gg/3Z9yzmA)
 
 [Chat](https://gitter.im/Cockatrice/Cockatrice) with the Cockatrice developers on Gitter. Come here to talk about the application, features, or just to hang out. For support regarding specific servers, please contact that server's admin or forum for support rather than asking here.<br>
 
@@ -151,6 +153,8 @@ Check out our [Translator FAQ](https://github.com/Cockatrice/Cockatrice/wiki/Tra
 # Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20unix%20build&logo=travis&style=for-the-badge)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&style=for-the-badge)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
 
 # Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20mac%20build&logo=travis)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
+
+# Build [![Travis Build Status - master](https://img.shields.io/travis/Cockatrice/Cockatrice/master.svg?label=linux%20%26%20mac%20build&logo=travis&logoColor=white)](https://travis-ci.org/Cockatrice/Cockatrice/branches) [![Appveyor Build Status - master](https://img.shields.io/appveyor/ci/Daenyth/Cockatrice/master.svg?label=win%20build&logo=appveyor&logoColor=white)](https://ci.appveyor.com/project/Daenyth/cockatrice/branch/master)
 
 **Detailed compiling instructions are on the Cockatrice wiki under [Compiling Cockatrice](https://github.com/Cockatrice/Cockatrice/wiki/Compiling-Cockatrice)**
 
