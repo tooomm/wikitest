@@ -181,7 +181,8 @@ Dependencies:
 - [protobuf](https://github.com/google/protobuf)
 - [CMake](https://www.cmake.org/)
 
-Oracle can optionally use zlib to load zipped files:
+Oracle can incorporate compression libraries to load .xz and .zip files: (optionally)
+- [XZ](https://tukaani.org/xz/)
 - [zlib](https://www.zlib.net/)
 
 To compile:
