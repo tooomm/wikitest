@@ -69,7 +69,7 @@ sadly not supported by github
 <!-- getrickse hier, da grafiken in pre tags nur gehen wenn keine linebreaks dazwischen daher </pre><pre> z.b. -->
 
 <br><pre>
-**Latest stable release:** [![Download](https://img.shields.io/badge/>%20Download%20<-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
+**Latest stable release:** [![Download](https://img.shields.io/badge/>%20Download%20<-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest) [![Download](https://img.shields.io/badge/»%20Download%20«-blue.svg?colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest)<br>
 
 [![Download Stable Release](https://img.shields.io/github/release/cockatrice/cockatrice.svg?label=download&colorB=4ac41d&style=for-the-badge "Download Latest Stable Release")](https://github.com/cockatrice/cockatrice/releases/latest) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [![](https://img.shields.io/github/downloads/cockatrice/cockatrice/latest/total.svg?label=download%20count&colorB=4ac41d&style=for-the-badge "Number of Downloads")](https://tooomm.github.io/github-release-stats/?username=Cockatrice&repository=Cockatrice&search=0) ![](https://img.shields.io/github/release-date/Cockatrice/Cockatrice.svg?label=released&colorB=4ac41d&style=for-the-badge "Release Date")
 </pre><pre>
