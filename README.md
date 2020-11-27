@@ -35,7 +35,8 @@
 
 # Cockatrice ![](https://img.shields.io/maintenance/yes/2020.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=repo%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=master%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=master%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=last%20commit "Most Recent Update/Commit to the Project")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+
 
 Cockatrice is an open-source multiplatform supported program for playing tabletop card games over a network. The program's server design prevents any kind of client modifications to gain an unfair advantage in a game. The client also has a built in single-player mode where you can brew without being connected to a server.<br>
 <br>
