@@ -31,9 +31,9 @@
 >- **Incooperate [Projects](https://github.com/Cockatrice/Cockatrice/projects) and [Milestones](https://github.com/Cockatrice/Cockatrice/milestones?direction=asc&sort=due_date) // how to properly utilize them side by side?**
 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2020.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
-# Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=repo%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
+# Cockatrice ![](https://img.shields.io/maintenance/yes/2020.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=repo%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
 # Cockatrice ![](https://img.shields.io/maintenance/yes/2019.svg "Project Maintenance Status") [![Commit History](https://img.shields.io/github/last-commit/Cockatrice/Cockatrice.svg?label=master%20updated "Most Recent Repository Update")](https://github.com/Cockatrice/Cockatrice/commits/master) 
 
