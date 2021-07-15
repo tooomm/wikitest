@@ -28,7 +28,7 @@ body:
     attributes:
       label: Cockatrice Version
       description: Please provide the version you are running. (Where to find it? [test link](https://www.google.com))
-      placeholder: e.g. "2.8.1-custom(ff6f562) (2021-06-29)"
+      placeholder: e.g. "2.8.0 (2021-01-26)"
     validations:
       required: true
 
@@ -38,7 +38,7 @@ body:
       label: System Details
       description: We need to understand what version and environment you are running in.
       placeholder: |
-          Copy your system informatino here!
+          Copy your system informatino here! (Alternative)
           
           Example:
           "Client Version: 2.8.1-custom(ff6f562) (2021-06-29)
@@ -48,7 +48,7 @@ body:
           System Locale: de_DE
           Install Mode: Standard"
     validations:
-      required: true
+      required: false
  
   - type: textarea
     id: issue-details
@@ -71,6 +71,7 @@ body:
     validations:
       required: true
 
+#possible to use this for the detailed system info input from debug log as well? no placeholder possible it seems like?
   - type: textarea
     id: logs
     attributes:
