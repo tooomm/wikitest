@@ -1,11 +1,77 @@
-<b>OS:</b>
-*Put your operating system here! For example: "Win 7 SP2", "macOS 10.12.3", "Ubuntu 16.10" etc.*
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: [bug]
+#assignees:
+#  - octocat
+body:
 
-<b>Cockatrice version:</b>
-*Put your Cockatrice version number & build date here! For example: "2d53ce9 (2016-02-18)"
-You find them inside the app under `Help → About Cockatrice` (Windows & Linux), or `Cockatrice → About Cockatrice` (macOS).*
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
 
-__________
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
 
+  - type: textarea
+    id: system-details
+    attributes:
+      label: System Details
+      description: We need to understand what version and environment you are running in.
+      placeholder: Copy your system informatino here!
+      value: |
+        Example:
+Client Version: 2.8.1-custom(ff6f562) (2021-06-29)
+Client Operating System: Windows 10 (10.0)
+Build Architecture: 64-bit
+Qt Version: 5.12.9
+System Locale: de_DE
+Install Mode: Standard
+    validations:
+      required: true
 
-*Explain your issue/request/suggestion in detail here!*
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 1.0.2 (Default)
+        - 1.0.3 (Edge)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
