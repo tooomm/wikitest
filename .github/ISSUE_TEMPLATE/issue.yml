@@ -28,7 +28,10 @@ body:
     attributes:
       label: System Details
       description: We need to understand what version and environment you are running in.
-      placeholder: Copy your system informatino here!
+      placeholder: |
+          Copy your system informatino here!
+          test
+          test
     validations:
       required: true
 
