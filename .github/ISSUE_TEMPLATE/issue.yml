@@ -48,23 +48,6 @@ body:
     validations:
       required: true
  
-  - type: input
-    id: system-details2
-    attributes:
-      label: System Details
-      description: We need to understand what version and environment you are running in.
-      render: shell
-      placeholder: |
-          Copy your system informatino here!
-          Client Version: 2.8.1-custom(ff6f562) (2021-06-29)
-          Client Operating System: Windows 10 (10.0)
-          Build Architecture: 64-bit
-          Qt Version: 5.12.9
-          System Locale: de_DE
-          Install Mode: Standard
-    validations:
-      required: true
-
   - type: textarea
     id: issue-details
     attributes:
