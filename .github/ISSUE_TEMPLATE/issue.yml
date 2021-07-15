@@ -61,6 +61,7 @@ body:
           Qt Version: 5.12.9
           System Locale: de_DE
           Install Mode: Standard
+      render: shell
     validations:
       required: true
 
@@ -78,7 +79,7 @@ body:
     attributes:
       label: Steps to reproduce
       description: We need to understand what problem you are running into.
-      placeholder: |
+      value: |
           1. Do A
           2. X happens
           3. Then check B
