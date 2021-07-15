@@ -27,7 +27,7 @@ body:
     id: version
     attributes:
       label: Cockatrice Version
-      description: Please provide the version you are running. (Where to find it? [test link](www.google.com))
+      description: Please provide the version you are running. (Where to find it? [test link](https://www.google.com))
       placeholder: 2.8.1-custom(ff6f562) (2021-06-29)
     validations:
       required: true
