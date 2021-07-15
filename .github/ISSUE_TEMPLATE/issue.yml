@@ -49,7 +49,7 @@ body:
       required: true
  
    - type: input
-    id: system-details
+    id: system-details2
     attributes:
       label: System Details
       description: We need to understand what version and environment you are running in.
