@@ -62,8 +62,13 @@ Download latest **beta** version to be a *Cockatrice Beta Tester*:
 </pre>
 <br>
 
-Nice link to changes since badge: https://github.com/Cockatrice/Cockatrice/compare/release...master
+Nice link to changes since badge: https://github.com/Cockatrice/Cockatrice/compare/latest_release...master
 sadly not supported by github
+
+<details>
+<summary>What is a beta release? Notes, Disclaimer, Important Hint...</summary>
+⚠️
+</details>
 
 ---
 
