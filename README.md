@@ -162,7 +162,8 @@ You just need to create an image from the Dockerfile<br>
 And then run it<br>
 `docker run -i -p 4747:4747/tcp -t servatrice:latest`<br>
 
->Please note that running this command will expose the TCP port 4747 of the docker container<br>
+> [!Note]
+> Please note that running this command will expose the TCP port 4747 of the docker container<br>
 to permit connections to the server.
 
 More infos on how to use Servatrice with Docker can be found in our [wiki](https://github.com/Cockatrice/Cockatrice/wiki/Setting-up-Servatrice#using-docker).
